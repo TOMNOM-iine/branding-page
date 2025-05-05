@@ -117,24 +117,18 @@
     <!-- メインスクリプト -->
     <script>
         // キャッシュ無効化のためのタイムスタンプ
-        const cacheBuster = new Date().getTime();
+        const timestamp = new Date().getTime();
         
-        // スクリプトをロード
-        function loadScript(src, callback) {
-            const script = document.createElement('script');
-            script.src = src + '?v=' + cacheBuster;
-            script.onload = callback || function() {};
-            document.body.appendChild(script);
+        // スクリプトを動的に読み込む関数
+        function loadScript(src) {
+            document.write('<script src="' + src + '?v=' + timestamp + '"><\/script>');
         }
         
-        // スクリプトを順番に読み込む
-        loadScript('supabase-config.js', function() {
-            loadScript('task-functions.js', function() {
-                loadScript('simple-auth.js', function() {
-                    loadScript('script.js');
-                });
-            });
-        });
+        // 各スクリプトを順番に読み込む
+        loadScript('supabase-config.js');
+        loadScript('task-functions.js');
+        loadScript('simple-auth.js');
+        loadScript('script.js');
     </script>
 </body>
 </html>

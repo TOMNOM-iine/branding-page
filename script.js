@@ -934,8 +934,8 @@ async function saveBrandEdits(brandId) {
             try {
                 console.log('Supabaseに保存を開始します');
                 
-                // コピーしてtasksプロパティを削除
-                const brandCopy = { ...brand };
+                // JSONデータを適切に処理
+                const brandCopy = JSON.parse(JSON.stringify(brand)); // ディープコピー
                 delete brandCopy.tasks;
                 
                 // Supabaseスキーマに合わせて変換
@@ -954,25 +954,66 @@ async function saveBrandEdits(brandId) {
                 console.log('変換前のokrKpi:', brandCopy.okrKpi);
                 console.log('変換後のokr_kpi:', supabaseBrand.okr_kpi);
                 
-                // Supabaseに直接保存
-                const { data, error } = await supabase
-                    .from('brands')
-                    .update(supabaseBrand)
-                    .eq('id', brand.id)
-                    .select();
+                // APIリクエストとレスポンスの詳細をログ
+                console.log('Supabase APIリクエスト:', 
+                    'URL:', supabase.supabaseUrl, 
+                    'テーブル:', 'brands', 
+                    'ID:', brand.id
+                );
                 
-                if (error) {
-                    console.error('Supabase保存エラー:', error);
-                    alert('保存に失敗しました: ' + error.message);
-                    return false;
+                // Supabaseに直接保存 - リトライロジック付き
+                let retries = 0;
+                const maxRetries = 2;
+                let success = false;
+                
+                while (!success && retries <= maxRetries) {
+                    try {
+                        console.log(`保存試行 ${retries + 1}/${maxRetries + 1}`);
+                        
+                        const { data, error } = await supabase
+                            .from('brands')
+                            .update(supabaseBrand)
+                            .eq('id', brand.id)
+                            .select();
+                        
+                        if (error) {
+                            console.error(`保存エラー(試行 ${retries + 1}):`, error);
+                            retries++;
+                            
+                            if (retries <= maxRetries) {
+                                // 再試行前に少し待機
+                                await new Promise(resolve => setTimeout(resolve, 500));
+                            } else {
+                                throw error; // 最大リトライ回数に達したらエラーを投げる
+                            }
+                        } else {
+                            console.log('Supabaseに保存成功:', data);
+                            success = true;
+                            
+                            // 確実に最新のローカルストレージを更新
+                            saveDataToLocalStorage();
+                            
+                            // 保存完了後に少し待機
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                        }
+                    } catch (retryErr) {
+                        console.error(`通信エラー(試行 ${retries}):`, retryErr);
+                        retries++;
+                        if (retries > maxRetries) throw retryErr;
+                        
+                        // 再試行前に少し待機
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
                 }
                 
-                console.log('Supabaseに保存成功:', data);
-                
-                // 保存成功時にローカルストレージも更新して整合性を保つ
-                saveDataToLocalStorage();
+                if (!success) {
+                    alert('保存に失敗しました。ネットワーク接続を確認してください。');
+                    return false;
+                }
             } catch (err) {
-                console.error('Supabase通信エラー:', err);
+                console.error('Supabase通信中にエラーが発生:', err);
+                alert('通信エラーが発生しました: ' + err.message);
+                return false;
             }
         }
         
@@ -1105,38 +1146,48 @@ function showBrandEditModal(brandId) {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // フォームデータの取得
-            const formData = new FormData(form);
+            // ローディング表示
+            const saveButton = form.querySelector('.save-button');
+            const originalText = saveButton.textContent;
+            saveButton.textContent = '保存中...';
+            saveButton.disabled = true;
             
-            console.log('フォームデータ取得完了');
-            
-            // ブランドデータの更新
-            brand.name = formData.get('name');
-            brand.type = formData.get('type');
-            
-            if (!brand.equity) brand.equity = {};
-            brand.equity.why = formData.get('why');
-            brand.equity.who = formData.get('who');
-            brand.equity.what = formData.get('what');
-            brand.equity.how = formData.get('how');
-            
-            if (!brand.strategy) brand.strategy = {};
-            brand.strategy.concept = formData.get('concept');
-            brand.strategy.positioning = formData.get('positioning');
-            brand.strategy.uniqueValue = formData.get('uniqueValue');
-            brand.strategy.targetAudience = formData.get('targetAudience');
-            
-            if (!brand.okrKpi) brand.okrKpi = {};
-            brand.okrKpi.objective = formData.get('objective');
-            // KeyResults と KPIs は改行で分割して配列として保存
-            brand.okrKpi.keyResults = formData.get('keyResults').split('\n').map(s => s.trim()).filter(s => s);
-            brand.okrKpi.kpis = formData.get('kpis').split('\n').map(s => s.trim()).filter(s => s);
-            
-            console.log('ブランドデータ更新完了:', brand.id);
-            
-            // Supabaseに直接保存
-            if (!isLocalStorageMode()) {
-                try {
+            try {
+                // フォームデータの取得
+                const formData = new FormData(form);
+                
+                console.log('フォームデータ取得完了');
+                
+                // ブランドデータの更新
+                brand.name = formData.get('name');
+                brand.type = formData.get('type');
+                
+                if (!brand.equity) brand.equity = {};
+                brand.equity.why = formData.get('why');
+                brand.equity.who = formData.get('who');
+                brand.equity.what = formData.get('what');
+                brand.equity.how = formData.get('how');
+                
+                if (!brand.strategy) brand.strategy = {};
+                brand.strategy.concept = formData.get('concept');
+                brand.strategy.positioning = formData.get('positioning');
+                brand.strategy.uniqueValue = formData.get('uniqueValue');
+                brand.strategy.targetAudience = formData.get('targetAudience');
+                
+                if (!brand.okrKpi) brand.okrKpi = {};
+                brand.okrKpi.objective = formData.get('objective');
+                // KeyResults と KPIs は改行で分割して配列として保存
+                brand.okrKpi.keyResults = formData.get('keyResults').split('\n').map(s => s.trim()).filter(s => s);
+                brand.okrKpi.kpis = formData.get('kpis').split('\n').map(s => s.trim()).filter(s => s);
+                
+                console.log('ブランドデータ更新完了:', brand.id);
+                
+                // 必ずローカルストレージには保存
+                saveDataToLocalStorage();
+                console.log('ローカルストレージに保存しました');
+                
+                // Supabaseに直接保存
+                if (!isLocalStorageMode()) {
                     // コピーしてtasksプロパティを削除
                     const brandCopy = { ...brand };
                     delete brandCopy.tasks;
@@ -1157,40 +1208,45 @@ function showBrandEditModal(brandId) {
                     console.log('変換前のokrKpi:', brandCopy.okrKpi);
                     console.log('変換後のokr_kpi:', supabaseBrand.okr_kpi);
                     
-                    // Supabaseに直接保存
-                    const { data, error } = await supabase
+                    console.log('直接Supabaseに保存を試みます');
+                    const response = await supabase
                         .from('brands')
                         .update(supabaseBrand)
                         .eq('id', brand.id)
                         .select();
                     
+                    const { data, error } = response;
+                    
                     if (error) {
-                        console.error('Supabase保存エラー:', error);
-                        alert('保存に失敗しました: ' + error.message);
-                        return false;
+                        console.error('保存エラー:', error);
+                        alert('データの保存に失敗しました: ' + error.message);
+                    } else {
+                        console.log('保存成功:', data);
+                        // 再度ローカルストレージも更新
+                        saveDataToLocalStorage();
+                        
+                        // モーダルを閉じる前に少し待機して保存を確実にする
+                        await new Promise(resolve => setTimeout(resolve, 300));
                     }
-                    
-                    console.log('Supabaseに保存成功:', data);
-                    
-                    // 保存成功時にローカルストレージも更新して整合性を保つ
-                    saveDataToLocalStorage();
-                } catch (err) {
-                    console.error('Supabase通信エラー:', err);
                 }
+                
+                // 表示を更新
+                renderBrands();
+                renderBrandTasksUI(currentTaskFilter);
+                
+                // モーダルを閉じる
+                document.body.removeChild(modalOverlay);
+                
+                // 通知表示
+                showNotification(`ブランド「${brand.name}」を更新しました`);
+            } catch (err) {
+                console.error('ブランド保存中にエラーが発生:', err);
+                alert('保存処理中にエラーが発生しました: ' + err.message);
+            } finally {
+                // ボタンを元に戻す
+                saveButton.textContent = originalText;
+                saveButton.disabled = false;
             }
-            
-            // ローカルストレージに保存
-            saveDataToLocalStorage();
-            
-            // 表示を更新
-            renderBrands();
-            renderBrandTasksUI(currentTaskFilter);
-            
-            // モーダルを閉じる
-            document.body.removeChild(modalOverlay);
-            
-            // 通知表示
-            showNotification(`ブランド「${brand.name}」を更新しました`);
         });
         
         // キャンセルボタンのイベント
