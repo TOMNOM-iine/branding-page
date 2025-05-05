@@ -1,11 +1,46 @@
 // タスク関連の機能を集約したファイル
 
+// ローカルストレージにデータを保存する
+function saveDataToLocalStorage() {
+    try {
+        localStorage.setItem('brandsData', JSON.stringify(brandsData));
+        console.log('データをローカルストレージに保存しました');
+        return true;
+    } catch (error) {
+        console.error('データのローカルストレージへの保存中にエラーが発生しました:', error);
+        return false;
+    }
+}
+
+// 通知表示関数
+function showNotification(message, duration = 3000) {
+    try {
+        const notification = document.getElementById('notification');
+        if (!notification) {
+            console.error('通知要素が見つかりません');
+            return;
+        }
+        notification.textContent = message;
+        notification.classList.add('show');
+        
+        // 一定時間後に通知を非表示
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, duration);
+    } catch (error) {
+        console.error('通知表示中にエラーが発生しました:', error);
+    }
+}
+
 // タスク削除処理
 async function deleteTask(taskId, brandId) {
     if (confirm('このタスクを削除しますか？')) {
         try {
             console.log('削除処理を開始します:', taskId, '-', brandId);
-            const brandIndex = brandsData.findIndex(b => b.id === brandId);
+            // 文字列→数値変換を確実に行う
+            const taskIdNum = parseInt(taskId, 10);
+            
+            const brandIndex = brandsData.findIndex(b => b.id.toString() === brandId.toString());
             if (brandIndex === -1) {
                 console.error('タスク削除時にブランドが見つかりません:', brandId);
                 return false;
@@ -15,32 +50,33 @@ async function deleteTask(taskId, brandId) {
             
             // タスクの削除前後のタスク数をログに出力
             const beforeCount = brandsData[brandIndex].tasks.length;
+            console.log('削除前のタスク一覧:', JSON.stringify(brandsData[brandIndex].tasks));
             
             // タスクを削除
-            brandsData[brandIndex].tasks = brandsData[brandIndex].tasks.filter(task => task.id !== parseInt(taskId));
+            brandsData[brandIndex].tasks = brandsData[brandIndex].tasks.filter(task => task.id !== taskIdNum);
             
             // タスクが削除されたことを確認
             const afterCount = brandsData[brandIndex].tasks.length;
             console.log('タスク削除:', beforeCount, '->', afterCount);
             
             if (beforeCount === afterCount) {
-                console.warn('タスクが削除されていません。IDが一致しない可能性があります。taskId:', taskId);
+                console.warn('タスクが削除されていません。IDが一致しない可能性があります。taskId:', taskIdNum);
                 console.log('タスク一覧:', brandsData[brandIndex].tasks.map(t => t.id));
                 return false;
             }
             
             // データを保存
-            await saveDataToLocalStorage();
+            saveDataToLocalStorage();
             // Supabase タスクテーブルから削除
             if (!isLocalStorageMode()) {
-                const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskId);
+                const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskIdNum);
                 if (dbErr) console.error('Supabaseタスク削除エラー:', dbErr);
             }
             
             console.log('データを保存しました');
             
             // UIから要素を削除（gridレイアウトとリストレイアウト両方に対応）
-            const taskElement = document.querySelector(`.task-card[data-task-id="${taskId}"][data-brand-id="${brandId}"], .task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
+            const taskElement = document.querySelector(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
             
             if (taskElement) {
                 taskElement.remove();
@@ -52,7 +88,7 @@ async function deleteTask(taskId, brandId) {
             }
             
             // 保存通知
-            showSaveNotification('タスクを削除しました');
+            showNotification('タスクを削除しました');
             
             console.log('タスクが正常に削除されました:', taskId);
             return true;
@@ -72,14 +108,17 @@ async function toggleTaskComplete(taskId, brandId, isComplete) {
         console.log('タスク完了状態の切り替え:', taskId, brandId, isComplete);
         
         // ブランドインデックスを取得
-        const brandIndex = brandsData.findIndex(b => b.id === brandId);
+        const brandIndex = brandsData.findIndex(b => b.id.toString() === brandId.toString());
         if (brandIndex === -1) {
             console.error('ブランドが見つかりません:', brandId);
             return false;
         }
         
+        // 数値に変換して確実に比較できるようにする
+        const taskIdNum = parseInt(taskId, 10);
+        
         // タスクインデックスを取得
-        const taskIndex = brandsData[brandIndex].tasks.findIndex(t => t.id === parseInt(taskId));
+        const taskIndex = brandsData[brandIndex].tasks.findIndex(t => t.id === taskIdNum);
         if (taskIndex === -1) {
             console.error('タスクが見つかりません:', taskId);
             return false;
@@ -89,25 +128,29 @@ async function toggleTaskComplete(taskId, brandId, isComplete) {
         brandsData[brandIndex].tasks[taskIndex].completed = isComplete;
         
         // データを保存
-        await saveDataToLocalStorage();
+        saveDataToLocalStorage();
         // Supabase タスク更新
         if (!isLocalStorageMode()) {
-            const { error: dbErr } = await supabase.from('tasks').update({ completed: isComplete }).eq('id', taskId);
+            const { error: dbErr } = await supabase.from('tasks').update({ completed: isComplete }).eq('id', taskIdNum);
             if (dbErr) console.error('Supabaseタスク更新エラー:', dbErr);
         }
         
         // UI上でタスクカードのクラスを更新
         // brandIdも含めて正確にタスク要素を特定
-        const taskCard = document.querySelector(`.task-card[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
-        if (taskCard) {
+        const taskItem = document.querySelector(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
+        if (taskItem) {
             if (isComplete) {
-                taskCard.classList.add('completed');
+                taskItem.classList.add('completed');
             } else {
-                taskCard.classList.remove('completed');
+                taskItem.classList.remove('completed');
             }
+            console.log('タスク完了状態をUIに反映しました');
         } else {
-            console.warn('タスクカード要素が見つかりません');
+            console.warn('タスク要素が見つかりません');
         }
+        
+        // 通知を表示
+        showNotification(isComplete ? 'タスクを完了としてマークしました' : 'タスクを未完了としてマークしました');
         
         return true;
     } catch (error) {
@@ -122,14 +165,17 @@ async function toggleTaskImportant(taskId, brandId, isImportant) {
         console.log('タスク重要度の切り替え:', taskId, brandId, isImportant);
         
         // ブランドインデックスを取得
-        const brandIndex = brandsData.findIndex(b => b.id === brandId);
+        const brandIndex = brandsData.findIndex(b => b.id.toString() === brandId.toString());
         if (brandIndex === -1) {
             console.error('ブランドが見つかりません:', brandId);
             return false;
         }
         
+        // 数値に変換して確実に比較できるようにする
+        const taskIdNum = parseInt(taskId, 10);
+        
         // タスクインデックスを取得
-        const taskIndex = brandsData[brandIndex].tasks.findIndex(t => t.id === parseInt(taskId));
+        const taskIndex = brandsData[brandIndex].tasks.findIndex(t => t.id === taskIdNum);
         if (taskIndex === -1) {
             console.error('タスクが見つかりません:', taskId);
             return false;
@@ -139,25 +185,18 @@ async function toggleTaskImportant(taskId, brandId, isImportant) {
         brandsData[brandIndex].tasks[taskIndex].important = isImportant;
         
         // データを保存
-        await saveDataToLocalStorage();
+        saveDataToLocalStorage();
         // Supabase タスク更新
         if (!isLocalStorageMode()) {
-            const { error: dbErr } = await supabase.from('tasks').update({ important: isImportant }).eq('id', taskId);
+            const { error: dbErr } = await supabase.from('tasks').update({ important: isImportant }).eq('id', taskIdNum);
             if (dbErr) console.error('Supabaseタスク更新エラー:', dbErr);
         }
         
-        // UI上でスターのクラスを更新
-        // brandIdも含めて正確にタスク要素を特定
-        const starElement = document.querySelector(`.task-star[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
-        if (starElement) {
-            if (isImportant) {
-                starElement.classList.add('important');
-            } else {
-                starElement.classList.remove('important');
-            }
-        } else {
-            console.warn('重要タスクのスター要素が見つかりません');
-        }
+        // 通知を表示
+        showNotification(isImportant ? 'タスクを重要としてマークしました' : '重要マークを解除しました');
+        
+        // UI上で表示を更新
+        renderBrandTasksUI(currentTaskFilter);
         
         return true;
     } catch (error) {
@@ -171,8 +210,14 @@ async function addTask(brandId, taskText) {
     try {
         console.log('タスク追加:', brandId, taskText);
         
+        // 入力チェック
+        if (!taskText.trim()) {
+            console.warn('空のタスクは追加できません');
+            return false;
+        }
+        
         // ブランドインデックスを取得
-        const brandIndex = brandsData.findIndex(b => b.id === brandId);
+        const brandIndex = brandsData.findIndex(b => b.id.toString() === brandId.toString());
         if (brandIndex === -1) {
             console.error('ブランドが見つかりません:', brandId);
             return false;
@@ -188,7 +233,7 @@ async function addTask(brandId, taskText) {
         // 新しいタスクを作成
         let newTask = {
             id: newTaskId,
-            text: taskText,
+            text: taskText.trim(),
             completed: false,
             important: false
         };
@@ -202,25 +247,36 @@ async function addTask(brandId, taskText) {
         brandsData[brandIndex].tasks.push(newTask);
         
         // データを保存
-        await saveDataToLocalStorage();
+        saveDataToLocalStorage();
+        
         // Supabaseに新規タスク挿入
         if (!isLocalStorageMode()) {
-            const { data: inserted, error: dbErr } = await supabase.from('tasks').insert([{ brand_id: brandId, text: taskText, completed: false, important: false }]).select();
-            if (dbErr) {
-                console.error('Supabaseタスク追加エラー:', dbErr);
-            } else if (inserted && inserted.length > 0) {
-                newTask.id = inserted[0].id;
-                // ローカルデータIDを更新
-                brandsData[brandIndex].tasks[brandsData[brandIndex].tasks.length - 1].id = newTask.id;
-                saveDataToLocalStorage();
+            try {
+                const { data: inserted, error: dbErr } = await supabase.from('tasks').insert([{ 
+                    brand_id: brandId, 
+                    text: taskText.trim(), 
+                    completed: false, 
+                    important: false 
+                }]).select();
+                
+                if (dbErr) {
+                    console.error('Supabaseタスク追加エラー:', dbErr);
+                } else if (inserted && inserted.length > 0) {
+                    newTask.id = inserted[0].id;
+                    // ローカルデータIDを更新
+                    brandsData[brandIndex].tasks[brandsData[brandIndex].tasks.length - 1].id = newTask.id;
+                    saveDataToLocalStorage();
+                }
+            } catch (err) {
+                console.error('Supabaseタスク追加処理中にエラー:', err);
             }
         }
         
         // 画面を更新
         renderBrandTasksUI();
         
-        // 保存通知
-        showSaveNotification('新しいタスクを追加しました');
+        // 通知を表示
+        showNotification('新しいタスクを追加しました');
         
         return true;
     } catch (error) {

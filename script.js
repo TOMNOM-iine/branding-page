@@ -277,6 +277,9 @@ let brandsData = [
     }
 ];
 
+// タスクフィルター用の変数（グローバルスコープ）
+let currentTaskFilter = 'all';
+
 // ブランド一覧の表示
 function renderBrands() {
     try {
@@ -907,7 +910,6 @@ function getBrandById(brandId) {
 }
 
 // フィルターボタンのイベントリスナー
-let currentTaskFilter = 'all';
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.filter-btn').forEach(button => {
         button.addEventListener('click', function() {
