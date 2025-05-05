@@ -129,9 +129,15 @@ async function handleLogin() {
         document.getElementById('login-overlay').style.display = 'none';
         console.log('ログイン成功しました。メインアプリに移行します。');
         
-        // ブランドデータを表示
-        renderBrands();
-        renderBrandTasksUI();
+        // ローカルストレージフラグを設定
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('useLocalStorage', 'false');
+        showNotification('ログインしました', 2000);
+
+        // リロードして初期データを使用するよう強制
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     } catch (err) {
         console.error('ログイン中にエラーが発生しました:', err);
         loginError.textContent = 'ログインに失敗しました。もう一度お試しください。';

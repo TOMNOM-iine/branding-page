@@ -730,6 +730,10 @@ function renderBrandTasksUI(filter = 'all') {
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('ページが読み込まれました。初期化を開始します。');
 
+    // 初期サンプルデータを保持（元のbrandsDataの値）
+    const defaultBrands = [...brandsData];
+    console.log('デフォルトブランドデータを保持:', defaultBrands.length, '件');
+
     if (isLocalStorageMode()) {
         // localStorage モード
         const storedData = localStorage.getItem('brandsData');
@@ -740,85 +744,119 @@ document.addEventListener('DOMContentLoaded', async function() {
             } catch (error) {
                 console.error('ローカルストレージのデータ解析エラー:', error);
                 console.log('代わりにデフォルトデータを使用します');
+                brandsData = defaultBrands;
             }
         } else {
             console.log('ローカルストレージにデータがないため、デフォルトデータを使用します');
+            brandsData = defaultBrands;
         }
     } else {
         // Supabase モード
         try {
+            // Supabaseからブランドデータを取得
             const { data, error } = await fetchBrands();
             if (error) throw error;
-            brandsData = data;
-            console.log('Supabaseからブランドデータを取得:', brandsData.length, '件');
+            
+            if (data && data.length > 0) {
+                // Supabaseから取得したデータ
+                const supabaseBrands = data;
+                console.log('Supabaseからブランドデータを取得:', supabaseBrands.length, '件');
+                
+                // 確実にデフォルトデータを使用
+                brandsData = [...defaultBrands];
+                
+                // Supabaseデータを追加（IDが重複しないもののみ）
+                const existingIds = brandsData.map(b => b.id.toString());
+                for (const brand of supabaseBrands) {
+                    if (!existingIds.includes(brand.id.toString())) {
+                        brandsData.push(brand);
+                        existingIds.push(brand.id.toString());
+                    }
+                }
+                
+                console.log('最終的なブランド総数:', brandsData.length, '件');
+            } else {
+                console.log('Supabaseにブランドデータがないため、デフォルトデータのみ使用します');
+                brandsData = defaultBrands;
+            }
+            
             // 各ブランドのタスクを取得
-            for (const brand of brandsData) {
+            const brandsCopy = [...brandsData]; // 元の配列をコピー
+            for (const brand of brandsCopy) {
                 const { data: tasks, error: taskErr } = await fetchTasks(brand.id);
-                if (!taskErr) {
-                    brand.tasks = tasks;
-                    console.log(`Brand ${brand.id} のタスクを ${tasks.length} 件取得`);
+                if (!taskErr && tasks && tasks.length > 0) {
+                    // 該当するブランドオブジェクトを探して更新
+                    const brandToUpdate = brandsData.find(b => b.id.toString() === brand.id.toString());
+                    if (brandToUpdate) {
+                        brandToUpdate.tasks = tasks;
+                        console.log(`Brand ${brand.id} のタスクを ${tasks.length} 件取得`);
+                    }
                 } else {
-                    console.error('タスク取得エラー:', taskErr);
-                    brand.tasks = [];
+                    console.log(`Brand ${brand.id} にタスクがないか、エラーが発生しました`);
                 }
             }
         } catch (err) {
             console.error('Supabaseからのデータ読み込みに失敗:', err);
-            // fallback to default data
+            console.log('デフォルトデータを使用します');
+            brandsData = defaultBrands;
         }
     }
-
-    // 表示処理
-    renderBrands();
-    renderBrandTasksUI();
-
-    // フィルターボタン設定
-    document.querySelectorAll('.filter-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            renderBrandTasksUI(this.dataset.filter);
-        });
-    });
-
-    // 全体タスク追加ボタン
-    const addTaskBtn = document.getElementById('add-task-btn');
-    if (addTaskBtn) {
-        addTaskBtn.addEventListener('click', () => {
-            const firstInput = document.querySelector('.new-task-input');
-            if (firstInput) firstInput.focus();
-        });
-    }
     
-    // ヘッダーにログアウトボタンを追加
-    const header = document.querySelector('header');
-    if (header && !document.querySelector('.logout-button')) {
-        const logoutBtn = document.createElement('button');
-        logoutBtn.textContent = 'ログアウト';
-        logoutBtn.classList.add('logout-button');
-        logoutBtn.addEventListener('click', async function() {
-            try {
-                if (confirm('ログアウトしますか？')) {
-                    if (typeof signOut === 'function') {
-                        const { error } = await signOut();
-                        if (error) {
-                            console.error('ログアウトエラー:', error);
-                            return;
-                        }
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('useLocalStorage');
-                        location.reload();
-                    } else {
-                        console.error('signOut 関数が見つかりません');
-                    }
-                }
-            } catch (err) {
-                console.error('ログアウト処理でエラー:', err);
-            }
+    // キャッシュ問題を回避するために、少し遅延してから表示処理を実行
+    setTimeout(() => {
+        // 表示処理
+        console.log('表示処理を開始します。ブランド数:', brandsData.length);
+        renderBrands();
+        renderBrandTasksUI();
+        
+        // フィルターボタン設定
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                renderBrandTasksUI(this.dataset.filter);
+            });
         });
-        header.appendChild(logoutBtn);
-        console.log('ログアウトボタンを追加しました');
-    }
-
-    console.log('初期化が完了しました');
+    
+        // 全体タスク追加ボタン
+        const addTaskBtn = document.getElementById('add-task-btn');
+        if (addTaskBtn) {
+            addTaskBtn.addEventListener('click', () => {
+                const firstInput = document.querySelector('.new-task-input');
+                if (firstInput) firstInput.focus();
+            });
+        }
+        
+        // ヘッダーにログアウトボタンを追加
+        const header = document.querySelector('header');
+        if (header && !document.querySelector('.logout-button')) {
+            const logoutBtn = document.createElement('button');
+            logoutBtn.textContent = 'ログアウト';
+            logoutBtn.classList.add('logout-button');
+            logoutBtn.addEventListener('click', async function() {
+                try {
+                    if (confirm('ログアウトしますか？')) {
+                        if (typeof signOut === 'function') {
+                            const { error } = await signOut();
+                            if (error) {
+                                console.error('ログアウトエラー:', error);
+                                return;
+                            }
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('useLocalStorage');
+                            location.reload();
+                        } else {
+                            console.error('signOut 関数が見つかりません');
+                        }
+                    }
+                } catch (err) {
+                    console.error('ログアウト処理でエラー:', err);
+                }
+            });
+            header.appendChild(logoutBtn);
+            console.log('ログアウトボタンを追加しました');
+        }
+    
+        console.log('初期化が完了しました');
+    }, 100);
 });
 
 // ブランド編集の保存
