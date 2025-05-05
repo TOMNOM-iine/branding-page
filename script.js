@@ -724,6 +724,36 @@ function renderBrandTasksUI(filter = 'all') {
 
         // イベントリスナー設定
         setupTaskInputListeners();
+        
+        // 重要: 削除ボタンのイベントリスナーを確実に設定
+        document.querySelectorAll('.task-delete-btn').forEach(button => {
+            // 既存のイベントリスナーを削除して再設定
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const taskId = this.getAttribute('data-task-id');
+                const brandId = this.getAttribute('data-brand-id');
+                
+                console.log('削除ボタンがクリックされました:', taskId, brandId);
+                if (taskId && brandId) {
+                    // 共通のdeleteTask関数を呼び出し
+                    if (typeof window.deleteTask === 'function') {
+                        window.deleteTask(taskId, brandId);
+                    } else if (typeof deleteTask === 'function') {
+                        deleteTask(taskId, brandId);
+                    } else {
+                        console.error('deleteTask関数が見つかりません');
+                        alert('システムエラー: タスク削除機能が利用できません');
+                    }
+                }
+            });
+        });
+        
+        // その他のタスクイベントリスナーを設定
         setupTaskEventListeners();
 
         console.log('ブランドタスクUIのレンダリングが完了しました');

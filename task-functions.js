@@ -34,51 +34,66 @@ function showNotification(message, duration = 3000) {
 
 // タスク削除処理
 async function deleteTask(taskId, brandId) {
-    if (confirm('このタスクを削除しますか？')) {
-        try {
-            console.log('削除処理を開始します:', taskId, '-', brandId);
-            // 文字列→数値変換を確実に行う
-            const taskIdNum = parseInt(taskId, 10);
+    try {
+        console.log(`タスク削除処理を開始: ID=${taskId}, ブランド=${brandId}`);
+        
+        // 確認ダイアログ
+        if (!confirm('このタスクを削除しますか？')) {
+            return false;
+        }
+        
+        // ブランドを検索
+        const brand = brandsData.find(b => b.id.toString() === brandId.toString());
+        if (!brand) {
+            console.error(`ブランドが見つかりません: ${brandId}`);
+            return false;
+        }
+        
+        // タスクのテキストを保存（通知用）
+        const task = brand.tasks.find(t => t.id.toString() === taskId.toString());
+        if (!task) {
+            console.error(`タスクが見つかりません: ${taskId}`);
+            return false;
+        }
+        
+        const taskText = task.text;
+        const taskIdNum = parseInt(taskId, 10);
+        
+        // 削除前のタスク数をログ
+        const beforeCount = brand.tasks.length;
+        console.log('削除前のタスク一覧:', JSON.stringify(brand.tasks));
+        
+        // タスクを削除
+        brand.tasks = brand.tasks.filter(t => t.id.toString() !== taskId.toString());
+        
+        // 削除後のタスク数をログ
+        const afterCount = brand.tasks.length;
+        console.log('タスク削除:', beforeCount, '->', afterCount);
+        
+        // タスクが削除されたか確認
+        if (beforeCount === afterCount) {
+            console.warn('タスクが削除されていません。IDが一致しない可能性があります。taskId:', taskId);
+            console.log('タスク一覧:', brand.tasks.map(t => t.id));
+            return false;
+        }
+        
+        // データを保存（ローカルストレージとSupabase両方に確実に保存）
+        saveDataToLocalStorage();
+        
+        // Supabase タスクテーブルから削除
+        if (!isLocalStorageMode()) {
+            console.log(`Supabaseからタスク(ID: ${taskIdNum})の削除を試みます`);
             
-            const brandIndex = brandsData.findIndex(b => b.id.toString() === brandId.toString());
-            if (brandIndex === -1) {
-                console.error('タスク削除時にブランドが見つかりません:', brandId);
-                return false;
-            }
-            
-            console.log('ブランドが見つかりました:', brandIndex);
-            
-            // タスクの削除前後のタスク数をログに出力
-            const beforeCount = brandsData[brandIndex].tasks.length;
-            console.log('削除前のタスク一覧:', JSON.stringify(brandsData[brandIndex].tasks));
-            
-            // タスクを削除
-            brandsData[brandIndex].tasks = brandsData[brandIndex].tasks.filter(task => task.id !== taskIdNum);
-            
-            // タスクが削除されたことを確認
-            const afterCount = brandsData[brandIndex].tasks.length;
-            console.log('タスク削除:', beforeCount, '->', afterCount);
-            
-            if (beforeCount === afterCount) {
-                console.warn('タスクが削除されていません。IDが一致しない可能性があります。taskId:', taskIdNum);
-                console.log('タスク一覧:', brandsData[brandIndex].tasks.map(t => t.id));
-                return false;
-            }
-            
-            // データを保存
-            saveDataToLocalStorage();
-            
-            // Supabase タスクテーブルから削除
-            if (!isLocalStorageMode()) {
+            // 非同期処理をすぐに開始
+            (async () => {
                 try {
-                    console.log(`Supabaseからタスク(ID: ${taskIdNum})を削除します`);
                     const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskIdNum);
                     if (dbErr) {
                         console.error('Supabaseタスク削除エラー:', dbErr);
                         
                         // DBエラー時にはブランドごと保存を試みる
                         console.log('ブランド全体を更新して同期を試みます');
-                        const { error: brandErr } = await saveBrandToSupabase(brandsData[brandIndex]);
+                        const { error: brandErr } = await saveBrandToSupabase(brand);
                         if (brandErr) {
                             console.error('ブランド更新エラー:', brandErr);
                         } else {
@@ -90,38 +105,42 @@ async function deleteTask(taskId, brandId) {
                 } catch (err) {
                     console.error('Supabase操作中にエラーが発生:', err);
                 }
-            }
-            
-            console.log('データを保存しました');
-            
-            // UIから要素を削除（gridレイアウトとリストレイアウト両方に対応）
-            const taskElements = document.querySelectorAll(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
-            
-            if (taskElements.length > 0) {
-                taskElements.forEach(el => {
-                    el.remove();
-                    console.log('タスク要素をDOMから削除しました:', el.className);
-                });
-            } else {
-                console.warn('削除するタスク要素が見つかりませんでした。表示を更新します。');
-                // 両方の表示を更新
-                renderBrandTasksUI();
-                renderBrands(); // メインのブランド一覧も更新
-            }
-            
-            // 保存通知
-            showNotification('タスクを削除しました');
-            
-            console.log('タスクが正常に削除されました:', taskId);
-            return true;
-        } catch (error) {
-            console.error('タスク削除中にエラーが発生しました:', error);
-            alert('タスクの削除中にエラーが発生しました\n' + error.message);
-            return false;
+            })();
         }
+        
+        // 重要: 両方のリストを確実に更新する処理
+        console.log('両方のリストを更新します...');
+        
+        // 遅延実行処理を開始（すぐに開始し、複数回実行して確実に更新）
+        setTimeout(() => {
+            console.log('1回目のUI更新');
+            renderBrandTasksUI(currentTaskFilter);
+            renderBrands();
+            
+            // 2回目の更新（さらに遅延）
+            setTimeout(() => {
+                console.log('2回目のUI更新');
+                renderBrands();
+                renderBrandTasksUI(currentTaskFilter);
+                
+                // 通知表示
+                showNotification(`「${taskText}」を削除しました`);
+                
+                // 最終確認のための3回目の更新
+                setTimeout(() => {
+                    console.log('最終確認のUI更新');
+                    renderBrandTasksUI(currentTaskFilter);
+                    renderBrands();
+                }, 300);
+            }, 200);
+        }, 100);
+        
+        return true;
+    } catch (error) {
+        console.error('タスク削除中にエラーが発生しました:', error);
+        alert('タスク削除中にエラーが発生しました: ' + error.message);
+        return false;
     }
-    
-    return false; // キャンセルした場合
 }
 
 // タスクの完了状態を切り替え
@@ -568,14 +587,16 @@ function editTask(taskId, brandId, currentText) {
     }
 }
 
-// タスク編集を保存
+// タスク編集の保存
 async function saveTaskEdit(taskId, brandId, newText, originalText) {
     try {
-        console.log('タスク編集を保存します:', taskId, brandId, newText);
+        console.log(`タスク編集の保存: ID=${taskId}, ブランド=${brandId}`);
+        console.log(`元のテキスト: "${originalText}"`);
+        console.log(`新しいテキスト: "${newText}"`);
         
-        // 空白の場合は元のテキストに戻す
-        if (!newText.trim()) {
-            console.warn('空のタスクは許可されていません。元のテキストに戻します。');
+        // 入力チェック
+        if (!newText || !newText.trim()) {
+            console.warn('空のタスクは保存できません');
             newText = originalText;
         }
         
@@ -597,13 +618,13 @@ async function saveTaskEdit(taskId, brandId, newText, originalText) {
         }
         
         // データを更新
-        const brandIndex = brandsData.findIndex(b => b.id === brandId);
+        const brandIndex = brandsData.findIndex(b => b.id.toString() === brandId.toString());
         if (brandIndex === -1) {
             console.error('ブランドが見つかりません:', brandId);
             return;
         }
         
-        const taskIndex = brandsData[brandIndex].tasks.findIndex(t => t.id === parseInt(taskId));
+        const taskIndex = brandsData[brandIndex].tasks.findIndex(t => t.id.toString() === taskId.toString());
         if (taskIndex === -1) {
             console.error('タスクが見つかりません:', taskId);
             return;
@@ -617,11 +638,31 @@ async function saveTaskEdit(taskId, brandId, newText, originalText) {
         
         // Supabaseにも保存（ローカルストレージモードでない場合）
         if (!isLocalStorageMode()) {
-            const { error } = await saveBrandToSupabase(brandsData[brandIndex]);
-            if (error) {
-                console.error('タスク編集後のSupabaseへの保存中にエラーが発生しました:', error);
+            try {
+                // タスクテーブル更新
+                const { error: taskErr } = await supabase
+                    .from('tasks')
+                    .update({ text: newText.trim() })
+                    .eq('id', parseInt(taskId));
+                
+                if (taskErr) {
+                    console.error('Supabaseタスク更新エラー:', taskErr);
+                    
+                    // エラー時はブランド全体を保存して回復を試みる
+                    const { error } = await saveBrandToSupabase(brandsData[brandIndex]);
+                    if (error) {
+                        console.error('タスク編集後のSupabaseへの保存中にエラーが発生しました:', error);
+                    }
+                } else {
+                    console.log('Supabaseタスク更新成功');
+                }
+            } catch (err) {
+                console.error('Supabase操作中にエラー:', err);
             }
         }
+        
+        // 重要: 両方のリストを確実に更新
+        console.log('両方のリストを更新します...');
         
         // UI要素を更新
         const editField = document.querySelector(`.task-card[data-task-id="${taskId}"][data-brand-id="${brandId}"] .task-edit-field`);
@@ -630,14 +671,26 @@ async function saveTaskEdit(taskId, brandId, newText, originalText) {
             taskText.className = 'task-text';
             taskText.textContent = newText;
             editField.replaceWith(taskText);
+        }
+        
+        // 遅延実行処理を使用して、確実に両方のリストを更新
+        setTimeout(() => {
+            renderBrandTasksUI(currentTaskFilter);
+            renderBrands();
             
             // イベントリスナーを再設定
             setupTaskEventListeners();
-        }
-        
-        // 保存通知
-        showNotification('タスクを更新しました');
-        console.log('タスク編集が保存されました:', taskId);
+            
+            // 保存通知
+            showNotification('タスクを更新しました');
+            console.log('タスク編集が保存されました:', taskId);
+            
+            // 念のため、もう一度遅延して更新
+            setTimeout(() => {
+                renderBrands();
+                renderBrandTasksUI(currentTaskFilter);
+            }, 200);
+        }, 100);
     } catch (error) {
         console.error('タスク編集の保存中にエラーが発生しました:', error);
         alert('タスク編集の保存中にエラーが発生しました\n' + error.message);
@@ -865,44 +918,6 @@ function addNewTask(brandId, taskText) {
     }
 }
 
-// タスクを削除
-function deleteTask(taskId, brandId) {
-    try {
-        // ブランドを検索
-        const brand = brandsData.find(b => b.id.toString() === brandId.toString());
-        if (!brand) {
-            console.error(`ブランドが見つかりません: ${brandId}`);
-            return false;
-        }
-        
-        // タスクのテキストを保存（通知用）
-        const task = brand.tasks.find(t => t.id.toString() === taskId.toString());
-        if (!task) {
-            console.error(`タスクが見つかりません: ${taskId}`);
-            return false;
-        }
-        
-        const taskText = task.text;
-        
-        // タスクを削除
-        brand.tasks = brand.tasks.filter(t => t.id.toString() !== taskId.toString());
-        
-        // データを保存
-        saveDataToLocalStorage();
-        
-        // 表示を更新
-        renderBrandTasksUI(currentTaskFilter);
-        
-        // 通知を表示
-        showNotification(`「${taskText}」を削除しました`);
-        
-        return true;
-    } catch (error) {
-        console.error('タスク削除中にエラーが発生しました:', error);
-        return false;
-    }
-}
-
 // タスクの完了状態を切り替え
 function toggleTaskCompletion(taskId, brandId, isCompleted) {
     try {
@@ -1075,3 +1090,8 @@ document.addEventListener('DOMContentLoaded', function() {
         showAddTaskModal();
     });
 });
+
+// グローバルスコープに関数を公開
+// これにより、他のJSファイルからもdeleteTask関数が呼び出せるようになる
+window.deleteTask = deleteTask;
+window.renderBrandTasksUI = renderBrandTasksUI;
