@@ -10,7 +10,7 @@ console.log('使用するSupabase URL:', SUPABASE_URL);
 
 try {
   // CDNから読み込んだsupabaseを初期化
-  supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   console.log('Supabaseクライアントの初期化が完了しました');
 } catch (err) {
   console.error('Supabaseクライアントの初期化中にエラーが発生しました:', err);
