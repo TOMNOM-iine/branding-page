@@ -787,6 +787,36 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (firstInput) firstInput.focus();
         });
     }
+    
+    // ヘッダーにログアウトボタンを追加
+    const header = document.querySelector('header');
+    if (header && !document.querySelector('.logout-button')) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.textContent = 'ログアウト';
+        logoutBtn.classList.add('logout-button');
+        logoutBtn.addEventListener('click', async function() {
+            try {
+                if (confirm('ログアウトしますか？')) {
+                    if (typeof signOut === 'function') {
+                        const { error } = await signOut();
+                        if (error) {
+                            console.error('ログアウトエラー:', error);
+                            return;
+                        }
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('useLocalStorage');
+                        location.reload();
+                    } else {
+                        console.error('signOut 関数が見つかりません');
+                    }
+                }
+            } catch (err) {
+                console.error('ログアウト処理でエラー:', err);
+            }
+        });
+        header.appendChild(logoutBtn);
+        console.log('ログアウトボタンを追加しました');
+    }
 
     console.log('初期化が完了しました');
 });

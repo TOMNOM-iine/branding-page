@@ -209,19 +209,9 @@ function setupLoginListeners() {
     
     // スキップボタンクリック
     if (skipLoginButton) {
-        skipLoginButton.addEventListener('click', function() {
-            // ローカルストレージモードを有効化
-            localStorage.setItem('useLocalStorage', 'true');
-            
-            // ログインオーバーレイを非表示
-            document.getElementById('login-overlay').style.display = 'none';
-            console.log('ローカルストレージモードを有効化しました');
-            
-            // ブランド一覧とタスク一覧を再描画
-            renderBrands();
-            renderBrandTasksUI();
-        });
-        console.log('スキップボタンのリスナーを設定しました');
+        // スキップボタンを非表示にする
+        skipLoginButton.style.display = 'none';
+        console.log('スキップボタンを非表示にしました');
     }
     
     // ヘッダーにログアウトボタンを追加
@@ -249,14 +239,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ローカルストレージからログイン状態を確認
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const useLocalStorage = localStorage.getItem('useLocalStorage') === 'true';
     
-    if (isLoggedIn || useLocalStorage) {
+    if (isLoggedIn) {
         // ログイン済みか、ローカルストレージモードの場合はオーバーレイを表示しない
         loginOverlay.style.display = 'none';
         
         // 必要に応じてログイン状態をチェック
-        if (isLoggedIn && !useLocalStorage) {
+        if (isLoggedIn) {
             // Supabaseでのログイン状態を確認
             checkLoginStatus().then(user => {
                 if (!user) {
@@ -335,22 +324,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ログインスキップボタンのクリックイベント
-    skipLoginButton.addEventListener('click', function() {
-        // ローカルストレージモードを有効化
-        localStorage.setItem('useLocalStorage', 'true');
-        localStorage.removeItem('isLoggedIn');
-        
-        // オーバーレイを非表示
-        loginOverlay.style.display = 'none';
-        
-        // 通知を表示
-        showNotification('ローカルモードで開始します', 2000);
-        
-        // ページをリロード
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
-    });
+    // スキップボタンを非表示にする
+    if (skipLoginButton) {
+        skipLoginButton.style.display = 'none';
+    }
     
     // ログインフォームのEnterキー対応
     loginForm.addEventListener('keypress', function(e) {
