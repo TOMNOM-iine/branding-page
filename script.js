@@ -689,7 +689,6 @@ function renderBrandTasksUI(filter = 'all') {
                         </div>
                         <span class="task-text">${task.text || ''}</span>
                         <div class="task-actions">
-                            <i class="fas fa-star task-star ${task.important ? 'important' : ''}" data-task-id="${task.id}" data-brand-id="${brand.id}"></i>
                             <button class="task-delete-btn" data-task-id="${task.id}" data-brand-id="${brand.id}">
                                 <i class="fas fa-trash"></i>
                             </button>

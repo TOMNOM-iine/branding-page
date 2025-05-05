@@ -39,12 +39,12 @@ async function deleteTask(taskId, brandId) {
             
             console.log('データを保存しました');
             
-            // UI から削除
-            // brandIdも含めて正確にタスク要素を特定
-            const taskElement = document.querySelector(`.task-card[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
+            // UIから要素を削除（gridレイアウトとリストレイアウト両方に対応）
+            const taskElement = document.querySelector(`.task-card[data-task-id="${taskId}"][data-brand-id="${brandId}"], .task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
+            
             if (taskElement) {
                 taskElement.remove();
-                console.log('タスク要素をDOMから削除しました');
+                console.log('タスク要素をDOMから削除しました:', taskElement.className);
             } else {
                 console.warn('削除するタスク要素が見つかりませんでした。表示を更新します。');
                 // 表示を更新
