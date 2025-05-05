@@ -852,15 +852,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         });
     
-        // 全体タスク追加ボタン
-        const addTaskBtn = document.getElementById('add-task-btn');
-        if (addTaskBtn) {
-            addTaskBtn.addEventListener('click', () => {
-                const firstInput = document.querySelector('.new-task-input');
-                if (firstInput) firstInput.focus();
-            });
-        }
-        
         // ヘッダーにログアウトボタンを追加
         const header = document.querySelector('header');
         if (header && !document.querySelector('.logout-button')) {
@@ -1075,18 +1066,11 @@ function showBrandEditModal(brandId) {
             brand.okrKpi.keyResults = formData.get('keyResults').split('\n').map(s => s.trim()).filter(s => s);
             brand.okrKpi.kpis = formData.get('kpis').split('\n').map(s => s.trim()).filter(s => s);
             
-            // データを保存
-            saveDataToLocalStorage();
-            
-            // 表示を更新
-            renderBrands();
-            renderBrandTasksUI(); // タスクリストも更新
+            // saveBrandEdits関数を呼び出してSupabaseにも保存
+            saveBrandEdits(brand.id);
             
             // モーダルを閉じる
             document.body.removeChild(modalOverlay);
-            
-            // 通知を表示
-            showNotification(`ブランド「${brand.name}」を更新しました`);
         });
         
         // キャンセルボタンのイベント
