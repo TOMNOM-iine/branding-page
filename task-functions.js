@@ -564,7 +564,7 @@ async function saveTaskEdit(taskId, brandId, newText, originalText) {
         }
         
         // 保存通知
-        showSaveNotification('タスクを更新しました');
+        showNotification('タスクを更新しました');
         console.log('タスク編集が保存されました:', taskId);
     } catch (error) {
         console.error('タスク編集の保存中にエラーが発生しました:', error);
