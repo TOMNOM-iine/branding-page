@@ -796,8 +796,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                 // Supabeseデータをパース
                 const supabaseBrands = data.map(brand => {
                     try {
+                        console.log('取得したブランド生データ:', brand.id, brand);
+                        
                         // JSON文字列をオブジェクトに変換
-                        return {
+                        const parsedBrand = {
                             ...brand,
                             equity: typeof brand.equity === 'string' ? JSON.parse(brand.equity) : brand.equity,
                             strategy: typeof brand.strategy === 'string' ? JSON.parse(brand.strategy) : brand.strategy,
@@ -805,6 +807,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 (typeof brand.okr_kpi === 'string' ? JSON.parse(brand.okr_kpi) : brand.okr_kpi) : 
                                 {}
                         };
+                        
+                        console.log('パース後のブランドデータ:', brand.id, parsedBrand);
+                        return parsedBrand;
                     } catch (e) {
                         console.error('ブランドデータのパースエラー:', e, brand);
                         return brand;
@@ -929,7 +934,7 @@ async function saveBrandEdits(brandId) {
             try {
                 console.log('Supabaseに保存を開始します');
                 
-                // brandをコピーして、tasksプロパティを削除（容量超過防止）
+                // コピーしてtasksプロパティを削除
                 const brandCopy = { ...brand };
                 delete brandCopy.tasks;
                 
@@ -946,8 +951,10 @@ async function saveBrandEdits(brandId) {
                 };
                 
                 console.log('Supabase形式に変換:', supabaseBrand);
+                console.log('変換前のokrKpi:', brandCopy.okrKpi);
+                console.log('変換後のokr_kpi:', supabaseBrand.okr_kpi);
                 
-                console.log('直接Supabaseに保存を試みます');
+                // Supabaseに直接保存
                 const { data, error } = await supabase
                     .from('brands')
                     .update(supabaseBrand)
@@ -955,11 +962,15 @@ async function saveBrandEdits(brandId) {
                     .select();
                 
                 if (error) {
-                    console.error('保存エラー:', error);
-                    alert('データの保存に失敗しました: ' + error.message);
-                } else {
-                    console.log('保存成功:', data);
+                    console.error('Supabase保存エラー:', error);
+                    alert('保存に失敗しました: ' + error.message);
+                    return false;
                 }
+                
+                console.log('Supabaseに保存成功:', data);
+                
+                // 保存成功時にローカルストレージも更新して整合性を保つ
+                saveDataToLocalStorage();
             } catch (err) {
                 console.error('Supabase通信エラー:', err);
             }
@@ -1143,8 +1154,10 @@ function showBrandEditModal(brandId) {
                     };
                     
                     console.log('Supabase形式に変換:', supabaseBrand);
+                    console.log('変換前のokrKpi:', brandCopy.okrKpi);
+                    console.log('変換後のokr_kpi:', supabaseBrand.okr_kpi);
                     
-                    console.log('直接Supabaseに保存を試みます');
+                    // Supabaseに直接保存
                     const { data, error } = await supabase
                         .from('brands')
                         .update(supabaseBrand)
@@ -1152,11 +1165,15 @@ function showBrandEditModal(brandId) {
                         .select();
                     
                     if (error) {
-                        console.error('保存エラー:', error);
-                        alert('データの保存に失敗しました: ' + error.message);
-                    } else {
-                        console.log('保存成功:', data);
+                        console.error('Supabase保存エラー:', error);
+                        alert('保存に失敗しました: ' + error.message);
+                        return false;
                     }
+                    
+                    console.log('Supabaseに保存成功:', data);
+                    
+                    // 保存成功時にローカルストレージも更新して整合性を保つ
+                    saveDataToLocalStorage();
                 } catch (err) {
                     console.error('Supabase通信エラー:', err);
                 }
