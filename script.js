@@ -817,39 +817,87 @@ document.addEventListener('DOMContentLoaded', async function() {
                 });
                 console.log('Supabaseからブランドデータを取得:', supabaseBrands.length, '件');
                 
-                // 確実にデフォルトデータを使用
-                brandsData = [...defaultBrands];
+                // ブランドデータのマージ戦略を変更
+                // まずIDをキーとするマップを作成
+                const brandMap = new Map();
                 
-                // Supabaseデータを追加（IDが重複しないもののみ）
-                const existingIds = brandsData.map(b => b.id.toString());
-                for (const brand of supabaseBrands) {
-                    if (!existingIds.includes(brand.id.toString())) {
-                        brandsData.push(brand);
-                        existingIds.push(brand.id.toString());
+                // デフォルトブランドをマップに追加
+                defaultBrands.forEach(brand => {
+                    brandMap.set(brand.id.toString(), { ...brand, isDefault: true });
+                });
+                
+                // Supabaseのブランドで更新または追加
+                supabaseBrands.forEach(brand => {
+                    if (brand.id) {
+                        // 既存のデフォルトブランドがあれば上書き
+                        if (brandMap.has(brand.id.toString())) {
+                            const existingBrand = brandMap.get(brand.id.toString());
+                            // タスクを保持
+                            const tasks = existingBrand.tasks || [];
+                            
+                            // 完全に新しいデータで上書き
+                            brandMap.set(brand.id.toString(), {
+                                ...brand,
+                                // タスクは保持
+                                tasks: tasks
+                            });
+                            
+                            console.log(`ブランド ${brand.id} を上書き更新しました`);
+                        } else {
+                            // 新規追加
+                            brandMap.set(brand.id.toString(), { ...brand, tasks: [] });
+                            console.log(`新規ブランド ${brand.id} を追加しました`);
+                        }
                     }
-                }
+                });
                 
-                console.log('最終的なブランド総数:', brandsData.length, '件');
+                // マップから配列に戻す
+                brandsData = Array.from(brandMap.values());
+                console.log('ブランドデータのマージ完了:', brandsData.length, '件');
             } else {
                 console.log('Supabaseにブランドデータがないため、デフォルトデータのみ使用します');
                 brandsData = defaultBrands;
             }
             
             // 各ブランドのタスクを取得
+            console.log('ブランドのタスクデータを取得中...');
             const brandsCopy = [...brandsData]; // 元の配列をコピー
             for (const brand of brandsCopy) {
-                const { data: tasks, error: taskErr } = await fetchTasks(brand.id);
-                if (!taskErr && tasks && tasks.length > 0) {
-                    // 該当するブランドオブジェクトを探して更新
-                    const brandToUpdate = brandsData.find(b => b.id.toString() === brand.id.toString());
-                    if (brandToUpdate) {
-                        brandToUpdate.tasks = tasks;
-                        console.log(`Brand ${brand.id} のタスクを ${tasks.length} 件取得`);
+                try {
+                    const { data: tasks, error: taskErr } = await fetchTasks(brand.id);
+                    
+                    if (taskErr) {
+                        console.error(`ブランド ${brand.id} のタスク取得エラー:`, taskErr);
+                        continue;
                     }
-                } else {
-                    console.log(`Brand ${brand.id} にタスクがないか、エラーが発生しました`);
+                    
+                    if (tasks && tasks.length > 0) {
+                        // 該当するブランドオブジェクトを探して更新
+                        const brandToUpdate = brandsData.find(b => b.id.toString() === brand.id.toString());
+                        if (brandToUpdate) {
+                            console.log(`ブランド ${brand.id} のタスクデータ取得:`, tasks.length, '件');
+                            
+                            // 完全にタスクを置き換え
+                            brandToUpdate.tasks = [...tasks];
+                            console.log(`ブランド ${brand.id} のタスクを ${tasks.length} 件設定`);
+                        }
+                    } else {
+                        console.log(`ブランド ${brand.id} にはタスクがありません`);
+                        
+                        // 空の配列を設定
+                        const brandToUpdate = brandsData.find(b => b.id.toString() === brand.id.toString());
+                        if (brandToUpdate) {
+                            brandToUpdate.tasks = [];
+                        }
+                    }
+                } catch (taskError) {
+                    console.error(`ブランド ${brand.id} のタスクデータ取得中にエラー:`, taskError);
                 }
             }
+            
+            // 最終的なデータをローカルストレージにも保存
+            console.log('データ取得完了、ローカルストレージに保存します');
+            saveDataToLocalStorage();
         } catch (err) {
             console.error('Supabaseからのデータ読み込みに失敗:', err);
             console.log('デフォルトデータを使用します');
