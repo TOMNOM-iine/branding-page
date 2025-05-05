@@ -293,6 +293,8 @@ async function saveBrandToSupabase(brand) {
       return { error: new Error('ログインしていないためSupabaseに保存できません') };
     }
     
+    console.log(`ブランドデータをSupabaseに保存: ${brand.id}`);
+    
     // 既存のブランドか確認
     const { data: existingBrand, error: checkError } = await supabase
       .from('brands')
@@ -301,32 +303,106 @@ async function saveBrandToSupabase(brand) {
       .maybeSingle();
     
     if (checkError) {
+      console.error('ブランド存在チェックエラー:', checkError);
       return { error: checkError };
     }
     
     let result;
     
+    // タスクデータを一時保存（ブランド更新後に個別に保存するため）
+    const tasks = [...(brand.tasks || [])];
+    
+    // APIの容量制限に対応するため、一時的にtasksを削除
+    const brandWithoutTasks = { ...brand };
+    delete brandWithoutTasks.tasks;
+    
     if (existingBrand) {
       // 既存のブランドを更新
+      console.log(`既存のブランド(${brand.id})を更新します`);
       result = await supabase
         .from('brands')
-        .update(brand)
+        .update(brandWithoutTasks)
         .eq('id', brand.id)
         .select();
     } else {
       // 新規ブランドを作成
+      console.log(`新規ブランド(${brand.id})を作成します`);
       result = await supabase
         .from('brands')
-        .insert([brand])
+        .insert([brandWithoutTasks])
         .select();
     }
     
     if (result.error) {
+      console.error('ブランド保存エラー:', result.error);
       return { error: result.error };
+    }
+    
+    console.log('ブランドの保存が完了しました');
+    
+    // タスクの更新処理
+    if (tasks && tasks.length > 0) {
+      console.log(`ブランド(${brand.id})のタスク(${tasks.length}件)を更新します`);
+      
+      // 既存のタスクを取得
+      const { data: existingTasks, error: tasksError } = await supabase
+        .from('tasks')
+        .select('id')
+        .eq('brand_id', brand.id);
+      
+      if (tasksError) {
+        console.error('既存タスク取得エラー:', tasksError);
+        return { data: result.data, success: true, warning: '既存タスクの取得に失敗しました' };
+      }
+      
+      // 既存タスクIDのマップを作成
+      const existingTaskIds = new Set((existingTasks || []).map(t => t.id));
+      
+      // タスク更新用のバッチ処理
+      const updatePromises = tasks.map(async task => {
+        if (existingTaskIds.has(task.id)) {
+          // 既存タスクを更新
+          const { error: updateErr } = await supabase
+            .from('tasks')
+            .update({
+              text: task.text,
+              completed: task.completed,
+              important: task.important
+            })
+            .eq('id', task.id);
+          
+          if (updateErr) {
+            console.error(`タスク(${task.id})の更新エラー:`, updateErr);
+          } else {
+            console.log(`タスク(${task.id})を更新しました`);
+          }
+        } else {
+          // 新規タスクを登録
+          const { error: insertErr } = await supabase
+            .from('tasks')
+            .insert([{
+              brand_id: brand.id,
+              text: task.text,
+              completed: task.completed,
+              important: task.important
+            }]);
+          
+          if (insertErr) {
+            console.error('新規タスク追加エラー:', insertErr);
+          } else {
+            console.log('新規タスクを追加しました');
+          }
+        }
+      });
+      
+      // 全てのタスク更新を待機
+      await Promise.all(updatePromises);
+      console.log('全てのタスク更新が完了しました');
     }
     
     return { data: result.data, success: true };
   } catch (error) {
+    console.error('saveBrandToSupabase関数でエラーが発生:', error);
     return { error };
   }
 }

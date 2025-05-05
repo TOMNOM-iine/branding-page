@@ -67,24 +67,46 @@ async function deleteTask(taskId, brandId) {
             
             // データを保存
             saveDataToLocalStorage();
+            
             // Supabase タスクテーブルから削除
             if (!isLocalStorageMode()) {
-                const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskIdNum);
-                if (dbErr) console.error('Supabaseタスク削除エラー:', dbErr);
+                try {
+                    console.log(`Supabaseからタスク(ID: ${taskIdNum})を削除します`);
+                    const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskIdNum);
+                    if (dbErr) {
+                        console.error('Supabaseタスク削除エラー:', dbErr);
+                        
+                        // DBエラー時にはブランドごと保存を試みる
+                        console.log('ブランド全体を更新して同期を試みます');
+                        const { error: brandErr } = await saveBrandToSupabase(brandsData[brandIndex]);
+                        if (brandErr) {
+                            console.error('ブランド更新エラー:', brandErr);
+                        } else {
+                            console.log('ブランド更新成功');
+                        }
+                    } else {
+                        console.log(`Supabaseからタスク(ID: ${taskIdNum})を削除しました`);
+                    }
+                } catch (err) {
+                    console.error('Supabase操作中にエラーが発生:', err);
+                }
             }
             
             console.log('データを保存しました');
             
             // UIから要素を削除（gridレイアウトとリストレイアウト両方に対応）
-            const taskElement = document.querySelector(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
+            const taskElements = document.querySelectorAll(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
             
-            if (taskElement) {
-                taskElement.remove();
-                console.log('タスク要素をDOMから削除しました:', taskElement.className);
+            if (taskElements.length > 0) {
+                taskElements.forEach(el => {
+                    el.remove();
+                    console.log('タスク要素をDOMから削除しました:', el.className);
+                });
             } else {
                 console.warn('削除するタスク要素が見つかりませんでした。表示を更新します。');
-                // 表示を更新
+                // 両方の表示を更新
                 renderBrandTasksUI();
+                renderBrands(); // メインのブランド一覧も更新
             }
             
             // 保存通知
@@ -131,22 +153,42 @@ async function toggleTaskComplete(taskId, brandId, isComplete) {
         saveDataToLocalStorage();
         // Supabase タスク更新
         if (!isLocalStorageMode()) {
-            const { error: dbErr } = await supabase.from('tasks').update({ completed: isComplete }).eq('id', taskIdNum);
-            if (dbErr) console.error('Supabaseタスク更新エラー:', dbErr);
+            try {
+                const { error: dbErr } = await supabase.from('tasks').update({ completed: isComplete }).eq('id', taskIdNum);
+                if (dbErr) {
+                    console.error('Supabaseタスク更新エラー:', dbErr);
+                    
+                    // DBエラー時にはブランドごと保存を試みる
+                    console.log('ブランド全体を更新して同期を試みます');
+                    const { error: brandErr } = await saveBrandToSupabase(brandsData[brandIndex]);
+                    if (brandErr) {
+                        console.error('ブランド更新エラー:', brandErr);
+                    } else {
+                        console.log('ブランド更新成功');
+                    }
+                } else {
+                    console.log(`タスク(ID: ${taskIdNum})の完了状態を更新しました`);
+                }
+            } catch (err) {
+                console.error('Supabase操作中にエラーが発生:', err);
+            }
         }
         
-        // UI上でタスクカードのクラスを更新
-        // brandIdも含めて正確にタスク要素を特定
-        const taskItem = document.querySelector(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
-        if (taskItem) {
-            if (isComplete) {
-                taskItem.classList.add('completed');
-            } else {
-                taskItem.classList.remove('completed');
-            }
+        // UI上でタスク要素のクラスを更新（全ての一致する要素）
+        const taskItems = document.querySelectorAll(`.task-item[data-task-id="${taskId}"][data-brand-id="${brandId}"]`);
+        if (taskItems.length > 0) {
+            taskItems.forEach(item => {
+                if (isComplete) {
+                    item.classList.add('completed');
+                } else {
+                    item.classList.remove('completed');
+                }
+            });
             console.log('タスク完了状態をUIに反映しました');
         } else {
-            console.warn('タスク要素が見つかりません');
+            console.warn('タスク要素が見つかりません。全体を更新します');
+            renderBrandTasksUI(currentTaskFilter);
+            renderBrands(); // メインのブランド一覧も更新
         }
         
         // 通知を表示
@@ -188,15 +230,33 @@ async function toggleTaskImportant(taskId, brandId, isImportant) {
         saveDataToLocalStorage();
         // Supabase タスク更新
         if (!isLocalStorageMode()) {
-            const { error: dbErr } = await supabase.from('tasks').update({ important: isImportant }).eq('id', taskIdNum);
-            if (dbErr) console.error('Supabaseタスク更新エラー:', dbErr);
+            try {
+                const { error: dbErr } = await supabase.from('tasks').update({ important: isImportant }).eq('id', taskIdNum);
+                if (dbErr) {
+                    console.error('Supabaseタスク更新エラー:', dbErr);
+                    
+                    // DBエラー時にはブランドごと保存を試みる
+                    console.log('ブランド全体を更新して同期を試みます');
+                    const { error: brandErr } = await saveBrandToSupabase(brandsData[brandIndex]);
+                    if (brandErr) {
+                        console.error('ブランド更新エラー:', brandErr);
+                    } else {
+                        console.log('ブランド更新成功');
+                    }
+                } else {
+                    console.log(`タスク(ID: ${taskIdNum})の重要度を更新しました`);
+                }
+            } catch (err) {
+                console.error('Supabase操作中にエラーが発生:', err);
+            }
         }
         
         // 通知を表示
         showNotification(isImportant ? 'タスクを重要としてマークしました' : '重要マークを解除しました');
         
-        // UI上で表示を更新
+        // UI上で表示を更新（両方とも更新して確実に同期する）
         renderBrandTasksUI(currentTaskFilter);
+        renderBrands(); // メインのブランド一覧も更新
         
         return true;
     } catch (error) {
@@ -252,6 +312,7 @@ async function addTask(brandId, taskText) {
         // Supabaseに新規タスク挿入
         if (!isLocalStorageMode()) {
             try {
+                console.log('Supabaseに新規タスクを追加します');
                 const { data: inserted, error: dbErr } = await supabase.from('tasks').insert([{ 
                     brand_id: brandId, 
                     text: taskText.trim(), 
@@ -261,7 +322,17 @@ async function addTask(brandId, taskText) {
                 
                 if (dbErr) {
                     console.error('Supabaseタスク追加エラー:', dbErr);
+                    
+                    // DBエラー時にはブランドごと保存を試みる
+                    console.log('ブランド全体を更新して同期を試みます');
+                    const { error: brandErr } = await saveBrandToSupabase(brandsData[brandIndex]);
+                    if (brandErr) {
+                        console.error('ブランド更新エラー:', brandErr);
+                    } else {
+                        console.log('ブランド更新成功');
+                    }
                 } else if (inserted && inserted.length > 0) {
+                    console.log('Supabaseに新規タスクが追加されました:', inserted[0].id);
                     newTask.id = inserted[0].id;
                     // ローカルデータIDを更新
                     brandsData[brandIndex].tasks[brandsData[brandIndex].tasks.length - 1].id = newTask.id;
@@ -272,8 +343,9 @@ async function addTask(brandId, taskText) {
             }
         }
         
-        // 画面を更新
-        renderBrandTasksUI();
+        // 両方の画面を更新
+        renderBrandTasksUI(currentTaskFilter);
+        renderBrands(); // メインのブランド一覧も更新
         
         // 通知を表示
         showNotification('新しいタスクを追加しました');

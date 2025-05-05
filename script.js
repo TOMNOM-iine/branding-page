@@ -640,6 +640,9 @@ function showNotification(message, duration = 3000) {
 // ブランドタスク一覧を表示する関数
 function renderBrandTasksUI(filter = 'all') {
     try {
+        // 現在のフィルターを保存
+        currentTaskFilter = filter;
+        
         console.log('ブランドタスクUIのレンダリング中:', filter);
         const container = document.getElementById('brand-tasks-container');
         if (!container) {
