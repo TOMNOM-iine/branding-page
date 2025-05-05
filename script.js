@@ -676,7 +676,6 @@ function renderBrandTasksUI(filter = 'all') {
             header.className = 'brand-task-header';
             header.innerHTML = `
                 <h3>${brand.name || 'ブランド名なし'}</h3>
-                <button class="add-task-btn" data-brand-id="${brand.id}"><i class="fas fa-plus"></i> タスク追加</button>
             `;
             card.appendChild(header);
 
@@ -891,20 +890,53 @@ async function saveBrandEdits(brandId) {
     try {
         console.log(`ブランド編集の保存: ${brandId}`);
         
+        const brand = getBrandById(brandId);
+        if (!brand) {
+            console.error(`ブランドが見つかりません: ${brandId}`);
+            return false;
+        }
+        
         // データを保存
         saveDataToLocalStorage();
+        console.log('ローカルストレージにデータを保存しました');
+        
         // Supabase に更新を同期
         if (!isLocalStorageMode()) {
             try {
-                const brand = getBrandById(brandId);
-                if (brand) {
-                    const { data, error } = await saveBrandToSupabase(brand);
-                    if (error) {
-                        console.error('Supabase ブランド更新エラー:', error);
+                console.log('Supabaseに更新を同期します');
+                
+                // 直接更新APIを使用
+                const { data, error } = await supabase
+                    .from('brands')
+                    .update({
+                        name: brand.name,
+                        type: brand.type,
+                        equity: brand.equity,
+                        strategy: brand.strategy,
+                        okrKpi: brand.okrKpi,
+                        awareness: brand.awareness || 0,
+                        preference: brand.preference || 0
+                    })
+                    .eq('id', brand.id)
+                    .select();
+                
+                if (error) {
+                    console.error('Supabase ブランド更新エラー:', error);
+                    
+                    // エラー時に別メソッドを試す
+                    const saveBrandResult = await saveBrandToSupabase(brand);
+                    if (saveBrandResult.error) {
+                        console.error('saveBrandToSupabase でも失敗:', saveBrandResult.error);
+                        return false;
+                    } else {
+                        console.log('saveBrandToSupabase による保存が成功しました');
                     }
+                } else {
+                    console.log('Supabaseブランド直接更新成功:', data);
                 }
             } catch (err) {
-                console.error('saveBrandToSupabase 処理中にエラー:', err);
+                console.error('Supabase 更新処理中にエラー:', err);
+                return false;
             }
         }
         
@@ -915,16 +947,13 @@ async function saveBrandEdits(brandId) {
         renderBrandTasksUI(currentTaskFilter);
         
         // 通知を表示
-        const brand = getBrandById(brandId);
-        if (brand) {
-            showNotification(`「${brand.name}」の情報を更新しました`);
-        } else {
-            showNotification('ブランド情報を更新しました');
-        }
+        showNotification(`「${brand.name}」の情報を更新しました`);
         
         console.log('ブランド編集の保存が完了しました');
+        return true;
     } catch (error) {
         console.error('ブランド編集の保存中にエラーが発生しました:', error);
+        return false;
     }
 }
 
