@@ -888,7 +888,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 // ブランド編集の保存
 async function saveBrandEdits(brandId) {
     try {
-        console.log(`ブランド編集の保存: ${brandId}`);
+        console.log(`ブランド編集の保存を開始: ${brandId}`);
         
         const brand = getBrandById(brandId);
         if (!brand) {
@@ -896,54 +896,51 @@ async function saveBrandEdits(brandId) {
             return false;
         }
         
-        // データを保存
-        saveDataToLocalStorage();
-        console.log('ローカルストレージにデータを保存しました');
+        console.log('保存するブランドデータ:', JSON.stringify({
+            id: brand.id, 
+            name: brand.name,
+            type: brand.type,
+            equity: brand.equity,
+            strategy: brand.strategy,
+            okrKpi: brand.okrKpi
+        }, null, 2));
         
-        // Supabase に更新を同期
+        // まずローカルに保存
+        saveDataToLocalStorage();
+        console.log('ローカルストレージに保存しました');
+        
+        // Supabase への保存処理
         if (!isLocalStorageMode()) {
             try {
-                console.log('Supabaseに更新を同期します');
+                console.log('Supabaseに保存を開始します');
                 
-                // 直接更新APIを使用
+                // brandをコピーして、tasksプロパティを削除（容量超過防止）
+                const brandCopy = { ...brand };
+                delete brandCopy.tasks;
+                
+                // Supabaseに直接保存
                 const { data, error } = await supabase
                     .from('brands')
-                    .update({
-                        name: brand.name,
-                        type: brand.type,
-                        equity: brand.equity,
-                        strategy: brand.strategy,
-                        okrKpi: brand.okrKpi,
-                        awareness: brand.awareness || 0,
-                        preference: brand.preference || 0
-                    })
+                    .update(brandCopy)
                     .eq('id', brand.id)
                     .select();
                 
                 if (error) {
-                    console.error('Supabase ブランド更新エラー:', error);
-                    
-                    // エラー時に別メソッドを試す
-                    const saveBrandResult = await saveBrandToSupabase(brand);
-                    if (saveBrandResult.error) {
-                        console.error('saveBrandToSupabase でも失敗:', saveBrandResult.error);
-                        return false;
-                    } else {
-                        console.log('saveBrandToSupabase による保存が成功しました');
-                    }
-                } else {
-                    console.log('Supabaseブランド直接更新成功:', data);
+                    console.error('Supabase保存エラー:', error);
+                    alert('保存に失敗しました: ' + error.message);
+                    return false;
                 }
+                
+                console.log('Supabaseに保存成功:', data);
             } catch (err) {
-                console.error('Supabase 更新処理中にエラー:', err);
+                console.error('Supabase通信中にエラーが発生:', err);
+                alert('通信エラーが発生しました: ' + err.message);
                 return false;
             }
         }
         
-        // ブランドカードを更新
+        // 表示を更新
         renderBrands();
-        
-        // ブランドタスク一覧も更新
         renderBrandTasksUI(currentTaskFilter);
         
         // 通知を表示
@@ -952,7 +949,8 @@ async function saveBrandEdits(brandId) {
         console.log('ブランド編集の保存が完了しました');
         return true;
     } catch (error) {
-        console.error('ブランド編集の保存中にエラーが発生しました:', error);
+        console.error('ブランド編集の保存でエラー発生:', error);
+        alert('保存処理中にエラーが発生しました: ' + error.message);
         return false;
     }
 }
@@ -1067,11 +1065,13 @@ function showBrandEditModal(brandId) {
         `;
         
         // 保存ボタンのイベント
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // フォームデータの取得
             const formData = new FormData(form);
+            
+            console.log('フォームデータ取得完了');
             
             // ブランドデータの更新
             brand.name = formData.get('name');
@@ -1095,11 +1095,45 @@ function showBrandEditModal(brandId) {
             brand.okrKpi.keyResults = formData.get('keyResults').split('\n').map(s => s.trim()).filter(s => s);
             brand.okrKpi.kpis = formData.get('kpis').split('\n').map(s => s.trim()).filter(s => s);
             
-            // saveBrandEdits関数を呼び出してSupabaseにも保存
-            saveBrandEdits(brand.id);
+            console.log('ブランドデータ更新完了:', brand.id);
+            
+            // Supabaseに直接保存
+            if (!isLocalStorageMode()) {
+                try {
+                    // コピーしてtasksプロパティを削除
+                    const brandCopy = { ...brand };
+                    delete brandCopy.tasks;
+                    
+                    console.log('直接Supabaseに保存を試みます');
+                    const { data, error } = await supabase
+                        .from('brands')
+                        .update(brandCopy)
+                        .eq('id', brand.id)
+                        .select();
+                    
+                    if (error) {
+                        console.error('保存エラー:', error);
+                        alert('データの保存に失敗しました: ' + error.message);
+                    } else {
+                        console.log('保存成功:', data);
+                    }
+                } catch (err) {
+                    console.error('Supabase通信エラー:', err);
+                }
+            }
+            
+            // ローカルストレージに保存
+            saveDataToLocalStorage();
+            
+            // 表示を更新
+            renderBrands();
+            renderBrandTasksUI(currentTaskFilter);
             
             // モーダルを閉じる
             document.body.removeChild(modalOverlay);
+            
+            // 通知表示
+            showNotification(`ブランド「${brand.name}」を更新しました`);
         });
         
         // キャンセルボタンのイベント
