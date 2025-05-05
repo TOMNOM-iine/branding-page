@@ -793,8 +793,23 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (error) throw error;
             
             if (data && data.length > 0) {
-                // Supabaseから取得したデータ
-                const supabaseBrands = data;
+                // Supabeseデータをパース
+                const supabaseBrands = data.map(brand => {
+                    try {
+                        // JSON文字列をオブジェクトに変換
+                        return {
+                            ...brand,
+                            equity: typeof brand.equity === 'string' ? JSON.parse(brand.equity) : brand.equity,
+                            strategy: typeof brand.strategy === 'string' ? JSON.parse(brand.strategy) : brand.strategy,
+                            okrKpi: brand.okr_kpi ? 
+                                (typeof brand.okr_kpi === 'string' ? JSON.parse(brand.okr_kpi) : brand.okr_kpi) : 
+                                {}
+                        };
+                    } catch (e) {
+                        console.error('ブランドデータのパースエラー:', e, brand);
+                        return brand;
+                    }
+                });
                 console.log('Supabaseからブランドデータを取得:', supabaseBrands.length, '件');
                 
                 // 確実にデフォルトデータを使用
@@ -918,24 +933,35 @@ async function saveBrandEdits(brandId) {
                 const brandCopy = { ...brand };
                 delete brandCopy.tasks;
                 
-                // Supabaseに直接保存
+                // Supabaseスキーマに合わせて変換
+                const supabaseBrand = {
+                    id: brandCopy.id,
+                    name: brandCopy.name,
+                    type: brandCopy.type,
+                    equity: JSON.stringify(brandCopy.equity || {}),
+                    strategy: JSON.stringify(brandCopy.strategy || {}),
+                    okr_kpi: JSON.stringify(brandCopy.okrKpi || {}),
+                    awareness: brandCopy.awareness || 0,
+                    preference: brandCopy.preference || 0
+                };
+                
+                console.log('Supabase形式に変換:', supabaseBrand);
+                
+                console.log('直接Supabaseに保存を試みます');
                 const { data, error } = await supabase
                     .from('brands')
-                    .update(brandCopy)
+                    .update(supabaseBrand)
                     .eq('id', brand.id)
                     .select();
                 
                 if (error) {
-                    console.error('Supabase保存エラー:', error);
-                    alert('保存に失敗しました: ' + error.message);
-                    return false;
+                    console.error('保存エラー:', error);
+                    alert('データの保存に失敗しました: ' + error.message);
+                } else {
+                    console.log('保存成功:', data);
                 }
-                
-                console.log('Supabaseに保存成功:', data);
             } catch (err) {
-                console.error('Supabase通信中にエラーが発生:', err);
-                alert('通信エラーが発生しました: ' + err.message);
-                return false;
+                console.error('Supabase通信エラー:', err);
             }
         }
         
@@ -1104,10 +1130,24 @@ function showBrandEditModal(brandId) {
                     const brandCopy = { ...brand };
                     delete brandCopy.tasks;
                     
+                    // Supabaseスキーマに合わせて変換
+                    const supabaseBrand = {
+                        id: brandCopy.id,
+                        name: brandCopy.name,
+                        type: brandCopy.type,
+                        equity: JSON.stringify(brandCopy.equity || {}),
+                        strategy: JSON.stringify(brandCopy.strategy || {}),
+                        okr_kpi: JSON.stringify(brandCopy.okrKpi || {}),
+                        awareness: brandCopy.awareness || 0,
+                        preference: brandCopy.preference || 0
+                    };
+                    
+                    console.log('Supabase形式に変換:', supabaseBrand);
+                    
                     console.log('直接Supabaseに保存を試みます');
                     const { data, error } = await supabase
                         .from('brands')
-                        .update(brandCopy)
+                        .update(supabaseBrand)
                         .eq('id', brand.id)
                         .select();
                     
