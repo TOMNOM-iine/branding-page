@@ -1,0 +1,16 @@
+{
+  "name": "brand-management-dashboard",
+  "version": "1.0.0",
+  "description": "ブランド管理ダッシュボード",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8000",
+    "build": "echo 'Build completed'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.js", "use": "@vercel/static" },
+    { "src": "*.css", "use": "@vercel/static" }
+  ],
+  "routes": [
+    {
+      "src": "/styles.css",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/styles.css"
+    },
+    {
+      "src": "/script.js",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/script.js"
+    },
+    {
+      "src": "/supabase-config.js",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/supabase-config.js"
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block"
+      },
+      "dest": "/"
+    }
+  ],
+  "env": {
+    "SUPABASE_URL": "https://vtgpmvkniaoovhlmvcwh.supabase.co",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0Z3BtdmtuaWFvb3ZobG12Y3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5ODM3MTMsImV4cCI6MjA2MTU1OTcxM30.vivSbeRz-xfA6iUKVTLM_6w4jW1XwFH9i9qtHAn5QEI"
+  }
+}
