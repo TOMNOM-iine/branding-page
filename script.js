@@ -18,7 +18,12 @@ let brandsData = [
             concept: '冒険と発見をテーマにした支援プログラム',
             positioning: '創造性重視の体験型発達支援サービス',
             uniqueValue: '自然体験と創作活動の融合',
-            targetAudience: '好奇心旺盛で体験的な学びを求める家族'
+            targetAudience: '好奇心旺盛で体験的な学びを求める家族',
+            awarenessDaily: '',
+            awarenessOther: '',
+            preferenceDaily: '',
+            preferenceOther: '',
+            netService: ''
         },
         okrKpi: {
             objective: '子どもたちの自己表現力と社会適応能力の向上',
@@ -404,18 +409,21 @@ function createBrandCard(brand) {
     strategyContent.className = 'section-content';
     
     if (brand.strategy) {
-        if (brand.strategy.concept) {
-            strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">コンセプト:</span> ${brand.strategy.concept}</div>`;
-        }
-        if (brand.strategy.positioning) {
-            strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">ポジショニング:</span> ${brand.strategy.positioning}</div>`;
-        }
-        if (brand.strategy.uniqueValue) {
-            strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">独自価値:</span> ${brand.strategy.uniqueValue}</div>`;
-        }
-        if (brand.strategy.targetAudience) {
-            strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">対象顧客:</span> ${brand.strategy.targetAudience}</div>`;
-        }
+        // 売上公式を冒頭に表示
+        strategyContent.innerHTML += `<div class="strategy-formula"><strong>公式: </strong>プレファランス（好感度）✖︎認知度✖︎配下率＝売上</div>`;
+        
+        // 認知度アップシステム
+        strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">認知度アップシステム:</span></div>`;
+        strategyContent.innerHTML += `<div class="strategy-sub-item"><span class="strategy-sublabel">毎日の仕組み:</span> ${brand.strategy.awarenessDaily || '未設定'}</div>`;
+        strategyContent.innerHTML += `<div class="strategy-sub-item"><span class="strategy-sublabel">他の仕組み:</span> ${brand.strategy.awarenessOther || '未設定'}</div>`;
+        
+        // プレファランスを上げる仕組み
+        strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">プレファランスを上げる仕組み:</span></div>`;
+        strategyContent.innerHTML += `<div class="strategy-sub-item"><span class="strategy-sublabel">毎日の仕組み:</span> ${brand.strategy.preferenceDaily || '未設定'}</div>`;
+        strategyContent.innerHTML += `<div class="strategy-sub-item"><span class="strategy-sublabel">他の仕組み:</span> ${brand.strategy.preferenceOther || '未設定'}</div>`;
+        
+        // ネットサービス展開
+        strategyContent.innerHTML += `<div class="strategy-item"><span class="strategy-label">ネットサービス展開（配下率）:</span> ${brand.strategy.netService || '未設定'}</div>`;
     } else {
         strategyContent.innerHTML = '<p>戦略データがありません</p>';
     }
@@ -560,10 +568,11 @@ async function createNewBrand() {
                 how: ''
             },
             strategy: {
-                concept: '',
-                positioning: '',
-                uniqueValue: '',
-                targetAudience: ''
+                awarenessDaily: '',
+                awarenessOther: '',
+                preferenceDaily: '',
+                preferenceOther: '',
+                netService: ''
             },
             okrKpi: {
                 objective: '',
@@ -1153,21 +1162,33 @@ function showBrandEditModal(brandId) {
             </div>
             
             <h3>戦略</h3>
+            <div class="form-group strategy-formula">
+                <label>公式: プレファランス（好感度）✖︎認知度✖︎配下率＝売上</label>
+            </div>
+            
+            <h4>認知度アップシステム（ブランドエクイティを本能に刺す）</h4>
             <div class="form-group">
-                <label for="brand-concept">コンセプト</label>
-                <textarea id="brand-concept" name="concept">${brand.strategy?.concept || ''}</textarea>
+                <label for="brand-awareness-daily">毎日の仕組み</label>
+                <textarea id="brand-awareness-daily" name="awarenessDaily">${brand.strategy?.awarenessDaily || ''}</textarea>
             </div>
             <div class="form-group">
-                <label for="brand-positioning">ポジショニング</label>
-                <textarea id="brand-positioning" name="positioning">${brand.strategy?.positioning || ''}</textarea>
+                <label for="brand-awareness-other">他の仕組み</label>
+                <textarea id="brand-awareness-other" name="awarenessOther">${brand.strategy?.awarenessOther || ''}</textarea>
+            </div>
+            
+            <h4>プレファランスを上げる仕組み</h4>
+            <div class="form-group">
+                <label for="brand-preference-daily">毎日の仕組み</label>
+                <textarea id="brand-preference-daily" name="preferenceDaily">${brand.strategy?.preferenceDaily || ''}</textarea>
             </div>
             <div class="form-group">
-                <label for="brand-unique-value">独自価値</label>
-                <textarea id="brand-unique-value" name="uniqueValue">${brand.strategy?.uniqueValue || ''}</textarea>
+                <label for="brand-preference-other">他の仕組み</label>
+                <textarea id="brand-preference-other" name="preferenceOther">${brand.strategy?.preferenceOther || ''}</textarea>
             </div>
+            
             <div class="form-group">
-                <label for="brand-target-audience">対象顧客</label>
-                <textarea id="brand-target-audience" name="targetAudience">${brand.strategy?.targetAudience || ''}</textarea>
+                <label for="brand-net-service">ネットサービス展開（配下率）</label>
+                <textarea id="brand-net-service" name="netService">${brand.strategy?.netService || ''}</textarea>
             </div>
             
             <h3>OKR・KPI</h3>
@@ -1217,10 +1238,11 @@ function showBrandEditModal(brandId) {
                 brand.equity.how = formData.get('how');
                 
                 if (!brand.strategy) brand.strategy = {};
-                brand.strategy.concept = formData.get('concept');
-                brand.strategy.positioning = formData.get('positioning');
-                brand.strategy.uniqueValue = formData.get('uniqueValue');
-                brand.strategy.targetAudience = formData.get('targetAudience');
+                brand.strategy.awarenessDaily = formData.get('awarenessDaily');
+                brand.strategy.awarenessOther = formData.get('awarenessOther');
+                brand.strategy.preferenceDaily = formData.get('preferenceDaily');
+                brand.strategy.preferenceOther = formData.get('preferenceOther');
+                brand.strategy.netService = formData.get('netService');
                 
                 if (!brand.okrKpi) brand.okrKpi = {};
                 brand.okrKpi.objective = formData.get('objective');
@@ -1319,3 +1341,5 @@ function showBrandEditModal(brandId) {
         console.error('ブランド編集モーダルの表示中にエラーが発生しました:', error);
     }
 }
+
+
