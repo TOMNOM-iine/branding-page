@@ -1291,27 +1291,34 @@ function showBrandEditModal(brandId) {
                 const tasksEditContainer = form.querySelector(`#tasks-edit-container-${brand.id}`);
                 const taskRows = tasksEditContainer.querySelectorAll('.task-edit-row');
                 
+                console.log('タスク行の数:', taskRows.length);
+                
                 // 既存のタスクを更新
                 const updatedTasks = [];
                 taskRows.forEach(row => {
-                    const index = row.getAttribute('data-index');
-                    const taskId = formData.get(`task-id-${index}`);
-                    const text = formData.get(`task-text-${index}`);
-                    const completed = formData.get(`task-completed-${index}`) === 'on';
-                    const important = formData.get(`task-important-${index}`) === 'on';
-                    
-                    if (text && text.trim()) {
-                        updatedTasks.push({
-                            id: taskId,
-                            text: text.trim(),
-                            completed,
-                            important
-                        });
+                    if (!row.classList.contains('new-task-row')) {
+                        const index = row.getAttribute('data-index');
+                        const taskId = formData.get(`task-id-${index}`);
+                        const text = formData.get(`task-text-${index}`);
+                        const completed = formData.get(`task-completed-${index}`) === 'on';
+                        const important = formData.get(`task-important-${index}`) === 'on';
+                        
+                        if (text && text.trim()) {
+                            updatedTasks.push({
+                                id: parseInt(taskId) || Math.floor(Math.random() * 10000),
+                                text: text.trim(),
+                                completed,
+                                important
+                            });
+                            console.log('既存タスク更新:', text.trim());
+                        }
                     }
                 });
                 
                 // 新しいタスクを保存
                 const newTaskRows = tasksEditContainer.querySelectorAll('.new-task-row');
+                console.log('新規タスク行の数:', newTaskRows.length);
+                
                 newTaskRows.forEach(row => {
                     const index = row.getAttribute('data-index');
                     const text = formData.get(`new-task-text-${index}`);
@@ -1321,11 +1328,13 @@ function showBrandEditModal(brandId) {
                     if (text && text.trim()) {
                         // 新しいタスクのIDを生成
                         let maxTaskId = 0;
-                        brand.tasks.forEach(task => {
-                            if (typeof task.id === 'number' && task.id > maxTaskId) {
-                                maxTaskId = task.id;
-                            }
-                        });
+                        if (brand.tasks && brand.tasks.length > 0) {
+                            brand.tasks.forEach(task => {
+                                if (typeof task.id === 'number' && task.id > maxTaskId) {
+                                    maxTaskId = task.id;
+                                }
+                            });
+                        }
                         
                         updatedTasks.push({
                             id: maxTaskId + 1,
@@ -1333,10 +1342,15 @@ function showBrandEditModal(brandId) {
                             completed,
                             important
                         });
+                        console.log('新規タスク追加:', text.trim(), 'ID:', maxTaskId + 1);
                     }
                 });
                 
                 // タスク配列を更新
+                console.log('更新前のタスク数:', brand.tasks ? brand.tasks.length : 0);
+                console.log('更新後のタスク数:', updatedTasks.length);
+                
+                // ブランドのタスク配列を更新
                 brand.tasks = updatedTasks;
                 
                 console.log('ブランドデータ更新完了:', brand.id);
@@ -1349,7 +1363,7 @@ function showBrandEditModal(brandId) {
                 if (!isLocalStorageMode()) {
                     // コピーしてtasksプロパティを削除
                     const brandCopy = { ...brand };
-                    const tasks = [...(brandCopy.tasks || [])];
+                    const tasks = [...(brand.tasks || [])];
                     delete brandCopy.tasks;
                     
                     // Supabaseスキーマに合わせて変換
@@ -1384,9 +1398,9 @@ function showBrandEditModal(brandId) {
                         saveDataToLocalStorage();
                         
                         // タスクの保存
-                        if (tasks.length > 0) {
-                            console.log(`${tasks.length}件のタスクを同期します`);
-                            
+                        console.log(`${tasks.length}件のタスクを同期します`);
+                        
+                        try {
                             // 既存のタスクをすべて削除
                             const { error: deleteError } = await supabase
                                 .from('tasks')
@@ -1396,15 +1410,20 @@ function showBrandEditModal(brandId) {
                             if (deleteError) {
                                 console.error('タスク削除エラー:', deleteError);
                             } else {
-                                // 新しいタスクをすべて追加
-                                const tasksToInsert = tasks.map(task => ({
-                                    brand_id: brand.id,
-                                    text: task.text,
-                                    completed: task.completed,
-                                    important: task.important
-                                }));
+                                console.log('既存タスクを削除しました');
                                 
-                                if (tasksToInsert.length > 0) {
+                                // 新しいタスクが存在する場合のみ追加
+                                if (updatedTasks.length > 0) {
+                                    // 新しいタスクをすべて追加
+                                    const tasksToInsert = updatedTasks.map(task => ({
+                                        brand_id: brand.id,
+                                        text: task.text,
+                                        completed: task.completed,
+                                        important: task.important
+                                    }));
+                                    
+                                    console.log('追加するタスク:', tasksToInsert);
+                                    
                                     const { data: insertedTasks, error: insertError } = await supabase
                                         .from('tasks')
                                         .insert(tasksToInsert)
@@ -1420,14 +1439,15 @@ function showBrandEditModal(brandId) {
                                             // Supabaseから返されたIDを使用
                                             brand.tasks = insertedTasks;
                                             saveDataToLocalStorage();
+                                            console.log('Supabaseから返されたタスクIDで更新しました');
                                         }
                                     }
                                 } else {
                                     console.log('追加するタスクがありません');
                                 }
                             }
-                        } else {
-                            console.log('タスクがないため、タスクテーブルの同期は不要です');
+                        } catch (taskErr) {
+                            console.error('タスク同期中にエラー:', taskErr);
                         }
                         
                         // モーダルを閉じる前に少し待機して保存を確実にする

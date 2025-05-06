@@ -451,6 +451,132 @@ function setupTaskEventListeners() {
     }
 }
 
+// タスク編集フォームの初期化
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // タスク編集モーダルの閉じるボタン
+        const closeModalBtn = document.querySelector('.close-modal');
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', function() {
+                const taskModal = document.getElementById('task-modal');
+                if (taskModal) {
+                    taskModal.classList.remove('show');
+                }
+            });
+        }
+        
+        // タスク編集フォームのキャンセルボタン
+        const cancelBtn = document.querySelector('.cancel-button');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                const taskModal = document.getElementById('task-modal');
+                if (taskModal) {
+                    taskModal.classList.remove('show');
+                }
+            });
+        }
+        
+        // タスク編集フォームの送信
+        const taskEditForm = document.getElementById('task-edit-form');
+        if (taskEditForm) {
+            taskEditForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const taskId = document.getElementById('task-id').value;
+                const oldBrandId = document.getElementById('task-brand-id').value;
+                const newBrandId = document.getElementById('task-brand').value;
+                const taskText = document.getElementById('task-text').value;
+                const isCompleted = document.getElementById('task-completed').checked;
+                const isImportant = document.getElementById('task-important').checked;
+                
+                console.log(`タスク更新: ID=${taskId}, 古いブランド=${oldBrandId}, 新しいブランド=${newBrandId}`);
+                
+                if (oldBrandId === newBrandId) {
+                    // 同じブランド内でのタスク更新
+                    const brand = brandsData.find(b => b.id.toString() === oldBrandId.toString());
+                    if (!brand) {
+                        console.error(`ブランドが見つかりません: ${oldBrandId}`);
+                        return;
+                    }
+                    
+                    const task = brand.tasks.find(t => t.id.toString() === taskId.toString());
+                    if (!task) {
+                        console.error(`タスクが見つかりません: ${taskId}`);
+                        return;
+                    }
+                    
+                    // タスクを更新
+                    task.text = taskText;
+                    task.completed = isCompleted;
+                    task.important = isImportant;
+                    
+                    // 通知を表示
+                    showNotification('タスクを更新しました');
+                } else {
+                    // 異なるブランドへのタスク移動
+                    const oldBrand = brandsData.find(b => b.id.toString() === oldBrandId.toString());
+                    if (!oldBrand) {
+                        console.error(`元のブランドが見つかりません: ${oldBrandId}`);
+                        return;
+                    }
+                    
+                    const newBrand = brandsData.find(b => b.id.toString() === newBrandId.toString());
+                    if (!newBrand) {
+                        console.error(`新しいブランドが見つかりません: ${newBrandId}`);
+                        return;
+                    }
+                    
+                    // タスクを検索し削除
+                    const taskIndex = oldBrand.tasks.findIndex(t => t.id.toString() === taskId.toString());
+                    if (taskIndex === -1) {
+                        console.error(`タスクが見つかりません: ${taskId}`);
+                        return;
+                    }
+                    
+                    const task = oldBrand.tasks.splice(taskIndex, 1)[0];
+                    
+                    // タスクを更新して新しいブランドに追加
+                    task.text = taskText;
+                    task.completed = isCompleted;
+                    task.important = isImportant;
+                    
+                    if (!newBrand.tasks) {
+                        newBrand.tasks = [];
+                    }
+                    
+                    newBrand.tasks.push(task);
+                    
+                    // 通知を表示
+                    showNotification(`タスクを「${newBrand.name}」に移動しました`);
+                }
+                
+                // データを保存
+                saveDataToLocalStorage();
+                
+                // モーダルを閉じる
+                const taskModal = document.getElementById('task-modal');
+                if (taskModal) {
+                    taskModal.classList.remove('show');
+                }
+                
+                // 画面を更新
+                renderBrandTasksUI(currentTaskFilter);
+            });
+        }
+        
+        // 「新しいタスクを追加」ボタンのクリックイベント
+        const addTaskBtn = document.getElementById('add-task-btn');
+        if (addTaskBtn) {
+            addTaskBtn.addEventListener('click', function() {
+                // 新しいタスク追加モーダルを表示
+                showAddTaskModal();
+            });
+        }
+    } catch (error) {
+        console.error('タスク編集フォームの初期化中にエラー:', error);
+    }
+});
+
 // タスク入力と追加ボタンのイベントリスナーを設定
 function setupTaskInputListeners() {
     try {
@@ -462,12 +588,22 @@ function setupTaskInputListeners() {
             newButton.addEventListener('click', function() {
                 const brandId = this.getAttribute('data-brand-id');
                 const brandCard = document.getElementById(`brand-${brandId}-tasks`);
+                if (!brandCard) {
+                    console.warn(`ブランドカード(ID: brand-${brandId}-tasks)が見つかりません`);
+                    return;
+                }
+                
                 const addTaskCard = brandCard.querySelector('.add-task-card');
                 const taskInput = brandCard.querySelector('.new-task-input');
                 
                 // タスク入力欄を表示して、フォーカス
-                addTaskCard.style.display = 'block';
-                taskInput.focus();
+                if (addTaskCard) {
+                    addTaskCard.style.display = 'block';
+                }
+                
+                if (taskInput) {
+                    taskInput.focus();
+                }
             });
         });
         
@@ -496,9 +632,18 @@ function setupTaskInputListeners() {
             newButton.addEventListener('click', function() {
                 const brandId = this.getAttribute('data-brand-id');
                 const brandCard = document.getElementById(`brand-${brandId}-tasks`);
-                const taskInput = brandCard.querySelector('.new-task-input');
-                const taskText = taskInput.value.trim();
+                if (!brandCard) {
+                    console.warn(`ブランドカード(ID: brand-${brandId}-tasks)が見つかりません`);
+                    return;
+                }
                 
+                const taskInput = brandCard.querySelector('.new-task-input');
+                if (!taskInput) {
+                    console.warn('新規タスク入力欄が見つかりません');
+                    return;
+                }
+                
+                const taskText = taskInput.value.trim();
                 if (taskText) {
                     addTask(brandId, taskText);
                     taskInput.value = '';
@@ -980,107 +1125,6 @@ function toggleTaskImportance(taskId, brandId) {
         return false;
     }
 }
-
-// タスク編集フォームの初期化
-document.addEventListener('DOMContentLoaded', function() {
-    // タスク編集モーダルの閉じるボタン
-    document.querySelector('.close-modal').addEventListener('click', function() {
-        document.getElementById('task-modal').classList.remove('show');
-    });
-    
-    // タスク編集フォームのキャンセルボタン
-    document.querySelector('.cancel-button').addEventListener('click', function() {
-        document.getElementById('task-modal').classList.remove('show');
-    });
-    
-    // タスク編集フォームの送信
-    document.getElementById('task-edit-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const taskId = document.getElementById('task-id').value;
-        const oldBrandId = document.getElementById('task-brand-id').value;
-        const newBrandId = document.getElementById('task-brand').value;
-        const taskText = document.getElementById('task-text').value;
-        const isCompleted = document.getElementById('task-completed').checked;
-        const isImportant = document.getElementById('task-important').checked;
-        
-        console.log(`タスク更新: ID=${taskId}, 古いブランド=${oldBrandId}, 新しいブランド=${newBrandId}`);
-        
-        if (oldBrandId === newBrandId) {
-            // 同じブランド内でのタスク更新
-            const brand = brandsData.find(b => b.id.toString() === oldBrandId.toString());
-            if (!brand) {
-                console.error(`ブランドが見つかりません: ${oldBrandId}`);
-                return;
-            }
-            
-            const task = brand.tasks.find(t => t.id.toString() === taskId.toString());
-            if (!task) {
-                console.error(`タスクが見つかりません: ${taskId}`);
-                return;
-            }
-            
-            // タスクを更新
-            task.text = taskText;
-            task.completed = isCompleted;
-            task.important = isImportant;
-            
-            // 通知を表示
-            showNotification('タスクを更新しました');
-        } else {
-            // 異なるブランドへのタスク移動
-            const oldBrand = brandsData.find(b => b.id.toString() === oldBrandId.toString());
-            if (!oldBrand) {
-                console.error(`元のブランドが見つかりません: ${oldBrandId}`);
-                return;
-            }
-            
-            const newBrand = brandsData.find(b => b.id.toString() === newBrandId.toString());
-            if (!newBrand) {
-                console.error(`新しいブランドが見つかりません: ${newBrandId}`);
-                return;
-            }
-            
-            // タスクを検索し削除
-            const taskIndex = oldBrand.tasks.findIndex(t => t.id.toString() === taskId.toString());
-            if (taskIndex === -1) {
-                console.error(`タスクが見つかりません: ${taskId}`);
-                return;
-            }
-            
-            const task = oldBrand.tasks.splice(taskIndex, 1)[0];
-            
-            // タスクを更新して新しいブランドに追加
-            task.text = taskText;
-            task.completed = isCompleted;
-            task.important = isImportant;
-            
-            if (!newBrand.tasks) {
-                newBrand.tasks = [];
-            }
-            
-            newBrand.tasks.push(task);
-            
-            // 通知を表示
-            showNotification(`タスクを「${newBrand.name}」に移動しました`);
-        }
-        
-        // データを保存
-        saveDataToLocalStorage();
-        
-        // モーダルを閉じる
-        document.getElementById('task-modal').classList.remove('show');
-        
-        // 画面を更新
-        renderBrandTasksUI(currentTaskFilter);
-    });
-    
-    // 「新しいタスクを追加」ボタンのクリックイベント
-    document.getElementById('add-task-btn').addEventListener('click', function() {
-        // 新しいタスク追加モーダルを表示
-        showAddTaskModal();
-    });
-});
 
 // グローバルスコープに関数を公開
 // これにより、他のJSファイルからもdeleteTask関数が呼び出せるようになる
