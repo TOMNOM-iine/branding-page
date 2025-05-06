@@ -993,6 +993,8 @@ async function saveBrandEdits(brandId) {
                 
                 // JSONデータを適切に処理
                 const brandCopy = JSON.parse(JSON.stringify(brand)); // ディープコピー
+                // タスクは別テーブルで管理するため削除
+                const tasks = [...(brandCopy.tasks || [])];
                 delete brandCopy.tasks;
                 
                 // Supabaseスキーマに合わせて変換
@@ -1018,55 +1020,68 @@ async function saveBrandEdits(brandId) {
                     'ID:', brand.id
                 );
                 
-                // Supabaseに直接保存 - リトライロジック付き
-                let retries = 0;
-                const maxRetries = 2;
-                let success = false;
+                // Supabaseに保存
+                const { data, error } = await supabase
+                    .from('brands')
+                    .update(supabaseBrand)
+                    .eq('id', brand.id)
+                    .select();
                 
-                while (!success && retries <= maxRetries) {
+                if (error) {
+                    console.error('保存エラー:', error);
+                    alert('データの保存に失敗しました: ' + error.message);
+                    return false;
+                }
+                
+                console.log('Supabaseに保存成功:', data);
+                
+                // タスクの同期
+                if (tasks && tasks.length > 0) {
+                    console.log(`${tasks.length}件のタスクを同期します`);
+                    
                     try {
-                        console.log(`保存試行 ${retries + 1}/${maxRetries + 1}`);
-                        
-                        const { data, error } = await supabase
-                            .from('brands')
-                            .update(supabaseBrand)
-                            .eq('id', brand.id)
-                            .select();
-                        
-                        if (error) {
-                            console.error(`保存エラー(試行 ${retries + 1}):`, error);
-                            retries++;
+                        // 既存のタスクをすべて削除
+                        const { error: deleteError } = await supabase
+                            .from('tasks')
+                            .delete()
+                            .eq('brand_id', brand.id);
                             
-                            if (retries <= maxRetries) {
-                                // 再試行前に少し待機
-                                await new Promise(resolve => setTimeout(resolve, 500));
-                            } else {
-                                throw error; // 最大リトライ回数に達したらエラーを投げる
-                            }
+                        if (deleteError) {
+                            console.error('タスク削除エラー:', deleteError);
                         } else {
-                            console.log('Supabaseに保存成功:', data);
-                            success = true;
+                            // 新しいタスクをすべて追加
+                            const tasksToInsert = tasks.map(task => ({
+                                brand_id: brand.id,
+                                text: task.text,
+                                completed: task.completed,
+                                important: task.important
+                            }));
                             
-                            // 確実に最新のローカルストレージを更新
-                            saveDataToLocalStorage();
-                            
-                            // 保存完了後に少し待機
-                            await new Promise(resolve => setTimeout(resolve, 300));
+                            const { data: insertedTasks, error: insertError } = await supabase
+                                .from('tasks')
+                                .insert(tasksToInsert)
+                                .select();
+                                
+                            if (insertError) {
+                                console.error('タスク追加エラー:', insertError);
+                            } else {
+                                console.log('タスクを保存しました:', insertedTasks);
+                                
+                                // 新しいIDをタスクに設定
+                                if (insertedTasks && insertedTasks.length > 0) {
+                                    // Supabaseから返されたIDを使用
+                                    brand.tasks = insertedTasks;
+                                    saveDataToLocalStorage();
+                                }
+                            }
                         }
-                    } catch (retryErr) {
-                        console.error(`通信エラー(試行 ${retries}):`, retryErr);
-                        retries++;
-                        if (retries > maxRetries) throw retryErr;
-                        
-                        // 再試行前に少し待機
-                        await new Promise(resolve => setTimeout(resolve, 500));
+                    } catch (taskErr) {
+                        console.error('タスク同期中にエラー:', taskErr);
                     }
                 }
                 
-                if (!success) {
-                    alert('保存に失敗しました。ネットワーク接続を確認してください。');
-                    return false;
-                }
+                // 保存完了後に少し待機
+                await new Promise(resolve => setTimeout(resolve, 300));
             } catch (err) {
                 console.error('Supabase通信中にエラーが発生:', err);
                 alert('通信エラーが発生しました: ' + err.message);
@@ -1205,6 +1220,28 @@ function showBrandEditModal(brandId) {
                 <textarea id="brand-kpis" name="kpis">${(brand.okrKpi?.kpis || []).join('\n')}</textarea>
             </div>
             
+            <h3>タスク一覧</h3>
+            <div class="tasks-edit-container" id="tasks-edit-container-${brand.id}">
+                <div class="task-header">
+                    <span>タスク内容</span>
+                    <span class="checkbox-label">完了</span>
+                    <span class="checkbox-label">重要</span>
+                    <span>操作</span>
+                </div>
+                <div class="tasks-edit-list">
+                    ${(brand.tasks || []).map((task, index) => `
+                        <div class="task-edit-row" data-task-id="${task.id}" data-index="${index}">
+                            <input type="text" name="task-text-${index}" value="${task.text || ''}" class="task-text-input">
+                            <input type="checkbox" name="task-completed-${index}" ${task.completed ? 'checked' : ''} class="task-checkbox">
+                            <input type="checkbox" name="task-important-${index}" ${task.important ? 'checked' : ''} class="task-important">
+                            <button type="button" class="task-delete-btn" data-index="${index}">削除</button>
+                            <input type="hidden" name="task-id-${index}" value="${task.id}">
+                        </div>
+                    `).join('')}
+                </div>
+                <button type="button" class="add-task-btn" data-brand-id="${brand.id}">+ 新しいタスクを追加</button>
+            </div>
+            
             <div class="form-action">
                 <button type="submit" class="save-button">保存</button>
                 <button type="button" class="cancel-button">キャンセル</button>
@@ -1250,16 +1287,69 @@ function showBrandEditModal(brandId) {
                 brand.okrKpi.keyResults = formData.get('keyResults').split('\n').map(s => s.trim()).filter(s => s);
                 brand.okrKpi.kpis = formData.get('kpis').split('\n').map(s => s.trim()).filter(s => s);
                 
+                // タスクデータの処理
+                const tasksEditContainer = form.querySelector(`#tasks-edit-container-${brand.id}`);
+                const taskRows = tasksEditContainer.querySelectorAll('.task-edit-row');
+                
+                // 既存のタスクを更新
+                const updatedTasks = [];
+                taskRows.forEach(row => {
+                    const index = row.getAttribute('data-index');
+                    const taskId = formData.get(`task-id-${index}`);
+                    const text = formData.get(`task-text-${index}`);
+                    const completed = formData.get(`task-completed-${index}`) === 'on';
+                    const important = formData.get(`task-important-${index}`) === 'on';
+                    
+                    if (text && text.trim()) {
+                        updatedTasks.push({
+                            id: taskId,
+                            text: text.trim(),
+                            completed,
+                            important
+                        });
+                    }
+                });
+                
+                // 新しいタスクを保存
+                const newTaskRows = tasksEditContainer.querySelectorAll('.new-task-row');
+                newTaskRows.forEach(row => {
+                    const index = row.getAttribute('data-index');
+                    const text = formData.get(`new-task-text-${index}`);
+                    const completed = formData.get(`new-task-completed-${index}`) === 'on';
+                    const important = formData.get(`new-task-important-${index}`) === 'on';
+                    
+                    if (text && text.trim()) {
+                        // 新しいタスクのIDを生成
+                        let maxTaskId = 0;
+                        brand.tasks.forEach(task => {
+                            if (typeof task.id === 'number' && task.id > maxTaskId) {
+                                maxTaskId = task.id;
+                            }
+                        });
+                        
+                        updatedTasks.push({
+                            id: maxTaskId + 1,
+                            text: text.trim(),
+                            completed,
+                            important
+                        });
+                    }
+                });
+                
+                // タスク配列を更新
+                brand.tasks = updatedTasks;
+                
                 console.log('ブランドデータ更新完了:', brand.id);
                 
                 // 必ずローカルストレージには保存
                 saveDataToLocalStorage();
                 console.log('ローカルストレージに保存しました');
                 
-                // Supabaseに直接保存
+                // Supabaseに保存
                 if (!isLocalStorageMode()) {
                     // コピーしてtasksプロパティを削除
                     const brandCopy = { ...brand };
+                    const tasks = [...(brandCopy.tasks || [])];
                     delete brandCopy.tasks;
                     
                     // Supabaseスキーマに合わせて変換
@@ -1278,14 +1368,12 @@ function showBrandEditModal(brandId) {
                     console.log('変換前のokrKpi:', brandCopy.okrKpi);
                     console.log('変換後のokr_kpi:', supabaseBrand.okr_kpi);
                     
-                    console.log('直接Supabaseに保存を試みます');
-                    const response = await supabase
+                    console.log('Supabaseに保存を開始します');
+                    const { data, error } = await supabase
                         .from('brands')
                         .update(supabaseBrand)
                         .eq('id', brand.id)
                         .select();
-                    
-                    const { data, error } = response;
                     
                     if (error) {
                         console.error('保存エラー:', error);
@@ -1294,6 +1382,53 @@ function showBrandEditModal(brandId) {
                         console.log('保存成功:', data);
                         // 再度ローカルストレージも更新
                         saveDataToLocalStorage();
+                        
+                        // タスクの保存
+                        if (tasks.length > 0) {
+                            console.log(`${tasks.length}件のタスクを同期します`);
+                            
+                            // 既存のタスクをすべて削除
+                            const { error: deleteError } = await supabase
+                                .from('tasks')
+                                .delete()
+                                .eq('brand_id', brand.id);
+                                
+                            if (deleteError) {
+                                console.error('タスク削除エラー:', deleteError);
+                            } else {
+                                // 新しいタスクをすべて追加
+                                const tasksToInsert = tasks.map(task => ({
+                                    brand_id: brand.id,
+                                    text: task.text,
+                                    completed: task.completed,
+                                    important: task.important
+                                }));
+                                
+                                if (tasksToInsert.length > 0) {
+                                    const { data: insertedTasks, error: insertError } = await supabase
+                                        .from('tasks')
+                                        .insert(tasksToInsert)
+                                        .select();
+                                        
+                                    if (insertError) {
+                                        console.error('タスク追加エラー:', insertError);
+                                    } else {
+                                        console.log('タスクを保存しました:', insertedTasks);
+                                        
+                                        // 新しいIDをタスクに設定
+                                        if (insertedTasks && insertedTasks.length > 0) {
+                                            // Supabaseから返されたIDを使用
+                                            brand.tasks = insertedTasks;
+                                            saveDataToLocalStorage();
+                                        }
+                                    }
+                                } else {
+                                    console.log('追加するタスクがありません');
+                                }
+                            }
+                        } else {
+                            console.log('タスクがないため、タスクテーブルの同期は不要です');
+                        }
                         
                         // モーダルを閉じる前に少し待機して保存を確実にする
                         await new Promise(resolve => setTimeout(resolve, 300));
@@ -1317,6 +1452,46 @@ function showBrandEditModal(brandId) {
                 saveButton.textContent = originalText;
                 saveButton.disabled = false;
             }
+        });
+        
+        // 新しいタスク追加ボタンのイベント
+        const addTaskBtn = form.querySelector('.add-task-btn');
+        let newTaskCounter = 0;
+        
+        addTaskBtn.addEventListener('click', function() {
+            const tasksEditList = form.querySelector('.tasks-edit-list');
+            const newTaskRow = document.createElement('div');
+            newTaskRow.className = 'task-edit-row new-task-row';
+            newTaskRow.dataset.index = `new-${newTaskCounter}`;
+            
+            newTaskRow.innerHTML = `
+                <input type="text" name="new-task-text-${newTaskCounter}" class="task-text-input" placeholder="新しいタスク...">
+                <input type="checkbox" name="new-task-completed-${newTaskCounter}" class="task-checkbox">
+                <input type="checkbox" name="new-task-important-${newTaskCounter}" class="task-important">
+                <button type="button" class="task-delete-btn" data-index="new-${newTaskCounter}">削除</button>
+            `;
+            
+            tasksEditList.appendChild(newTaskRow);
+            
+            // 削除ボタンのイベント
+            const deleteBtn = newTaskRow.querySelector('.task-delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                newTaskRow.remove();
+            });
+            
+            // フォーカスを新しい入力欄に
+            const textInput = newTaskRow.querySelector('.task-text-input');
+            textInput.focus();
+            
+            newTaskCounter++;
+        });
+        
+        // 既存タスクの削除ボタンのイベント
+        form.querySelectorAll('.task-delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('.task-edit-row');
+                row.remove();
+            });
         });
         
         // キャンセルボタンのイベント

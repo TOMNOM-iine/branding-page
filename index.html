@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>ブランド管理ページ</title>
@@ -114,21 +114,19 @@
         console.log("環境変数初期化完了");
     </script>
     
-    <!-- メインスクリプト -->
+    <!-- キャッシュ回避のためのバージョン生成 -->
     <script>
-        // キャッシュ無効化のためのタイムスタンプ
-        const timestamp = new Date().getTime();
+        // ハードコードされた固定バージョン（本番リリース時に変更する）
+        const SCRIPT_VERSION = "1.0.5";
         
-        // スクリプトを動的に読み込む関数
-        function loadScript(src) {
-            document.write('<script src="' + src + '?v=' + timestamp + '"><\/script>');
-        }
-        
-        // 各スクリプトを順番に読み込む
-        loadScript('supabase-config.js');
-        loadScript('task-functions.js');
-        loadScript('simple-auth.js');
-        loadScript('script.js');
+        // 現在の時刻も追加して確実にキャッシュを無効化
+        const cacheKiller = Date.now();
     </script>
+    
+    <!-- 直接スクリプトを埋め込む -->
+    <script src="supabase-config.js?v=1.0.5&t=12345"></script>
+    <script src="task-functions.js?v=1.0.5&t=12345"></script>
+    <script src="simple-auth.js?v=1.0.5&t=12345"></script>
+    <script src="script.js?v=1.0.5&t=12345"></script>
 </body>
 </html>

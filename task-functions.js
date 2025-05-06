@@ -80,60 +80,51 @@ async function deleteTask(taskId, brandId) {
         // データを保存（ローカルストレージとSupabase両方に確実に保存）
         saveDataToLocalStorage();
         
-        // Supabase タスクテーブルから削除
+        // Supabase タスクテーブルから削除（非同期処理を待機する形に修正）
         if (!isLocalStorageMode()) {
-            console.log(`Supabaseからタスク(ID: ${taskIdNum})の削除を試みます`);
+            console.log(`Supabaseからタスク(ID: ${taskIdNum})の削除を開始します`);
             
-            // 非同期処理をすぐに開始
-            (async () => {
-                try {
-                    const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskIdNum);
-                    if (dbErr) {
-                        console.error('Supabaseタスク削除エラー:', dbErr);
-                        
-                        // DBエラー時にはブランドごと保存を試みる
-                        console.log('ブランド全体を更新して同期を試みます');
-                        const { error: brandErr } = await saveBrandToSupabase(brand);
-                        if (brandErr) {
-                            console.error('ブランド更新エラー:', brandErr);
-                        } else {
-                            console.log('ブランド更新成功');
-                        }
+            try {
+                // 明示的にawaitを使用して削除処理を完了するまで待機
+                const { error: dbErr } = await supabase.from('tasks').delete().eq('id', taskIdNum);
+                
+                if (dbErr) {
+                    console.error('Supabaseタスク削除エラー:', dbErr);
+                    
+                    // DBエラー時にはブランドごと保存を試みる
+                    console.log('ブランド全体を更新して同期を試みます');
+                    const { error: brandErr } = await saveBrandToSupabase(brand);
+                    if (brandErr) {
+                        console.error('ブランド更新エラー:', brandErr);
+                        alert('タスク削除の同期に失敗しました。再度お試しください。');
                     } else {
-                        console.log(`Supabaseからタスク(ID: ${taskIdNum})を削除しました`);
+                        console.log('ブランド更新成功');
                     }
-                } catch (err) {
-                    console.error('Supabase操作中にエラーが発生:', err);
+                } else {
+                    console.log(`Supabaseからタスク(ID: ${taskIdNum})を削除しました`);
                 }
-            })();
+            } catch (err) {
+                console.error('Supabase操作中にエラーが発生:', err);
+                alert('タスク削除の同期に失敗しました。ネットワーク接続を確認してください。');
+            }
         }
         
         // 重要: 両方のリストを確実に更新する処理
         console.log('両方のリストを更新します...');
         
         // 遅延実行処理を開始（すぐに開始し、複数回実行して確実に更新）
-        setTimeout(() => {
-            console.log('1回目のUI更新');
-            renderBrandTasksUI(currentTaskFilter);
-            renderBrands();
+        renderBrandTasksUI(currentTaskFilter);
+        renderBrands();
             
-            // 2回目の更新（さらに遅延）
-            setTimeout(() => {
-                console.log('2回目のUI更新');
-                renderBrands();
-                renderBrandTasksUI(currentTaskFilter);
+        // 確実に更新するため2回目の更新
+        setTimeout(() => {
+            console.log('2回目のUI更新');
+            renderBrands();
+            renderBrandTasksUI(currentTaskFilter);
                 
-                // 通知表示
-                showNotification(`「${taskText}」を削除しました`);
-                
-                // 最終確認のための3回目の更新
-                setTimeout(() => {
-                    console.log('最終確認のUI更新');
-                    renderBrandTasksUI(currentTaskFilter);
-                    renderBrands();
-                }, 300);
-            }, 200);
-        }, 100);
+            // 通知表示
+            showNotification(`「${taskText}」を削除しました`);
+        }, 200);
         
         return true;
     } catch (error) {
