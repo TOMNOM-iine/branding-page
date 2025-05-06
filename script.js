@@ -1293,6 +1293,12 @@ function showBrandEditModal(brandId) {
                 
                 console.log('タスク行の数:', taskRows.length);
                 
+                // タスク配列がない場合は初期化
+                if (!Array.isArray(brand.tasks)) {
+                    brand.tasks = [];
+                    console.log('brand.tasks配列を初期化しました');
+                }
+                
                 // 既存のタスクを更新
                 const updatedTasks = [];
                 taskRows.forEach(row => {
@@ -1319,36 +1325,56 @@ function showBrandEditModal(brandId) {
                 const newTaskRows = tasksEditContainer.querySelectorAll('.new-task-row');
                 console.log('新規タスク行の数:', newTaskRows.length);
                 
-                newTaskRows.forEach(row => {
+                // 最大ID値を取得（既存タスクまたは最近追加したタスクから）
+                let maxTaskId = 0;
+                if (brand.tasks && brand.tasks.length > 0) {
+                    brand.tasks.forEach(task => {
+                        if (typeof task.id === 'number' && task.id > maxTaskId) {
+                            maxTaskId = task.id;
+                        }
+                    });
+                }
+                updatedTasks.forEach(task => {
+                    if (typeof task.id === 'number' && task.id > maxTaskId) {
+                        maxTaskId = task.id;
+                    }
+                });
+                console.log('最大タスクID:', maxTaskId);
+                
+                newTaskRows.forEach((row, idx) => {
                     const index = row.getAttribute('data-index');
-                    const text = formData.get(`new-task-text-${index}`);
-                    const completed = formData.get(`new-task-completed-${index}`) === 'on';
-                    const important = formData.get(`new-task-important-${index}`) === 'on';
+                    console.log(`新規タスク[${idx}]処理中:`, index);
+                    
+                    const textFieldName = `new-task-text-${index.replace('new-', '')}`;
+                    const text = formData.get(textFieldName);
+                    console.log('取得したテキスト:', textFieldName, text);
+                    
+                    const completedFieldName = `new-task-completed-${index.replace('new-', '')}`;
+                    const completed = formData.get(completedFieldName) === 'on';
+                    
+                    const importantFieldName = `new-task-important-${index.replace('new-', '')}`;
+                    const important = formData.get(importantFieldName) === 'on';
                     
                     if (text && text.trim()) {
-                        // 新しいタスクのIDを生成
-                        let maxTaskId = 0;
-                        if (brand.tasks && brand.tasks.length > 0) {
-                            brand.tasks.forEach(task => {
-                                if (typeof task.id === 'number' && task.id > maxTaskId) {
-                                    maxTaskId = task.id;
-                                }
-                            });
-                        }
+                        // 新しいタスクID
+                        const newId = maxTaskId + 1 + idx;
                         
                         updatedTasks.push({
-                            id: maxTaskId + 1,
+                            id: newId,
                             text: text.trim(),
                             completed,
                             important
                         });
-                        console.log('新規タスク追加:', text.trim(), 'ID:', maxTaskId + 1);
+                        console.log('新規タスク追加:', text.trim(), 'ID:', newId);
                     }
                 });
                 
                 // タスク配列を更新
                 console.log('更新前のタスク数:', brand.tasks ? brand.tasks.length : 0);
                 console.log('更新後のタスク数:', updatedTasks.length);
+                
+                // 更新されたタスク一覧を表示して確認
+                console.log('更新タスク一覧:', JSON.stringify(updatedTasks));
                 
                 // ブランドのタスク配列を更新
                 brand.tasks = updatedTasks;
@@ -1363,7 +1389,7 @@ function showBrandEditModal(brandId) {
                 if (!isLocalStorageMode()) {
                     // コピーしてtasksプロパティを削除
                     const brandCopy = { ...brand };
-                    const tasks = [...(brand.tasks || [])];
+                    const tasks = [...brand.tasks]; // 直接brandのタスクを使用
                     delete brandCopy.tasks;
                     
                     // Supabaseスキーマに合わせて変換
@@ -1413,9 +1439,9 @@ function showBrandEditModal(brandId) {
                                 console.log('既存タスクを削除しました');
                                 
                                 // 新しいタスクが存在する場合のみ追加
-                                if (updatedTasks.length > 0) {
+                                if (tasks.length > 0) {
                                     // 新しいタスクをすべて追加
-                                    const tasksToInsert = updatedTasks.map(task => ({
+                                    const tasksToInsert = tasks.map(task => ({
                                         brand_id: brand.id,
                                         text: task.text,
                                         completed: task.completed,
@@ -1484,6 +1510,8 @@ function showBrandEditModal(brandId) {
             newTaskRow.className = 'task-edit-row new-task-row';
             newTaskRow.dataset.index = `new-${newTaskCounter}`;
             
+            console.log('新規タスク行を作成します。インデックス:', `new-${newTaskCounter}`);
+            
             newTaskRow.innerHTML = `
                 <input type="text" name="new-task-text-${newTaskCounter}" class="task-text-input" placeholder="新しいタスク...">
                 <input type="checkbox" name="new-task-completed-${newTaskCounter}" class="task-checkbox">
@@ -1496,6 +1524,7 @@ function showBrandEditModal(brandId) {
             // 削除ボタンのイベント
             const deleteBtn = newTaskRow.querySelector('.task-delete-btn');
             deleteBtn.addEventListener('click', function() {
+                console.log('新規タスク行を削除します:', this.dataset.index);
                 newTaskRow.remove();
             });
             
@@ -1503,7 +1532,9 @@ function showBrandEditModal(brandId) {
             const textInput = newTaskRow.querySelector('.task-text-input');
             textInput.focus();
             
+            // カウンターを増やす
             newTaskCounter++;
+            console.log('新規タスクカウンター更新:', newTaskCounter);
         });
         
         // 既存タスクの削除ボタンのイベント
