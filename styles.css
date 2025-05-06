@@ -97,6 +97,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    height: 100%;
 }
 
 .brand-section {
@@ -104,6 +105,9 @@ h1 {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .section-title {
@@ -111,6 +115,12 @@ h1 {
     margin-bottom: 15px;
     padding-bottom: 5px;
     border-bottom: 1px solid var(--border-color);
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .brand-section ul {
@@ -141,7 +151,9 @@ h1 {
 }
 
 .task-list {
-    max-height: 200px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     overflow-y: auto;
 }
 
