@@ -365,13 +365,6 @@ h1 {
     cursor: pointer;
 }
 
-/* タスク一覧の重要タスク表示 */
-.task-item.important .task-text:before {
-    content: "\2605"; /* 星の文字実体 */
-    color: #FFD700;
-    margin-right: 5px;
-}
-
 /* ブランドタスク一覧表のスタイル */
 .brands-task-list {
     margin-bottom: 40px;
