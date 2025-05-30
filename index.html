@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>ブランド管理ページ</title>
+    <link rel="stylesheet" href="styles.css?v=1.0.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- ログインオーバーレイ -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-container">
+            <h2 class="handwritten">ブランド管理ダッシュボード</h2>
+            <p>ログインして続行してください</p>
+            <div class="login-form" id="login-form">
+                <input type="email" id="email-input" placeholder="メールアドレス" required>
+                <input type="password" id="password-input" placeholder="パスワード" required>
+                <button id="login-button">ログイン</button>
+                <button id="signup-button" type="button">アカウント作成</button>
+                <p id="login-error" class="login-error"></p>
+                <p class="note">※ ログインするとデータはSupabaseに保存され、複数デバイスで共有できます</p>
+                <!-- テストアカウント情報は非表示 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1 class="handwritten">ブランド管理ダッシュボード</h1>
+            <p class="subtitle">全ブランド一覧 - タスク管理</p>
+        </header>
+        
+        <!-- ブランドタスク一覧 -->
+        <section class="brands-task-list">
+            <h2 class="handwritten">ブランドタスク一覧</h2>
+            <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">すべて</button>
+                <button class="filter-btn" data-filter="important">重要なタスク</button>
+                <button class="filter-btn" data-filter="incomplete">未完了</button>
+                <button class="filter-btn" data-filter="completed">完了済み</button>
+            </div>
+            
+            <!-- ブランドタスク一覧 -->
+            <div class="brand-tasks-container" id="brand-tasks-container">
+                <!-- JavaScriptでブランドタスク一覧を生成 -->
+            </div>
+        </section>
+        
+        <!-- ブランド一覧 -->
+        <h2 class="handwritten">ブランド一覧</h2>
+        <main id="brands-container">
+            <!-- ブランドカードがここに動的に挿入されます -->
+        </main>
+    </div>
+
+    <!-- タスク編集モーダル -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="handwritten">タスク編集</h3>
+            <form id="task-edit-form">
+                <div class="form-group">
+                    <label for="task-brand">ブランド</label>
+                    <select id="task-brand" name="brand" required>
+                        <!-- JavaScriptでブランドオプションを生成 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="task-text">タスク内容</label>
+                    <input type="text" id="task-text" name="text" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="task-completed" name="completed">
+                        完了済み
+                    </label>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="task-important" name="important">
+                        重要タスク
+                    </label>
+                </div>
+                <input type="hidden" id="task-id" name="id">
+                <input type="hidden" id="task-brand-id" name="brandId">
+                <div class="form-actions">
+                    <button type="submit" class="save-button">保存</button>
+                    <button type="button" class="cancel-button">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 通知エリア -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
+    
+    <!-- 環境変数設定 -->
+    <script>
+        // 環境変数の設定
+        window.SUPABASE_URL = "https://vtgpmvkniaoovhlmvcwh.supabase.co";
+        window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0Z3BtdmtuaWFvb3ZobG12Y3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5ODM3MTMsImV4cCI6MjA2MTU1OTcxM30.vivSbeRz-xfA6iUKVTLM_6w4jW1XwFH9i9qtHAn5QEI";
+        console.log("環境変数初期化完了");
+    </script>
+    
+    <!-- キャッシュ回避のためのバージョン生成 -->
+    <script>
+        // ハードコードされた固定バージョン（本番リリース時に変更する）
+        const SCRIPT_VERSION = "1.0.5";
+        
+        // 現在の時刻も追加して確実にキャッシュを無効化
+        const cacheKiller = Date.now();
+    </script>
+    
+    <!-- 直接スクリプトを埋め込む -->
+    <script src="supabase-config.js?v=1.0.5&t=12345"></script>
+    <script src="task-functions.js?v=1.0.5&t=12345"></script>
+    <script src="simple-auth.js?v=1.0.5&t=12345"></script>
+    <script src="script.js?v=1.0.5&t=12345"></script>
+</body>
+</html>
