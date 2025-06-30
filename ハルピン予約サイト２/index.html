@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元祖ハルピン | 真相報道 バンキシャ！</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="食べログ餃子百名店2021選出。40年以上の歴史を持つ三鷹の中華料理店「元祖ハルピン」の冷凍餃子・小籠包をオンラインで販売。八角香る本場の味をご自宅で。">
+    <meta name="keywords" content="元祖ハルピン,餃子,小籠包,冷凍餃子,三鷹,中華料理,餃子百名店">
+    
+    <!-- OGP -->
+    <meta property="og:title" content="元祖ハルピン | 真相報道 バンキシャ！">
+    <meta property="og:description" content="食べログ餃子百名店2021選出。40年の歴史が詰まった冷凍餃子をお届け">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ganso-harupin.com">
+    <meta property="og:image" content="https://ganso-harupin.com/images/og-image.jpg">
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/opening.css">
+    
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "@id": "https://ganso-harupin.com",
+        "name": "元祖ハルピン",
+        "image": "https://ganso-harupin.com/images/restaurant.jpg",
+        "url": "https://ganso-harupin.com",
+        "telephone": "0422-XX-XXXX",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "東京都三鷹市",
+            "addressLocality": "三鷹市",
+            "addressRegion": "東京都",
+            "postalCode": "181-XXXX",
+            "addressCountry": "JP"
+        },
+        "servesCuisine": "Chinese",
+        "priceRange": "¥¥",
+        "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "11:00",
+            "closes": "21:00"
+        },
+        "award": "食べログ餃子百名店2021"
+    }
+    </script>
+</head>
+<body>
+    <!-- オープニングアニメーション -->
+    <div class="opening-animation" id="opening-animation">
+        <div class="opening-bg"></div>
+        
+        <!-- セイロ（蒸籠）コンテナ -->
+        <div class="seiro-container">
+            <!-- セイロの蓋 -->
+            <div class="seiro-lid" id="seiro-lid">
+                <div class="seiro-top"></div>
+                <div class="seiro-handle"></div>
+            </div>
+            
+            <!-- セイロ本体 -->
+            <div class="seiro-body">
+                <div class="seiro-base"></div>
+                <!-- 煙エフェクト -->
+                <div class="smoke-container" id="smoke-container"></div>
+            </div>
+        </div>
+        
+        <!-- メディア画像コンテナ -->
+        <div class="media-images-container" id="media-images-container">
+            <!-- 
+            画像アップロード後は以下の形式で置き換えてください：
+            <div class="media-image" data-delay="0.1s">
+                <img src="images/media/tv-tokyo.png" alt="テレビ東京">
+            </div>
+            -->
+            <div class="media-image" data-delay="0.1s">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='20'%3Eテレビ東京%3C/text%3E%3C/svg%3E" alt="テレビ東京">
+            </div>
+            <div class="media-image" data-delay="0.2s">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='20'%3Eタクシー飯店%3C/text%3E%3C/svg%3E" alt="タクシー飯店">
+            </div>
+            <div class="media-image" data-delay="0.3s">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='20'%3Eワカコ酒%3C/text%3E%3C/svg%3E" alt="ワカコ酒">
+            </div>
+            <div class="media-image" data-delay="0.4s">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='20'%3E食べログ%3C/text%3E%3C/svg%3E" alt="食べログ">
+            </div>
+            <div class="media-image" data-delay="0.5s">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='20'%3Eアド街%3C/text%3E%3C/svg%3E" alt="アド街">
+            </div>
+            <div class="media-image" data-delay="0.6s">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='20'%3Eセブンルール%3C/text%3E%3C/svg%3E" alt="セブンルール">
+            </div>
+        </div>
+        
+        <!-- スキップボタン -->
+        <button class="skip-button" onclick="skipOpening()">スキップ →</button>
+    </div>
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        
+        <!-- 装飾要素 -->
+        <div class="hero-decorations">
+            <span class="decoration" style="top: 10%; left: 10%; font-size: 3rem;">🥟</span>
+            <span class="decoration" style="top: 20%; right: 15%; font-size: 2.5rem;">✨</span>
+            <span class="decoration" style="bottom: 20%; left: 8%; font-size: 2rem;">🌟</span>
+            <span class="decoration" style="bottom: 30%; right: 10%; font-size: 3.5rem;">🥢</span>
+            <span class="decoration" style="top: 40%; left: 5%; font-size: 2rem;">💫</span>
+            <span class="decoration" style="top: 15%; right: 40%; font-size: 2.5rem;">🎉</span>
+        </div>
+        
+        <!-- メディア画像（オープニング後に表示） -->
+        <div class="hero-media-images" id="hero-media-images">
+            <!-- 
+            画像アップロード後は以下の形式で置き換えてください：
+            <div class="hero-media-item" style="top: 15%; left: 5%;">
+                <img src="images/media/tv-tokyo.png" alt="テレビ東京">
+            </div>
+            -->
+            <div class="hero-media-item" style="top: 15%; left: 5%;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='16'%3Eテレビ東京%3C/text%3E%3C/svg%3E" alt="テレビ東京">
+            </div>
+            <div class="hero-media-item" style="top: 20%; right: 8%;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='16'%3Eタクシー飯店%3C/text%3E%3C/svg%3E" alt="タクシー飯店">
+            </div>
+            <div class="hero-media-item" style="bottom: 25%; left: 10%;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='16'%3Eワカコ酒%3C/text%3E%3C/svg%3E" alt="ワカコ酒">
+            </div>
+            <div class="hero-media-item" style="bottom: 20%; right: 12%;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='16'%3E食べログ%3C/text%3E%3C/svg%3E" alt="食べログ">
+            </div>
+            <div class="hero-media-item" style="top: 50%; left: 3%;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='16'%3Eアド街%3C/text%3E%3C/svg%3E" alt="アド街">
+            </div>
+            <div class="hero-media-item" style="top: 60%; right: 5%;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60' fill='black'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-size='16'%3Eセブンルール%3C/text%3E%3C/svg%3E" alt="セブンルール">
+            </div>
+        </div>
+        
+        <div class="hero-title">
+            <div class="title-container">
+                <h1 class="main-title">
+                    <span class="title-char" style="animation-delay: 0s">元</span>
+                    <span class="title-char" style="animation-delay: 0.1s">祖</span>
+                    <span class="title-char" style="animation-delay: 0.2s">ハ</span>
+                    <span class="title-char" style="animation-delay: 0.3s">ル</span>
+                    <span class="title-char" style="animation-delay: 0.4s">ピ</span>
+                    <span class="title-char" style="animation-delay: 0.5s">ン</span>
+                </h1>
+                <div class="title-underline"></div>
+            </div>
+            <p class="subtitle">1982年創業 三鷹の老舗中華料理店</p>
+            <p class="subtitle-sub">🏆 餃子百名店2021選出 🏆</p>
+        </div>
+        
+        <!-- 100名店バッジ -->
+        <div class="award-badge">
+            <div class="award-badge-text">
+                <div class="award-badge-year">2021</div>
+                <div class="award-badge-title">餃子百名店</div>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator" aria-label="下にスクロール">
+            <svg width="40" height="60" viewBox="0 0 40 60">
+                <rect x="5" y="5" width="30" height="50" rx="15" fill="none" stroke="black" stroke-width="3"/>
+                <circle cx="20" cy="20" r="5" fill="black"/>
+            </svg>
+        </div>
+    </section>
+    
+    <!-- 歴史セクション -->
+    <section class="timeline">
+        <div class="timeline-content">
+            <h2 style="font-family: 'Bebas Neue', cursive; font-size: 4rem; text-align: center; margin-bottom: 80px;">
+                40 YEARS OF TRUTH
+            </h2>
+            
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content-box">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">創業</h3>
+                    <p>中国ハルビンから三鷹へ。本場の味を日本に伝える使命を背負って。</p>
+                </div>
+                <div class="timeline-year">1982</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content-box">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">メディア初登場</h3>
+                    <p>テレビ東京「出没！アド街ック天国」で話題の餃子店として紹介。</p>
+                </div>
+                <div class="timeline-year">2018</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content-box">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">リニューアル</h3>
+                    <p>建物を一新。変わらぬ味と新しい空間で再出発。</p>
+                </div>
+                <div class="timeline-year">2019</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content-box">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">食べログ餃子百名店</h3>
+                    <p>ついに全国の餃子愛好家が認める名店へ。</p>
+                </div>
+                <div class="timeline-year">2021</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 商品セクション -->
+    <section class="comic-section">
+        <div class="comic-panel">
+            <div class="panel-number">01</div>
+            <h2 style="font-family: 'Bebas Neue', cursive; font-size: 3rem; text-align: center; margin-bottom: 40px;">
+                40年の真実、冷凍で解凍
+            </h2>
+            
+            <div class="products-grid">
+                <!-- 冷凍餃子 -->
+                <article class="product-card" data-product="gyoza" data-price="650">
+                    <div class="product-image">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 5rem;">🥟</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">元祖ハルピン餃子</h3>
+                        <p style="margin-bottom: 10px;">八角香る本場の味 (1人前 6個入り)</p>
+                        
+                        <!-- 種類選択 -->
+                        <div class="product-options" style="margin: 15px 0;">
+                            <p style="font-size: 0.9rem; margin-bottom: 8px; font-weight: bold;">種類を選択：</p>
+                            <div class="option-buttons" style="display: flex; gap: 10px;">
+                                <button class="option-btn active" data-type="shrimp" onclick="selectGyozaType(this, 'gyoza')" style="flex: 1; padding: 8px; border: 2px solid var(--black); background: var(--accent); color: var(--white); cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                                    🦐 エビ
+                                </button>
+                                <button class="option-btn" data-type="nira" onclick="selectGyozaType(this, 'gyoza')" style="flex: 1; padding: 8px; border: 2px solid var(--black); background: var(--white); color: var(--black); cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                                    🌿 ニラ
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <p class="product-price">¥650</p>
+                        <button class="add-to-cart" aria-label="元祖ハルピン餃子をカートに追加">カートに追加</button>
+                    </div>
+                </article>
+                
+                <!-- 小籠包 -->
+                <article class="product-card" data-product="xiaolongbao" data-price="900">
+                    <div class="product-image">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 5rem;">🥟</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">巨大小籠包</h3>
+                        <p style="margin-bottom: 10px;">スープたっぷり (1人前)</p>
+                        <p class="product-price">¥900</p>
+                        <button class="add-to-cart" aria-label="巨大小籠包をカートに追加">カートに追加</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 引用セクション -->
+    <section class="quote-section">
+        <div class="quote-bg">HANDMADE</div>
+        <p class="quote-text">
+            "すべて手作り<br>
+            それが40年守り続けた真実"
+        </p>
+    </section>
+    
+    <!-- メディア実績セクション -->
+    <section class="comic-section">
+        <div class="comic-panel">
+            <div class="panel-number">02</div>
+            <h2 style="font-family: 'Bebas Neue', cursive; font-size: 3rem; text-align: center; margin-bottom: 40px;">
+                MEDIA EXPOSURE
+            </h2>
+            
+            <div class="media-wall">
+                <div class="media-badge">テレビ東京</div>
+                <div class="media-badge">タクシー飯店</div>
+                <div class="media-badge">ワカコ酒</div>
+                <div class="media-badge">出没！アド街ック天国</div>
+                <div class="media-badge">食べログ3.49</div>
+                <div class="media-badge">餃子百名店2021</div>
+                <div class="media-badge">セブンルール出店</div>
+                <div class="media-badge">285件以上のレビュー</div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 40px; font-size: 1.5rem; font-weight: bold;">
+                メディアが証明する、本物の味
+            </p>
+        </div>
+    </section>
+    
+    <!-- 手作りプロセス -->
+    <section class="comic-section" style="background: var(--black);">
+        <div class="comic-panel" style="background: var(--yellow);">
+            <div class="panel-number">03</div>
+            <h2 style="font-family: 'Bebas Neue', cursive; font-size: 3rem; text-align: center; margin-bottom: 40px;">
+                ALL HANDMADE PROCESS
+            </h2>
+            
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h3 style="font-size: 1.5rem;">皮から手作り</h3>
+                    <p>毎朝5時から仕込む分厚い特製皮</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h3 style="font-size: 1.5rem;">中国直輸入香辛料</h3>
+                    <p>八角をはじめとする本場の調味料</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h3 style="font-size: 1.5rem;">職人の包み技</h3>
+                    <p>40年磨き続けた熟練の技術</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h3 style="font-size: 1.5rem;">瞬間冷凍</h3>
+                    <p>作りたての美味しさをそのまま封印</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 60px; padding: 30px; background: var(--white); border: 4px solid var(--black); display: inline-block; transform: rotate(-2deg);">
+                <h3 style="font-family: 'Bebas Neue', cursive; font-size: 2rem; margin-bottom: 10px;">NO GARLIC, NO LARD</h3>
+                <p style="font-size: 1.2rem;">ニンニク・ラード不使用でも、この旨さ</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- カート -->
+    <aside class="cart" id="cart" role="complementary" aria-label="ショッピングカート">
+        <div class="cart-header">
+            <span>YOUR CART</span>
+            <span class="cart-close" onclick="cartManager.toggleCart()" aria-label="カートを閉じる">×</span>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- カートアイテムが動的に追加される -->
+        </div>
+        <div id="cart-total" style="padding: 30px; font-size: 1.5rem; font-weight: bold;">
+            合計: ¥0
+        </div>
+        <button class="checkout-btn" onclick="cartManager.checkout()">
+            決済へ進む
+        </button>
+    </aside>
+    
+    <!-- フローティングカートボタン -->
+    <button class="floating-cart" onclick="cartManager.checkout()" aria-label="チェックアウトへ進む">
+        🛒
+        <span class="cart-count" id="cart-count">0</span>
+    </button>
+    
+    <!-- 通知用のスタイル -->
+    <style>
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            max-width: 400px;
+            background: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 5px 5px 0 var(--black);
+            padding: 20px;
+            transition: right 0.3s ease;
+            z-index: 2000;
+        }
+        
+        .notification.show {
+            right: 20px;
+        }
+        
+        .notification-success {
+            border-color: #4CAF50;
+        }
+        
+        .notification-error {
+            border-color: var(--red);
+        }
+        
+        .notification-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-message {
+            font-weight: bold;
+            margin-right: 20px;
+        }
+        
+        .notification-close {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        /* カートアイテムのスタイル改善 */
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 20px;
+        }
+        
+        .quantity-btn {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .quantity {
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .remove-btn {
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-left: 10px;
+        }
+        
+        .cart-item-total {
+            font-weight: bold;
+            min-width: 100px;
+            text-align: right;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="js/stripe-integration.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/opening.js"></script>
+    
+    <script>
+        // 餃子の種類選択
+        function selectGyozaType(button, productId) {
+            // 同じ商品カード内のボタンをすべて取得
+            const card = button.closest('.product-card');
+            const buttons = card.querySelectorAll('.option-btn');
+            
+            // すべてのボタンから active クラスを削除
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = 'var(--white)';
+                btn.style.color = 'var(--black)';
+            });
+            
+            // クリックされたボタンに active クラスを追加
+            button.classList.add('active');
+            button.style.background = 'var(--accent)';
+            button.style.color = 'var(--white)';
+            
+            // データ属性に種類を保存
+            card.dataset.selectedType = button.dataset.type;
+        }
+    </script>
+</body>
+</html>

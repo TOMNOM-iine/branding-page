@@ -1,0 +1,751 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --yellow: #FFD93D;  /* より明るく爽やかな黄色 */
+    --black: #2C3E50;   /* 真っ黒ではなく、柔らかいダークグレー */
+    --white: #FFFFFF;
+    --red: #FF6B6B;     /* より明るく楽しい赤 */
+    --shadow: #E0E0E0;  /* 薄い影 */
+    --accent: #4ECDC4;  /* 爽やかなターコイズ */
+    --pink: #FF8CC8;    /* 楽しいピンク */
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--yellow);
+    overflow-x: hidden;
+    cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTAiIGZpbGw9ImJsYWNrIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='), auto;
+}
+
+/* バンキシー風ヒーローセクション */
+.hero {
+    height: 100vh;
+    position: relative;
+    background: var(--yellow);
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0,0,0,0.03) 10px,
+        rgba(0,0,0,0.03) 20px
+    );
+    animation: bgScroll 20s linear infinite;
+}
+
+@keyframes bgScroll {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(28px, 28px); }
+}
+
+/* キャラクター関連のスタイルは削除 */
+
+.hero-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+}
+
+/* タイトルコンテナ */
+.title-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.main-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 8rem;
+    margin: 0;
+    display: flex;
+    gap: 0.1em;
+    perspective: 1000px;
+}
+
+.title-char {
+    display: inline-block;
+    color: var(--black);
+    text-shadow: 
+        3px 3px 0 var(--white),
+        6px 6px 0 var(--accent),
+        6px 6px 15px rgba(0,0,0,0.1);
+    animation: charBounce 2s ease-in-out infinite, charColor 8s ease-in-out infinite;
+    transform-origin: center bottom;
+    cursor: default;
+    transition: all 0.3s ease;
+}
+
+.title-char:hover {
+    animation-play-state: paused;
+    transform: translateY(-20px) rotate(10deg) scale(1.2);
+    color: var(--pink);
+}
+
+@keyframes charBounce {
+    0%, 100% { 
+        transform: translateY(0) rotateX(0) rotateY(0);
+    }
+    25% { 
+        transform: translateY(-15px) rotateX(10deg) rotateY(-5deg);
+    }
+    50% { 
+        transform: translateY(-5px) rotateX(-5deg) rotateY(5deg);
+    }
+    75% { 
+        transform: translateY(-10px) rotateX(5deg) rotateY(-3deg);
+    }
+}
+
+@keyframes charColor {
+    0%, 100% { color: var(--black); }
+    25% { color: var(--pink); }
+    50% { color: var(--accent); }
+    75% { color: var(--red); }
+}
+
+/* タイトル下線アニメーション */
+.title-underline {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--pink) 0%, 
+        var(--accent) 25%, 
+        var(--yellow) 50%, 
+        var(--accent) 75%, 
+        var(--pink) 100%
+    );
+    background-size: 200% 100%;
+    animation: underlineFlow 3s linear infinite;
+    border-radius: 2px;
+}
+
+@keyframes underlineFlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.subtitle {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-top: 20px;
+    background: var(--white);
+    padding: 12px 35px;
+    display: inline-block;
+    transform: rotate(-2deg);
+    box-shadow: 4px 4px 0 var(--shadow);
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 2px solid var(--black);
+}
+
+.subtitle-sub {
+    font-size: 1.4rem;
+    color: var(--white);
+    background: var(--accent);
+    padding: 10px 30px;
+    display: inline-block;
+    transform: rotate(2deg);
+    box-shadow: 4px 4px 0 var(--shadow);
+    margin-top: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* 装飾要素 */
+.hero-decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* ヒーローセクションのメディア画像 */
+.hero-media-images {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+.hero-media-images.show {
+    opacity: 1;
+}
+
+.hero-media-item {
+    position: absolute;
+    animation: floatHeroMedia 4s ease-in-out infinite;
+}
+
+.hero-media-item img {
+    width: 140px;
+    height: auto;
+    /* 背景を透明に */
+    background: transparent;
+    /* ボーダーと影を削除 */
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    /* ドロップシャドウで存在感を */
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.hero-media-item:hover img {
+    transform: scale(1.1);
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+}
+
+.hero-media-item:nth-child(odd) {
+    animation-duration: 5s;
+    animation-delay: 0.5s;
+}
+
+.hero-media-item:nth-child(even) {
+    animation-duration: 6s;
+    animation-direction: reverse;
+}
+
+@keyframes floatHeroMedia {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+.decoration {
+    position: absolute;
+    animation: floatDecoration 4s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.decoration:nth-child(odd) {
+    animation-duration: 5s;
+    animation-delay: 0.5s;
+}
+
+.decoration:nth-child(even) {
+    animation-duration: 6s;
+    animation-direction: reverse;
+}
+
+@keyframes floatDecoration {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(10deg); }
+    50% { transform: translateY(5px) rotate(-5deg); }
+    75% { transform: translateY(-5px) rotate(5deg); }
+}
+
+/* スクロールインジケーター */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+    30% { transform: translateX(-50%) translateY(-30px) scale(1.1); }
+    50% { transform: translateX(-50%) translateY(-20px) scale(1); }
+    80% { transform: translateX(-50%) translateY(-5px) scale(0.95); }
+}
+
+/* アメコミ風セクション */
+.comic-section {
+    padding: 100px 0;
+    position: relative;
+}
+
+.comic-panel {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 4px solid var(--black);
+    box-shadow: 8px 8px 0 var(--shadow);
+    padding: 80px;
+    position: relative;
+    transform: rotate(-1deg);
+    transition: all 0.3s ease;
+    border-radius: 15px;
+}
+
+.comic-panel:hover {
+    transform: rotate(1deg) scale(1.02);
+    box-shadow: 12px 12px 0 var(--accent);
+}
+
+.panel-number {
+    position: absolute;
+    top: -30px;
+    left: 30px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    padding: 10px 30px;
+    border: 4px solid var(--black);
+    transform: rotate(-5deg);
+}
+
+/* 商品グリッド */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.product-card {
+    background: var(--white);
+    border: 3px solid var(--black);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+.product-card:hover {
+    transform: translateY(-15px) rotate(3deg);
+    box-shadow: 8px 8px 0 var(--accent);
+    border-color: var(--accent);
+}
+
+.product-image {
+    width: 100%;
+    height: 250px;
+    background: var(--yellow);
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 20px,
+        rgba(0,0,0,0.1) 20px,
+        rgba(0,0,0,0.1) 40px
+    );
+}
+
+.product-info {
+    padding: 30px;
+}
+
+.product-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--red);
+    text-shadow: 2px 2px 0 var(--black);
+}
+
+.add-to-cart {
+    background: var(--accent);
+    color: var(--white);
+    border: 2px solid var(--black);
+    padding: 15px 30px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.add-to-cart:hover {
+    background: var(--pink);
+    transform: scale(1.05) rotate(-1deg);
+    box-shadow: 5px 5px 0 var(--shadow);
+}
+
+.add-to-cart::after {
+    content: '→';
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: right 0.3s ease;
+}
+
+.add-to-cart:hover::after {
+    right: 20px;
+}
+
+/* バンキシー風引用セクション */
+.quote-section {
+    background: linear-gradient(135deg, var(--accent), var(--pink));
+    color: var(--white);
+    padding: 100px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-text {
+    font-size: 3rem;
+    font-weight: 900;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.quote-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20rem;
+    opacity: 0.1;
+    font-family: 'Bebas Neue', cursive;
+}
+
+/* 年表セクション */
+.timeline {
+    background: var(--white);
+    padding: 100px 20px;
+    position: relative;
+}
+
+.timeline-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--black);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    padding: 40px 0;
+    display: flex;
+    align-items: center;
+}
+
+.timeline-item:nth-child(odd) {
+    flex-direction: row-reverse;
+}
+
+.timeline-content-box {
+    width: 45%;
+    background: var(--yellow);
+    border: 4px solid var(--black);
+    padding: 30px;
+    position: relative;
+    transform: rotate(-2deg);
+    transition: all 0.3s ease;
+}
+
+.timeline-content-box:hover {
+    transform: rotate(0deg) scale(1.05);
+    box-shadow: 10px 10px 0 var(--black);
+}
+
+.timeline-year {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    padding: 10px 20px;
+    border: 3px solid var(--black);
+    z-index: 10;
+}
+
+/* メディアセクション */
+.media-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.media-badge {
+    background: var(--white);
+    color: var(--black);
+    border: 2px solid var(--black);
+    padding: 20px;
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    transform: rotate(-5deg);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.media-badge:hover {
+    transform: rotate(8deg) scale(1.15);
+    background: var(--accent);
+    color: var(--white);
+    border-color: var(--accent);
+}
+
+/* 手作りプロセス */
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.process-step {
+    text-align: center;
+    position: relative;
+}
+
+.process-number {
+    width: 80px;
+    height: 80px;
+    background: var(--accent);
+    color: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    margin: 0 auto 20px;
+    transform: rotate(-10deg);
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.process-step:nth-child(1) .process-number { background: var(--pink); }
+.process-step:nth-child(2) .process-number { background: var(--accent); }
+.process-step:nth-child(3) .process-number { background: var(--red); }
+.process-step:nth-child(4) .process-number { background: #9B59B6; }
+
+.process-step:hover .process-number {
+    transform: rotate(10deg) scale(1.2);
+}
+
+/* カート */
+.cart {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    background: var(--white);
+    border-left: 8px solid var(--black);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.cart.open {
+    right: 0;
+}
+
+.cart-header {
+    background: var(--black);
+    color: var(--white);
+    padding: 30px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-close {
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.cart-items {
+    padding: 30px;
+}
+
+.cart-item {
+    border-bottom: 2px solid var(--black);
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout-btn {
+    background: linear-gradient(135deg, var(--accent), var(--pink));
+    color: var(--white);
+    border: 3px solid var(--black);
+    padding: 20px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    cursor: pointer;
+    width: calc(100% - 60px);
+    margin: 30px;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.checkout-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 5px 0 var(--black);
+}
+
+/* フローティングカートボタン */
+.floating-cart {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--accent), var(--pink));
+    border: 3px solid var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    color: var(--white);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.floating-cart:hover {
+    transform: scale(1.1) rotate(10deg);
+}
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--yellow);
+    color: var(--black);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+/* 100名店バッジ */
+.award-badge {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 140px;
+    height: 140px;
+    background: linear-gradient(135deg, var(--pink), var(--red));
+    border: 3px solid var(--white);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(15deg);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: rotate(15deg) scale(1); }
+    50% { transform: rotate(15deg) scale(1.1); }
+}
+
+.award-badge-text {
+    font-family: 'Bebas Neue', cursive;
+    color: var(--white);
+    text-align: center;
+}
+
+.award-badge-year {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.award-badge-title {
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* 特殊エフェクト */
+.glitch {
+    position: relative;
+    animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+}
+
+.explosion {
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 4rem;
+    color: var(--pink);
+    font-weight: 900;
+    transform: rotate(-15deg);
+    animation: explode 0.6s ease-out;
+    pointer-events: none;
+    z-index: 1000;
+    text-shadow: 2px 2px 0 var(--accent);
+}
+
+@keyframes explode {
+    0% { transform: scale(0) rotate(-15deg); opacity: 1; }
+    100% { transform: scale(2) rotate(-15deg); opacity: 0; }
+}

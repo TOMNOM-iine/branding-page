@@ -1,0 +1,317 @@
+/* オープニングアニメーション */
+.opening-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    background: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.opening-animation.hidden {
+    display: none;
+}
+
+.opening-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
+}
+
+/* セイロ（蒸籠）のデザイン */
+.seiro-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    transform: scale(0.8);
+    animation: seiroAppear 0.8s ease-out;
+}
+
+@keyframes seiroAppear {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.8) rotate(0);
+        opacity: 1;
+    }
+}
+
+/* セイロの蓋 */
+.seiro-lid {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 120px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: 10;
+}
+
+.seiro-lid.open {
+    transform: translateX(-70%) translateY(-100px) rotate(-35deg);
+}
+
+.seiro-top {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to bottom, #D4A574 0%, #B8956A 100%);
+    border-radius: 50% 50% 10px 10px;
+    border: 3px solid var(--black);
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.seiro-top::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: var(--black);
+    opacity: 0.3;
+}
+
+.seiro-top::after {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 3px;
+    background: var(--black);
+    opacity: 0.3;
+}
+
+.seiro-handle {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 40px;
+    background: #8B7355;
+    border: 3px solid var(--black);
+    border-radius: 30px 30px 5px 5px;
+}
+
+/* セイロ本体 */
+.seiro-body {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 150px;
+}
+
+
+.seiro-base {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #C4A474 0%, #A08060 100%);
+    border: 3px solid var(--black);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.seiro-base::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    right: 10%;
+    height: 60%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 10px,
+        rgba(0,0,0,0.1) 10px,
+        rgba(0,0,0,0.1) 12px
+    );
+}
+
+/* 煙エフェクト */
+.smoke-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.smoke {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.3) 60%, transparent 80%);
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0;
+    mix-blend-mode: screen;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+}
+
+/* 通常の煙 */
+.smoke.normal {
+    animation: smokeRise 4s ease-out infinite;
+}
+
+/* 爆発的な煙 */
+.smoke.burst {
+    width: 300px;
+    height: 300px;
+    animation: smokeBurst 1.5s ease-out forwards;
+}
+
+@keyframes smokeRise {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(calc(-50% + var(--x-drift, 0px)), calc(-50% - 600px)) scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes smokeBurst {
+    0% {
+        transform: translate(-50%, -50%) scale(calc(0.5 * var(--scale, 1)));
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(calc(-50% + var(--x-burst, 0px)), calc(-50% + var(--y-burst, -200px))) scale(calc(6 * var(--scale, 1)));
+        opacity: 0;
+    }
+}
+
+/* メディア画像 */
+.media-images-container {
+    display: none; /* オープニングでは非表示 */
+}
+
+.media-image img {
+    width: 180px;
+    height: auto;
+    /* 背景を透明に */
+    background: transparent;
+    /* ボーダーと影を削除 */
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    /* ドロップシャドウで存在感を */
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+    transition: all 0.3s ease;
+}
+
+.media-image img:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.4));
+}
+
+.media-image.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(var(--rotation));
+}
+
+/* メディア画像の最終位置 */
+.media-image:nth-child(1) { --final-x: 20%; --final-y: 20%; --rotation: -15deg; }
+.media-image:nth-child(2) { --final-x: 80%; --final-y: 25%; --rotation: 10deg; }
+.media-image:nth-child(3) { --final-x: 15%; --final-y: 70%; --rotation: -8deg; }
+.media-image:nth-child(4) { --final-x: 85%; --final-y: 75%; --rotation: 12deg; }
+.media-image:nth-child(5) { --final-x: 35%; --final-y: 85%; --rotation: -5deg; }
+.media-image:nth-child(6) { --final-x: 65%; --final-y: 15%; --rotation: 8deg; }
+
+.media-image.final-position {
+    left: var(--final-x);
+    top: var(--final-y);
+    animation: floatMedia 3s ease-in-out infinite;
+}
+
+@keyframes floatMedia {
+    0%, 100% { transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(0); }
+    50% { transform: translate(-50%, -50%) rotate(var(--rotation)) translateY(-10px); }
+}
+
+/* スキップボタン */
+.skip-button {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: var(--white);
+    color: var(--black);
+    border: 2px solid var(--black);
+    padding: 10px 25px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 2s forwards;
+}
+
+.skip-button:hover {
+    background: var(--accent);
+    color: var(--white);
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .seiro-container {
+        transform: scale(0.6);
+    }
+    
+    .media-image img {
+        width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .seiro-container {
+        transform: scale(0.5);
+    }
+    
+    .media-image img {
+        width: 100px;
+        padding: 5px;
+    }
+    
+    .skip-button {
+        bottom: 20px;
+        right: 20px;
+        padding: 8px 20px;
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チェックアウト | 元祖ハルピン</title>
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/checkout.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- ヘッダー -->
+        <header class="checkout-header">
+            <h1 class="checkout-logo">元祖ハルピン</h1>
+            <p class="checkout-subtitle">安全な決済</p>
+        </header>
+
+        <div class="checkout-content">
+            <!-- 左側：入力フォーム -->
+            <div class="checkout-form-section">
+                <!-- 決済方法選択 -->
+                <div class="checkout-method-selector">
+                    <h2>決済方法を選択してください</h2>
+                    <div class="method-options">
+                        <label class="method-option">
+                            <input type="radio" name="checkout-method" value="account" id="method-account">
+                            <div class="method-card">
+                                <h3>🔐 アカウント登録して決済</h3>
+                                <ul>
+                                    <li>次回から住所入力不要</li>
+                                    <li>購入履歴の確認</li>
+                                    <li>カード情報の保存（任意）</li>
+                                </ul>
+                            </div>
+                        </label>
+                        
+                        <label class="method-option">
+                            <input type="radio" name="checkout-method" value="guest" id="method-guest" checked>
+                            <div class="method-card">
+                                <h3>👤 ゲストとして決済</h3>
+                                <ul>
+                                    <li>アカウント登録不要</li>
+                                    <li>今回限りの購入</li>
+                                    <li>情報は保存されません</li>
+                                </ul>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ログイン案内（既存アカウントある場合） -->
+                <div id="login-prompt" class="login-prompt" style="display: none;">
+                    <p>既にアカウントをお持ちの方</p>
+                    <a href="/login.html?return=/checkout.html" class="login-link">ログインして購入</a>
+                </div>
+
+                <form id="payment-form">
+                    <!-- 配送先情報 -->
+                    <section class="form-section">
+                        <h2 class="section-title">配送先情報</h2>
+                        
+                        <div class="form-group">
+                            <label for="name">お名前 <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" required placeholder="山田 太郎">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">メールアドレス <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required placeholder="example@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">電話番号 <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" required placeholder="090-1234-5678">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="postal-code">郵便番号 <span class="required">*</span></label>
+                                <input type="text" id="postal-code" name="postal_code" required placeholder="123-4567" maxlength="8">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prefecture">都道府県 <span class="required">*</span></label>
+                            <select id="prefecture" name="prefecture" required>
+                                <option value="">選択してください</option>
+                                <option value="北海道">北海道</option>
+                                <option value="青森県">青森県</option>
+                                <option value="岩手県">岩手県</option>
+                                <option value="宮城県">宮城県</option>
+                                <option value="秋田県">秋田県</option>
+                                <option value="山形県">山形県</option>
+                                <option value="福島県">福島県</option>
+                                <option value="茨城県">茨城県</option>
+                                <option value="栃木県">栃木県</option>
+                                <option value="群馬県">群馬県</option>
+                                <option value="埼玉県">埼玉県</option>
+                                <option value="千葉県">千葉県</option>
+                                <option value="東京都">東京都</option>
+                                <option value="神奈川県">神奈川県</option>
+                                <option value="新潟県">新潟県</option>
+                                <option value="富山県">富山県</option>
+                                <option value="石川県">石川県</option>
+                                <option value="福井県">福井県</option>
+                                <option value="山梨県">山梨県</option>
+                                <option value="長野県">長野県</option>
+                                <option value="岐阜県">岐阜県</option>
+                                <option value="静岡県">静岡県</option>
+                                <option value="愛知県">愛知県</option>
+                                <option value="三重県">三重県</option>
+                                <option value="滋賀県">滋賀県</option>
+                                <option value="京都府">京都府</option>
+                                <option value="大阪府">大阪府</option>
+                                <option value="兵庫県">兵庫県</option>
+                                <option value="奈良県">奈良県</option>
+                                <option value="和歌山県">和歌山県</option>
+                                <option value="鳥取県">鳥取県</option>
+                                <option value="島根県">島根県</option>
+                                <option value="岡山県">岡山県</option>
+                                <option value="広島県">広島県</option>
+                                <option value="山口県">山口県</option>
+                                <option value="徳島県">徳島県</option>
+                                <option value="香川県">香川県</option>
+                                <option value="愛媛県">愛媛県</option>
+                                <option value="高知県">高知県</option>
+                                <option value="福岡県">福岡県</option>
+                                <option value="佐賀県">佐賀県</option>
+                                <option value="長崎県">長崎県</option>
+                                <option value="熊本県">熊本県</option>
+                                <option value="大分県">大分県</option>
+                                <option value="宮崎県">宮崎県</option>
+                                <option value="鹿児島県">鹿児島県</option>
+                                <option value="沖縄県">沖縄県</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">市区町村 <span class="required">*</span></label>
+                            <input type="text" id="city" name="city" required placeholder="渋谷区">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">番地・建物名 <span class="required">*</span></label>
+                            <input type="text" id="address" name="address" required placeholder="1-2-3 ○○マンション 101号室">
+                        </div>
+                    </section>
+
+                    <!-- アカウント情報（アカウント登録選択時のみ表示） -->
+                    <section id="account-section" class="form-section" style="display: none;">
+                        <h2 class="section-title">アカウント情報</h2>
+                        
+                        <div class="form-group">
+                            <label for="password">パスワード <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" minlength="8">
+                            <small>8文字以上で設定してください</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password-confirm">パスワード（確認） <span class="required">*</span></label>
+                            <input type="password" id="password-confirm" name="password_confirm">
+                        </div>
+                    </section>
+
+                    <!-- 配送オプション -->
+                    <section class="form-section">
+                        <h2 class="section-title">配送方法</h2>
+                        <div class="shipping-notice">
+                            <div class="option-content selected">
+                                <span class="option-name">🧊 クール宅急便</span>
+                                <span class="option-price">¥1,200</span>
+                                <span class="option-description">冷凍配送でお届け</span>
+                            </div>
+                            <input type="hidden" name="shipping" value="cool">
+                        </div>
+                    </section>
+
+                    <!-- 配送日時指定 -->
+                    <section class="form-section">
+                        <h2 class="section-title">配送日時指定</h2>
+                        
+                        <div class="form-group">
+                            <label for="delivery-date">配送希望日</label>
+                            <input type="date" id="delivery-date" name="delivery_date" min="" max="">
+                            <small>※最短でお届けの場合は未選択のままにしてください</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delivery-time">配送時間帯</label>
+                            <select id="delivery-time" name="delivery_time">
+                                <option value="">指定なし</option>
+                                <option value="morning">午前中（8:00-12:00）</option>
+                                <option value="afternoon1">14:00-16:00</option>
+                                <option value="afternoon2">16:00-18:00</option>
+                                <option value="evening1">18:00-20:00</option>
+                                <option value="evening2">19:00-21:00</option>
+                            </select>
+                        </div>
+                    </section>
+
+                    <!-- 支払い情報 -->
+                    <section class="form-section">
+                        <h2 class="section-title">お支払い情報</h2>
+                        
+                        <!-- Stripe Elements用のコンテナ -->
+                        <div class="form-group">
+                            <label for="card-element">カード情報</label>
+                            <div id="card-element" class="stripe-element">
+                                <!-- Stripe Elementsがここに挿入されます -->
+                            </div>
+                            <div id="card-errors" class="error-message" role="alert"></div>
+                        </div>
+                    </section>
+
+                    <!-- 利用規約 -->
+                    <div class="form-group terms">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span><a href="#" target="_blank">利用規約</a>と<a href="#" target="_blank">プライバシーポリシー</a>に同意します</span>
+                        </label>
+                    </div>
+
+                    <!-- 送信ボタン -->
+                    <button type="submit" id="submit-button" class="submit-button">
+                        <span id="button-text">注文を確定する</span>
+                        <span id="spinner" class="spinner hidden"></span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 右側：注文サマリー -->
+            <div class="order-summary-section">
+                <div class="order-summary">
+                    <h2 class="section-title">ご注文内容</h2>
+                    
+                    <div id="order-items" class="order-items">
+                        <!-- カート内容が動的に挿入されます -->
+                    </div>
+
+                    <div class="summary-row">
+                        <span>小計</span>
+                        <span id="subtotal">¥0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>配送料</span>
+                        <span id="shipping-fee">¥800</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>合計</span>
+                        <span id="total">¥0</span>
+                    </div>
+
+                    <div class="security-info">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 0C8.5 0 7.5 1 7.5 2.5V5H5C3.9 5 3 5.9 3 7V18C3 19.1 3.9 20 5 20H15C16.1 20 17 19.1 17 18V7C17 5.9 16.1 5 15 5H12.5V2.5C12.5 1 11.5 0 10 0ZM10 2C10.3 2 10.5 2.2 10.5 2.5V5H9.5V2.5C9.5 2.2 9.7 2 10 2ZM10 10C11.1 10 12 10.9 12 12C12 12.7 11.6 13.4 11 13.7V16H9V13.7C8.4 13.4 8 12.7 8 12C8 10.9 8.9 10 10 10Z"/>
+                        </svg>
+                        <span>安全な決済システム</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/checkout.js"></script>
+</body>
+</html>

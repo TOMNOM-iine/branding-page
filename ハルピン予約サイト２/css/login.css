@@ -1,0 +1,275 @@
+/* ログイン・登録ページスタイル */
+.login-container {
+    min-height: 100vh;
+    background: var(--yellow);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ロゴ */
+.login-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.site-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    color: var(--black);
+    margin: 0;
+}
+
+.site-subtitle {
+    font-size: 1.2rem;
+    color: var(--black);
+    margin-top: 10px;
+}
+
+/* タブ */
+.tab-container {
+    display: flex;
+    gap: 0;
+    margin-bottom: 30px;
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 40px;
+    background: var(--white);
+    color: var(--black);
+    border: none;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button:not(:last-child) {
+    border-right: 3px solid var(--black);
+}
+
+.tab-button.active {
+    background: var(--black);
+    color: var(--white);
+}
+
+/* フォームコンテナ */
+.form-container {
+    background: var(--white);
+    padding: 40px;
+    border: 3px solid var(--black);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    max-width: 500px;
+    width: 100%;
+    display: none;
+}
+
+.form-container.active {
+    display: block;
+}
+
+.form-container h3 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    color: var(--black);
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--black);
+}
+
+.form-container h3:first-child {
+    margin-top: 0;
+}
+
+/* フォーム要素 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--black);
+}
+
+.required {
+    color: var(--red);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"],
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* チェックボックス */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.checkbox-label a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.checkbox-label a:hover {
+    text-decoration: underline;
+}
+
+/* 送信ボタン */
+.submit-button {
+    width: 100%;
+    padding: 18px;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    margin-top: 30px;
+}
+
+.submit-button:hover:not(:disabled) {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--shadow);
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* スピナー */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--white);
+    animation: spin 1s ease-in-out infinite;
+}
+
+.spinner.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* フォームフッター */
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+.form-footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* メッセージ */
+.message {
+    max-width: 500px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--black);
+    font-weight: 600;
+    text-align: center;
+}
+
+.message.success {
+    background: #d4edda;
+    color: #155724;
+    border-color: #28a745;
+}
+
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.message.hidden {
+    display: none;
+}
+
+/* 戻るリンク */
+.back-link {
+    margin-top: 30px;
+}
+
+.back-link a {
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.back-link a:hover {
+    color: var(--accent);
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 20px;
+    }
+    
+    .tab-button {
+        padding: 12px 20px;
+        font-size: 1.1rem;
+    }
+    
+    .site-title {
+        font-size: 2.5rem;
+    }
+}

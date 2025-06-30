@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元祖ハルピン - カート機能テスト</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .test-section {
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-log {
+            background: #f5f5f5;
+            border: 2px solid #333;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .test-button {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.2rem;
+        }
+        .test-button:hover {
+            background: var(--red);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1>カート機能テスト</h1>
+        
+        <h2>1. カート操作テスト</h2>
+        <button class="test-button" onclick="testAddToCart()">商品追加テスト</button>
+        <button class="test-button" onclick="testUpdateQuantity()">数量変更テスト</button>
+        <button class="test-button" onclick="testRemoveItem()">商品削除テスト</button>
+        <button class="test-button" onclick="testClearCart()">カートクリアテスト</button>
+        
+        <h2>2. ローカルストレージテスト</h2>
+        <button class="test-button" onclick="testLocalStorage()">保存・読込テスト</button>
+        
+        <h2>3. UI表示テスト</h2>
+        <button class="test-button" onclick="testCartUI()">カート表示テスト</button>
+        
+        <h2>4. 決済フローテスト（モック）</h2>
+        <button class="test-button" onclick="testCheckout()">決済テスト</button>
+        
+        <div id="test-log" class="test-log">テスト結果がここに表示されます。</div>
+    </div>
+
+    <!-- 本番用カートUI -->
+    <div class="cart" id="cart">
+        <div class="cart-header">
+            <span>YOUR CART</span>
+            <span class="cart-close" onclick="toggleCart()">×</span>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div id="cart-total" style="padding: 30px; font-size: 1.5rem; font-weight: bold;">合計: ¥0</div>
+        <button class="checkout-btn" onclick="mockCheckout()">決済へ進む（テスト）</button>
+    </div>
+    
+    <div class="floating-cart" onclick="toggleCart()">
+        🛒
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <script>
+        const log = (message) => {
+            const logDiv = document.getElementById('test-log');
+            logDiv.textContent += `[${new Date().toLocaleTimeString()}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+
+        // モックカートマネージャー
+        class MockCartManager {
+            constructor() {
+                this.cart = [];
+                this.products = {
+                    'shrimp-gyoza': {
+                        name: '伝説のエビ餃子',
+                        price: 2980,
+                        description: '八角香る本場の味 (20個入り)'
+                    },
+                    'xiaolongbao': {
+                        name: '巨大小籠包',
+                        price: 3480,
+                        description: 'スープたっぷり (12個入り)'
+                    }
+                };
+                log('MockCartManager initialized');
+            }
+
+            addItem(productId, quantity = 1) {
+                const product = this.products[productId];
+                if (!product) {
+                    log(`Error: Product ${productId} not found`);
+                    return;
+                }
+
+                const existingItem = this.cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                    log(`Updated quantity for ${product.name}: ${existingItem.quantity}`);
+                } else {
+                    this.cart.push({
+                        id: productId,
+                        name: product.name,
+                        price: product.price,
+                        quantity: quantity
+                    });
+                    log(`Added ${product.name} to cart`);
+                }
+                this.updateUI();
+            }
+
+            updateUI() {
+                const cartCount = document.getElementById('cart-count');
+                const cartTotal = document.getElementById('cart-total');
+                const cartItems = document.getElementById('cart-items');
+                
+                let total = 0;
+                let count = 0;
+                
+                cartItems.innerHTML = '';
+                this.cart.forEach((item, index) => {
+                    total += item.price * item.quantity;
+                    count += item.quantity;
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    itemDiv.innerHTML = `
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            ¥${item.price.toLocaleString()} × ${item.quantity}
+                        </div>
+                        <div>¥${(item.price * item.quantity).toLocaleString()}</div>
+                    `;
+                    cartItems.appendChild(itemDiv);
+                });
+                
+                cartCount.textContent = count;
+                cartTotal.textContent = `合計: ¥${total.toLocaleString()}`;
+                log(`UI updated: ${count} items, Total: ¥${total}`);
+            }
+        }
+
+        const mockCart = new MockCartManager();
+
+        // テスト関数
+        function testAddToCart() {
+            log('=== 商品追加テスト開始 ===');
+            mockCart.addItem('shrimp-gyoza', 2);
+            mockCart.addItem('xiaolongbao', 1);
+            log('=== 商品追加テスト完了 ===');
+        }
+
+        function testUpdateQuantity() {
+            log('=== 数量変更テスト開始 ===');
+            if (mockCart.cart.length > 0) {
+                const item = mockCart.cart[0];
+                item.quantity = 5;
+                log(`${item.name}の数量を5に変更`);
+                mockCart.updateUI();
+            } else {
+                log('カートが空です。先に商品を追加してください。');
+            }
+            log('=== 数量変更テスト完了 ===');
+        }
+
+        function testRemoveItem() {
+            log('=== 商品削除テスト開始 ===');
+            if (mockCart.cart.length > 0) {
+                const removed = mockCart.cart.pop();
+                log(`${removed.name}を削除しました`);
+                mockCart.updateUI();
+            } else {
+                log('カートが空です。');
+            }
+            log('=== 商品削除テスト完了 ===');
+        }
+
+        function testClearCart() {
+            log('=== カートクリアテスト開始 ===');
+            mockCart.cart = [];
+            mockCart.updateUI();
+            log('カートをクリアしました');
+            log('=== カートクリアテスト完了 ===');
+        }
+
+        function testLocalStorage() {
+            log('=== ローカルストレージテスト開始 ===');
+            
+            // 保存
+            localStorage.setItem('test-cart', JSON.stringify(mockCart.cart));
+            log('カートデータを保存しました');
+            
+            // 読込
+            const saved = JSON.parse(localStorage.getItem('test-cart') || '[]');
+            log(`保存されたデータ: ${JSON.stringify(saved)}`);
+            
+            // クリーンアップ
+            localStorage.removeItem('test-cart');
+            log('テストデータを削除しました');
+            
+            log('=== ローカルストレージテスト完了 ===');
+        }
+
+        function testCartUI() {
+            log('=== カートUI表示テスト開始 ===');
+            document.getElementById('cart').classList.add('open');
+            log('カートを開きました');
+            setTimeout(() => {
+                document.getElementById('cart').classList.remove('open');
+                log('カートを閉じました');
+                log('=== カートUI表示テスト完了 ===');
+            }, 2000);
+        }
+
+        function testCheckout() {
+            log('=== 決済テスト開始 ===');
+            if (mockCart.cart.length === 0) {
+                log('Error: カートが空です');
+                return;
+            }
+            
+            const checkoutData = {
+                items: mockCart.cart,
+                total: mockCart.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+            
+            log(`決済データ: ${JSON.stringify(checkoutData, null, 2)}`);
+            log('Stripe Checkoutにリダイレクトします（モック）');
+            log('=== 決済テスト完了 ===');
+        }
+
+        function toggleCart() {
+            document.getElementById('cart').classList.toggle('open');
+        }
+
+        function mockCheckout() {
+            alert('これはテスト環境です。本番環境ではStripe Checkoutにリダイレクトされます。');
+            log('決済ボタンがクリックされました（モック）');
+        }
+
+        // 初期ログ
+        log('テストページが読み込まれました');
+        log('各ボタンをクリックして機能をテストしてください');
+    </script>
+</body>
+</html>

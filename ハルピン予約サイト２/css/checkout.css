@@ -1,0 +1,504 @@
+/* チェックアウトページスタイル */
+.checkout-container {
+    min-height: 100vh;
+    background: #f8f8f8;
+}
+
+/* 決済方法選択 */
+.checkout-method-selector {
+    background: var(--white);
+    padding: 30px;
+    border: 3px solid var(--black);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    margin-bottom: 30px;
+}
+
+.checkout-method-selector h2 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.method-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.method-option {
+    display: block;
+    cursor: pointer;
+}
+
+.method-option input[type="radio"] {
+    display: none;
+}
+
+.method-card {
+    padding: 25px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.method-option input[type="radio"]:checked + .method-card {
+    background: var(--yellow);
+    box-shadow: 4px 4px 0 var(--shadow);
+    transform: translateY(-2px);
+}
+
+.method-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--black);
+}
+
+.method-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.method-card li {
+    padding: 5px 0;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.method-card li:before {
+    content: "✓ ";
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* ログインプロンプト */
+.login-prompt {
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.login-prompt p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 15px;
+}
+
+.login-link {
+    display: inline-block;
+    padding: 10px 30px;
+    background: var(--black);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.login-link:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--shadow);
+}
+
+/* 保存されたカード */
+.saved-cards {
+    margin-bottom: 20px;
+}
+
+.saved-cards select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+}
+
+.save-card-option {
+    margin-top: 15px;
+}
+
+/* ヘッダー */
+.checkout-header {
+    background: var(--yellow);
+    padding: 30px 0;
+    text-align: center;
+    border-bottom: 4px solid var(--black);
+}
+
+.checkout-logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    color: var(--black);
+    margin: 0;
+}
+
+.checkout-subtitle {
+    font-size: 1rem;
+    color: var(--black);
+    margin-top: 5px;
+}
+
+/* メインコンテンツ */
+.checkout-content {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 40px;
+}
+
+/* フォームセクション */
+.checkout-form-section {
+    background: var(--white);
+    padding: 40px;
+    border: 3px solid var(--black);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--shadow);
+}
+
+.form-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    color: var(--black);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--black);
+}
+
+/* フォーム要素 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--black);
+}
+
+.required {
+    color: var(--red);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+
+/* 配送オプション */
+.shipping-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.shipping-option {
+    display: block;
+    cursor: pointer;
+}
+
+.shipping-option input[type="radio"] {
+    display: none;
+}
+
+.option-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.shipping-option input[type="radio"]:checked + .option-content {
+    background: var(--accent);
+    color: var(--white);
+    box-shadow: 4px 4px 0 var(--shadow);
+}
+
+/* 配送方法通知 */
+.shipping-notice {
+    text-align: center;
+}
+
+.shipping-notice .option-content {
+    background: var(--accent);
+    color: var(--white);
+    padding: 20px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.shipping-notice .option-content.selected {
+    cursor: default;
+}
+
+/* 配送日時入力 */
+input[type="date"] {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+input[type="date"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+
+small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.option-name {
+    font-weight: 700;
+}
+
+.option-price {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+}
+
+.option-description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Stripe Elements */
+.stripe-element {
+    padding: 15px;
+    border: 2px solid var(--black);
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.stripe-element--focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+
+.stripe-element--invalid {
+    border-color: var(--red);
+}
+
+.error-message {
+    color: var(--red);
+    font-size: 0.9rem;
+    margin-top: 8px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* チェックボックス */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.checkbox-label a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.checkbox-label a:hover {
+    text-decoration: underline;
+}
+
+/* 送信ボタン */
+.submit-button {
+    width: 100%;
+    padding: 20px;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    margin-top: 30px;
+}
+
+.submit-button:hover:not(:disabled) {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--shadow);
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* スピナー */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--white);
+    animation: spin 1s ease-in-out infinite;
+}
+
+.spinner.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 注文サマリー */
+.order-summary {
+    background: var(--white);
+    padding: 30px;
+    border: 3px solid var(--black);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    position: sticky;
+    top: 20px;
+}
+
+.order-items {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.item-name {
+    font-weight: 700;
+}
+
+.item-quantity {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.item-price {
+    font-weight: 700;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.summary-row.total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--black);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* セキュリティ情報 */
+.security-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.security-info svg {
+    color: var(--accent);
+}
+
+/* レスポンシブ */
+@media (max-width: 968px) {
+    .checkout-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .order-summary {
+        position: static;
+    }
+    
+    .method-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-form-section {
+        padding: 20px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .option-content {
+        flex-direction: column;
+        align-items: start;
+        gap: 5px;
+    }
+}
