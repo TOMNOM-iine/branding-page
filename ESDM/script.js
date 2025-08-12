@@ -63,12 +63,36 @@ function addGoal() {
 }
 
 // Save progress to localStorage
-function saveProgress() {
+async function saveProgress() {
     const formData = collectFormData();
     localStorage.setItem('esdm_assessment', JSON.stringify(formData));
     
-    // Show save confirmation
-    showNotification('進捗を保存しました');
+    // Try to save to database if API is available
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        try {
+            const response = await fetch('/api/save-assessment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                localStorage.setItem('esdm_assessment_id', result.assessmentId);
+                showNotification('データベースに保存しました');
+            } else {
+                showNotification('ローカルに保存しました');
+            }
+        } catch (error) {
+            console.log('API not available, saved locally');
+            showNotification('進捗を保存しました');
+        }
+    } else {
+        // Show save confirmation
+        showNotification('進捗を保存しました');
+    }
 }
 
 // Load progress from localStorage

@@ -1,0 +1,23 @@
+{
+  "name": "esdm-assessment",
+  "version": "1.0.0",
+  "description": "ESDM Assessment System",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'No build required'",
+    "deploy-vercel": "vercel --prod",
+    "deploy-netlify": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.7.2"
+  },
+  "keywords": [
+    "ESDM",
+    "assessment",
+    "early-intervention",
+    "child-development"
+  ],
+  "author": "",
+  "license": "MIT"
+}
