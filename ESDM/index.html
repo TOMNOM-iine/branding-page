@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESDM 初回評価システム</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ESDM 初回評価システム</h1>
+            <p class="subtitle">早期支援のための発達評価ツール</p>
+            <div class="actions">
+                <button onclick="saveProgress()" class="btn btn-secondary">進捗を保存</button>
+                <button onclick="exportToMarkdown()" class="btn btn-primary">MDファイルをダウンロード</button>
+            </div>
+        </header>
+
+        <nav class="navigation">
+            <ul>
+                <li><a href="#overview" class="nav-link active">概要</a></li>
+                <li><a href="#basic-info" class="nav-link">基本情報</a></li>
+                <li><a href="#priorities" class="nav-link">優先事項</a></li>
+                <li><a href="#daily-routine" class="nav-link">日常生活</a></li>
+                <li><a href="#assessment" class="nav-link">発達評価</a></li>
+                <li><a href="#support-plan" class="nav-link">支援計画</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <!-- 概要セクション -->
+            <section id="overview" class="section">
+                <h2>ESDMとは</h2>
+                <div class="info-box">
+                    <p>ESDMは、12〜48か月のお子さんを対象とした、遊びを通じて学ぶ早期支援の方法です。</p>
+                    <p>日常の生活や遊びの中で、お子さんの興味に合わせて自然に学習機会を作ります。</p>
+                </div>
+                
+                <h3>評価の流れ</h3>
+                <ol class="process-list">
+                    <li>基本情報の記入</li>
+                    <li>お子さんの現在の様子を確認</li>
+                    <li>優先したい目標を設定</li>
+                    <li>12週間の支援計画を作成</li>
+                </ol>
+            </section>
+
+            <!-- 基本情報セクション -->
+            <section id="basic-info" class="section">
+                <h2>基本情報</h2>
+                <div class="form-group">
+                    <label for="child-name">お子さんのお名前</label>
+                    <input type="text" id="child-name" class="input-field" placeholder="例：山田 太郎">
+                </div>
+                
+                <div class="form-group">
+                    <label for="birth-date">生年月日</label>
+                    <input type="date" id="birth-date" class="input-field">
+                </div>
+                
+                <div class="form-group">
+                    <label for="assessment-date">評価日</label>
+                    <input type="date" id="assessment-date" class="input-field" value="">
+                </div>
+                
+                <div class="form-group">
+                    <label for="attendees">同席者</label>
+                    <input type="text" id="attendees" class="input-field" placeholder="例：母、父">
+                </div>
+                
+                <div class="form-group">
+                    <label for="language">使用言語</label>
+                    <input type="text" id="language" class="input-field" placeholder="例：日本語">
+                </div>
+            </section>
+
+            <!-- 優先事項セクション -->
+            <section id="priorities" class="section">
+                <h2>ご家族の優先事項</h2>
+                <p class="section-desc">お子さんについて最も気になること、できるようになってほしいことを3つまで教えてください。</p>
+                
+                <div class="priority-list">
+                    <div class="form-group">
+                        <label>優先度1（最も重要）</label>
+                        <textarea class="textarea-field" id="priority-1" rows="3" placeholder="例：言葉で要求を伝えられるようになってほしい"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>優先度2</label>
+                        <textarea class="textarea-field" id="priority-2" rows="3" placeholder="例：お友達と一緒に遊べるようになってほしい"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>優先度3</label>
+                        <textarea class="textarea-field" id="priority-3" rows="3" placeholder="例：かんしゃくを減らしたい"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 日常生活セクション -->
+            <section id="daily-routine" class="section">
+                <h2>日常生活の様子</h2>
+                
+                <div class="routine-grid">
+                    <div class="routine-item">
+                        <h3>食事</h3>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="meal-spoon"> スプーンやフォークを使える</label>
+                            <label><input type="checkbox" id="meal-sit"> 座って食べられる</label>
+                            <label><input type="checkbox" id="meal-variety"> いろいろな食べ物を食べる</label>
+                        </div>
+                        <textarea class="textarea-field routine-notes" id="meal-notes" rows="2" placeholder="気になることがあれば記入"></textarea>
+                    </div>
+                    
+                    <div class="routine-item">
+                        <h3>睡眠</h3>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="sleep-regular"> 決まった時間に寝る</label>
+                            <label><input type="checkbox" id="sleep-alone"> 一人で眠れる</label>
+                            <label><input type="checkbox" id="sleep-through"> 朝まで起きない</label>
+                        </div>
+                        <textarea class="textarea-field routine-notes" id="sleep-notes" rows="2" placeholder="気になることがあれば記入"></textarea>
+                    </div>
+                    
+                    <div class="routine-item">
+                        <h3>着替え</h3>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="dress-cooperate"> 着替えに協力する</label>
+                            <label><input type="checkbox" id="dress-simple"> 簡単な服を脱げる</label>
+                            <label><input type="checkbox" id="dress-choose"> 服を選ぶ</label>
+                        </div>
+                        <textarea class="textarea-field routine-notes" id="dress-notes" rows="2" placeholder="気になることがあれば記入"></textarea>
+                    </div>
+                    
+                    <div class="routine-item">
+                        <h3>トイレ</h3>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="toilet-signal"> トイレを教える</label>
+                            <label><input type="checkbox" id="toilet-use"> トイレを使える</label>
+                            <label><input type="checkbox" id="toilet-wash"> 手を洗う</label>
+                        </div>
+                        <textarea class="textarea-field routine-notes" id="toilet-notes" rows="2" placeholder="気になることがあれば記入"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>好きな遊びや活動</label>
+                    <textarea class="textarea-field" id="favorite-activities" rows="3" placeholder="例：ブロック遊び、音楽、外遊び、本を見る"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>苦手なこと・避けたいこと</label>
+                    <textarea class="textarea-field" id="dislikes" rows="3" placeholder="例：大きな音、人混み、特定の感触"></textarea>
+                </div>
+            </section>
+
+            <!-- 発達評価セクション -->
+            <section id="assessment" class="section">
+                <h2>発達の評価</h2>
+                <p class="section-desc">お子さんの現在の様子について、それぞれの項目を確認してください。</p>
+                
+                <!-- コミュニケーション（表出） -->
+                <div class="assessment-category">
+                    <h3>気持ちを伝える力（表出）</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <span class="skill-label">欲しいものを指差す</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="point-want" value="2"> できる</label>
+                                <label><input type="radio" name="point-want" value="1"> 時々できる</label>
+                                <label><input type="radio" name="point-want" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">言葉や声で要求する</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="verbal-request" value="2"> できる</label>
+                                <label><input type="radio" name="verbal-request" value="1"> 時々できる</label>
+                                <label><input type="radio" name="verbal-request" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">「いや」「いらない」を伝える</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="refuse" value="2"> できる</label>
+                                <label><input type="radio" name="refuse" value="1"> 時々できる</label>
+                                <label><input type="radio" name="refuse" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">2つ以上の言葉をつなげて話す</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="two-words" value="2"> できる</label>
+                                <label><input type="radio" name="two-words" value="1"> 時々できる</label>
+                                <label><input type="radio" name="two-words" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- コミュニケーション（受容） -->
+                <div class="assessment-category">
+                    <h3>理解する力（受容）</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <span class="skill-label">名前を呼ばれたら振り向く</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="name-response" value="2"> できる</label>
+                                <label><input type="radio" name="name-response" value="1"> 時々できる</label>
+                                <label><input type="radio" name="name-response" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">「ちょうだい」が分かる</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="give-understand" value="2"> できる</label>
+                                <label><input type="radio" name="give-understand" value="1"> 時々できる</label>
+                                <label><input type="radio" name="give-understand" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">簡単な指示に従う</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="follow-instruction" value="2"> できる</label>
+                                <label><input type="radio" name="follow-instruction" value="1"> 時々できる</label>
+                                <label><input type="radio" name="follow-instruction" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">物の名前が分かる</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="object-names" value="2"> できる</label>
+                                <label><input type="radio" name="object-names" value="1"> 時々できる</label>
+                                <label><input type="radio" name="object-names" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 社会性・遊び -->
+                <div class="assessment-category">
+                    <h3>人との関わり・遊び</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <span class="skill-label">目を合わせる</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="eye-contact" value="2"> できる</label>
+                                <label><input type="radio" name="eye-contact" value="1"> 時々できる</label>
+                                <label><input type="radio" name="eye-contact" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">一緒に笑う</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="shared-laugh" value="2"> できる</label>
+                                <label><input type="radio" name="shared-laugh" value="1"> 時々できる</label>
+                                <label><input type="radio" name="shared-laugh" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">順番を待つ・交代する</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="turn-taking" value="2"> できる</label>
+                                <label><input type="radio" name="turn-taking" value="1"> 時々できる</label>
+                                <label><input type="radio" name="turn-taking" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">ごっこ遊びをする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="pretend-play" value="2"> できる</label>
+                                <label><input type="radio" name="pretend-play" value="1"> 時々できる</label>
+                                <label><input type="radio" name="pretend-play" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 模倣 -->
+                <div class="assessment-category">
+                    <h3>まねをする力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <span class="skill-label">手の動きをまねする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="hand-imitation" value="2"> できる</label>
+                                <label><input type="radio" name="hand-imitation" value="1"> 時々できる</label>
+                                <label><input type="radio" name="hand-imitation" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">音や言葉をまねする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="sound-imitation" value="2"> できる</label>
+                                <label><input type="radio" name="sound-imitation" value="1"> 時々できる</label>
+                                <label><input type="radio" name="sound-imitation" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">おもちゃの使い方をまねする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="toy-imitation" value="2"> できる</label>
+                                <label><input type="radio" name="toy-imitation" value="1"> 時々できる</label>
+                                <label><input type="radio" name="toy-imitation" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">表情をまねする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="facial-imitation" value="2"> できる</label>
+                                <label><input type="radio" name="facial-imitation" value="1"> 時々できる</label>
+                                <label><input type="radio" name="facial-imitation" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 認知・学習 -->
+                <div class="assessment-category">
+                    <h3>考える力・学ぶ力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <span class="skill-label">おもちゃで遊ぶ方法を理解</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="toy-function" value="2"> できる</label>
+                                <label><input type="radio" name="toy-function" value="1"> 時々できる</label>
+                                <label><input type="radio" name="toy-function" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">形や色を分ける</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="sort-shapes" value="2"> できる</label>
+                                <label><input type="radio" name="sort-shapes" value="1"> 時々できる</label>
+                                <label><input type="radio" name="sort-shapes" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">簡単なパズルをする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="puzzle" value="2"> できる</label>
+                                <label><input type="radio" name="puzzle" value="1"> 時々できる</label>
+                                <label><input type="radio" name="puzzle" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">原因と結果を理解</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="cause-effect" value="2"> できる</label>
+                                <label><input type="radio" name="cause-effect" value="1"> 時々できる</label>
+                                <label><input type="radio" name="cause-effect" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 運動 -->
+                <div class="assessment-category">
+                    <h3>体を動かす力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <span class="skill-label">走る</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="run" value="2"> できる</label>
+                                <label><input type="radio" name="run" value="1"> 時々できる</label>
+                                <label><input type="radio" name="run" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">ジャンプする</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="jump" value="2"> できる</label>
+                                <label><input type="radio" name="jump" value="1"> 時々できる</label>
+                                <label><input type="radio" name="jump" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">ボールを投げる・蹴る</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="ball-play" value="2"> できる</label>
+                                <label><input type="radio" name="ball-play" value="1"> 時々できる</label>
+                                <label><input type="radio" name="ball-play" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-item">
+                            <span class="skill-label">小さなものをつまむ</span>
+                            <div class="skill-options">
+                                <label><input type="radio" name="pinch" value="2"> できる</label>
+                                <label><input type="radio" name="pinch" value="1"> 時々できる</label>
+                                <label><input type="radio" name="pinch" value="0"> まだできない</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 行動・感覚 -->
+                <div class="assessment-category">
+                    <h3>行動・感覚の特徴</h3>
+                    <div class="form-group">
+                        <label>繰り返し行動（あれば記入）</label>
+                        <textarea class="textarea-field" id="repetitive-behavior" rows="2" placeholder="例：手をひらひらさせる、同じ遊びを繰り返す"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>感覚の特徴（あれば記入）</label>
+                        <textarea class="textarea-field" id="sensory-features" rows="2" placeholder="例：特定の音を嫌がる、特定の感触を好む"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>落ち着く方法（あれば記入）</label>
+                        <textarea class="textarea-field" id="calming-methods" rows="2" placeholder="例：抱っこ、音楽を聴く、一人になる"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 支援計画セクション -->
+            <section id="support-plan" class="section">
+                <h2>支援計画</h2>
+                
+                <div class="plan-summary">
+                    <h3>12週間の目標設定</h3>
+                    <p class="section-desc">評価結果をもとに、優先順位の高い目標から取り組みます。</p>
+                    
+                    <div id="goals-container" class="goals-list">
+                        <div class="goal-item">
+                            <input type="checkbox" id="goal-1-check">
+                            <input type="text" class="goal-input" id="goal-1" placeholder="目標1を入力">
+                        </div>
+                        <div class="goal-item">
+                            <input type="checkbox" id="goal-2-check">
+                            <input type="text" class="goal-input" id="goal-2" placeholder="目標2を入力">
+                        </div>
+                        <div class="goal-item">
+                            <input type="checkbox" id="goal-3-check">
+                            <input type="text" class="goal-input" id="goal-3" placeholder="目標3を入力">
+                        </div>
+                    </div>
+                    
+                    <button onclick="addGoal()" class="btn btn-secondary">目標を追加</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>家庭での練習時間</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="practice-morning"> 朝（5-10分）</label>
+                        <label><input type="checkbox" id="practice-afternoon"> 昼（5-10分）</label>
+                        <label><input type="checkbox" id="practice-evening"> 夕方（5-10分）</label>
+                        <label><input type="checkbox" id="practice-bedtime"> 就寝前（5-10分）</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>支援の形式</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="support-home"> 家庭訪問</label>
+                        <label><input type="checkbox" id="support-clinic"> 通所</label>
+                        <label><input type="checkbox" id="support-online"> オンライン</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>次回評価予定日</label>
+                    <input type="date" id="next-assessment" class="input-field">
+                </div>
+                
+                <div class="form-group">
+                    <label>追加メモ</label>
+                    <textarea class="textarea-field" id="additional-notes" rows="4" placeholder="その他、記録しておきたいことがあれば記入"></textarea>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>ESDM評価システム v1.0 | データは端末内に保存されます</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
