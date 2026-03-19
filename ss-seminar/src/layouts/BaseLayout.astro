@@ -479,6 +479,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
       // Intersection Observer for scroll-triggered appearances
       const appearEls = document.querySelectorAll('.appear');
 
+      function checkVisibility(el: Element) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 50 && rect.bottom > -50) {
+          el.classList.add('is-visible');
+          return true;
+        }
+        return false;
+      }
+
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach(entry => {
@@ -487,17 +496,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
             }
           });
         },
-        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        { threshold: 0, rootMargin: '50px 0px 50px 0px' }
       );
 
+      // Initial check + observe
       appearEls.forEach(el => {
-        // Immediately show elements already in viewport
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          el.classList.add('is-visible');
-        }
+        checkVisibility(el);
         observer.observe(el);
       });
+
+      // Fallback: re-check on scroll for any missed elements
+      let scrollCheckTimeout: number;
+      window.addEventListener('scroll', () => {
+        clearTimeout(scrollCheckTimeout);
+        scrollCheckTimeout = window.setTimeout(() => {
+          appearEls.forEach(el => {
+            if (!el.classList.contains('is-visible')) {
+              checkVisibility(el);
+            }
+          });
+        }, 100);
+      }, { passive: true });
 
       // Active nav section tracking
       const sections = document.querySelectorAll('[data-section-id]');
