@@ -117,8 +117,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
         <li><a href="/#programs" data-section="programs">プログラム</a></li>
         <li><a href="/#parents" data-section="parents">保護者の方へ</a></li>
         <li><a href="/#voices" data-section="voices">声</a></li>
+        <li><a href="/group">グループ</a></li>
         <li><a href="/#access" data-section="access">アクセス</a></li>
-        <li><a href="/blog">ブログ</a></li>
         <li><a href="/trial" class="nav-cta-link">体験申込</a></li>
       </ul>
       <button
@@ -143,8 +143,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
           <li><a href="/#programs">プログラム</a></li>
           <li><a href="/#parents">保護者の方へ</a></li>
           <li><a href="/#voices">声</a></li>
+          <li><a href="/group">グループ事業</a></li>
           <li><a href="/#access">アクセス</a></li>
-          <li><a href="/blog">ブログ</a></li>
         </ul>
         <a href="/trial" class="mobile-drawer-cta">無料体験を申し込む</a>
       </div>
@@ -162,14 +162,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
           <div class="footer-brand">
             <span class="footer-logo text-display">S&Sセミナー</span>
             <p class="footer-tagline">居場所から始まる学び</p>
+            <p class="footer-company">S&S合同会社</p>
           </div>
           <div class="footer-links">
-            <h4>メニュー</h4>
+            <h4>セミナー</h4>
             <ul>
               <li><a href="/#philosophy">理念</a></li>
               <li><a href="/#programs">プログラム</a></li>
               <li><a href="/#parents">保護者の方へ</a></li>
-              <li><a href="/#voices">声</a></li>
+              <li><a href="/trial">体験申込</a></li>
+            </ul>
+          </div>
+          <div class="footer-links">
+            <h4>グループ事業</h4>
+            <ul>
+              <li><a href="/group">トム・ソーヤ</a></li>
+              <li><a href="/group">日光AI食堂</a></li>
+              <li><a href="/group">児童クラブ</a></li>
+              <li><a href="/group">一覧を見る</a></li>
             </ul>
           </div>
           <div class="footer-contact">
@@ -179,7 +189,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} S&Sセミナー. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} S&S合同会社. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -350,9 +360,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
 
       .footer-grid {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
         gap: var(--space-xl);
         margin-bottom: var(--space-xl);
+      }
+
+      .footer-company {
+        font-size: var(--text-xs);
+        opacity: 0.4;
+        margin-top: var(--space-sm);
+        letter-spacing: 0.05em;
       }
 
       .footer-logo {
