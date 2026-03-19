@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #4DABF7;
+  --color-primary-dark: #1971C2;
+  --color-secondary: #FF8A80;
+  --color-tertiary: #69DB7C;
+  --color-accent: #FFD43B;
+  --color-accent-purple: #B197FC;
+  --color-text-primary: #212529;
+  --color-text-secondary: #495057;
+  --color-bg: #F8F9FF;
+  --color-card: #FFFFFF;
+  --color-bg-end: #E7F5FF;
+  --color-fun-border: #FF922B;
+  --font-heading: 'Kosugi Maru', sans-serif;
+  --font-body: 'Noto Sans JP', sans-serif;
+  --font-fun: 'Yusei Magic', cursive;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.3;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.5rem); }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.8rem); }
+
+.font-fun { font-family: var(--font-fun); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.scene {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes float-cloud {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+}
+@keyframes float-cloud-slow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(77, 171, 247, 0.4);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary-dark);
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  border: 2px solid var(--color-primary);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  display: inline-block;
+  text-decoration: none;
+}
+.btn-secondary:hover {
+  transform: scale(1.05);
+  background: rgba(77, 171, 247, 0.1);
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,157 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="コース案内 | S&Sセミナー" description="小学生から高校生まで、一人ひとりに合わせた学びのコースをご紹介します。">
+  <div class="pt-24 pb-16">
+    <section class="max-w-4xl mx-auto px-4 text-center mb-16">
+      <span class="inline-block bg-[var(--color-accent)]/20 text-[var(--color-primary-dark)] text-sm px-4 py-1.5 rounded-full mb-4">
+        コース案内
+      </span>
+      <h1 class="text-[var(--color-primary-dark)] mb-6">
+        お子さまに合った学びを
+      </h1>
+      <p class="text-[var(--color-text-secondary)] text-lg max-w-2xl mx-auto">
+        小学生から高校生まで、集団授業と個別指導の両方で、一人ひとりの目標に合わせた指導を行います。
+      </p>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-4 mb-16">
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Elementary -->
+        <div class="card border-t-4 border-[var(--color-accent)]">
+          <div class="text-center mb-6">
+            <div class="w-20 h-20 mx-auto mb-4 bg-[var(--color-accent)]/10 rounded-full flex items-center justify-center text-4xl">
+              🎒
+            </div>
+            <h2 class="text-xl text-[var(--color-primary-dark)]">小学生コース</h2>
+          </div>
+          <ul class="space-y-3 text-sm text-[var(--color-text-secondary)]">
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>私立中学受験対策</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>中高一貫校受験対策</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>通常クラス（基礎学力定着）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>学習方法習得クラス</span>
+            </li>
+          </ul>
+          <div class="mt-6 text-center">
+            <a href="/contact" class="btn-secondary !text-sm !py-2">
+              詳しく聞く →
+            </a>
+          </div>
+        </div>
+
+        <!-- Middle School -->
+        <div class="card border-t-4 border-[var(--color-primary)] relative">
+          <div class="absolute -top-3 right-4 bg-[var(--color-primary)] text-white text-xs px-3 py-1 rounded-full font-bold">
+            人気
+          </div>
+          <div class="text-center mb-6">
+            <div class="w-20 h-20 mx-auto mb-4 bg-[var(--color-primary)]/10 rounded-full flex items-center justify-center text-4xl">
+              📖
+            </div>
+            <h2 class="text-xl text-[var(--color-primary-dark)]">中学生コース</h2>
+          </div>
+          <ul class="space-y-3 text-sm text-[var(--color-text-secondary)]">
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>学校教科書準拠の予習型授業</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>定期テスト3週間前から無料補習</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>成績下降時の継続無料補習</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>高校受験対策</span>
+            </li>
+          </ul>
+          <div class="mt-6 text-center">
+            <a href="/contact" class="btn-primary !text-sm !py-2">
+              無料体験に申し込む →
+            </a>
+          </div>
+        </div>
+
+        <!-- High School -->
+        <div class="card border-t-4 border-[var(--color-accent-purple)]">
+          <div class="text-center mb-6">
+            <div class="w-20 h-20 mx-auto mb-4 bg-[var(--color-accent-purple)]/10 rounded-full flex items-center justify-center text-4xl">
+              🎓
+            </div>
+            <h2 class="text-xl text-[var(--color-primary-dark)]">高校生コース</h2>
+          </div>
+          <ul class="space-y-3 text-sm text-[var(--color-text-secondary)]">
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>英語（大学受験対応）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>数学（大学受験対応）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>小論文・AO入試対策</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-tertiary)]">✓</span>
+              <span>個別指導プラン</span>
+            </li>
+          </ul>
+          <div class="mt-6 text-center">
+            <a href="/contact" class="btn-secondary !text-sm !py-2">
+              詳しく聞く →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Group vs Individual -->
+    <section class="max-w-4xl mx-auto px-4 mb-16">
+      <h2 class="text-center text-[var(--color-primary-dark)] mb-8">授業スタイル</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/10">
+          <h3 class="text-lg text-[var(--color-primary-dark)] mb-3 flex items-center gap-2">
+            <span class="text-2xl">👥</span> 集団授業
+          </h3>
+          <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+            仲間と一緒に学び、切磋琢磨する環境。ソクラテス問答法を活かした対話型授業で、考える力を育みます。
+          </p>
+        </div>
+        <div class="card bg-[var(--color-secondary)]/5 border border-[var(--color-secondary)]/10">
+          <h3 class="text-lg text-[var(--color-primary-dark)] mb-3 flex items-center gap-2">
+            <span class="text-2xl">🧑‍🏫</span> 個別指導
+          </h3>
+          <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+            一人ひとりのペースに合わせたきめ細やかな指導。苦手科目の克服や、得意分野のさらなる伸長に。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-2xl mx-auto px-4 text-center">
+      <div class="card bg-gradient-to-r from-[var(--color-primary)]/5 to-[var(--color-accent)]/5 p-8">
+        <h2 class="text-xl text-[var(--color-primary-dark)] mb-3">まずは無料体験から</h2>
+        <p class="text-sm text-[var(--color-text-secondary)] mb-6">お子さまに合ったコースをご提案いたします。お気軽にご相談ください。</p>
+        <a href="/contact" class="btn-primary">お問い合わせ →</a>
+      </div>
+    </section>
+  </div>
+</Layout>

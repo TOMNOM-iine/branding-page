@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="校舎案内 | S&Sセミナー" description="栃木県日光市の今市校舎・日光校舎のご案内です。">
+  <div class="pt-24 pb-16">
+    <section class="max-w-4xl mx-auto px-4 text-center mb-16">
+      <span class="inline-block bg-[var(--color-accent-purple)]/20 text-[var(--color-primary-dark)] text-sm px-4 py-1.5 rounded-full mb-4">
+        校舎案内
+      </span>
+      <h1 class="text-[var(--color-primary-dark)] mb-6">教室のご案内</h1>
+      <p class="text-[var(--color-text-secondary)] text-lg">
+        栃木県日光市に2つの校舎を構えています
+      </p>
+    </section>
+
+    <section class="max-w-5xl mx-auto px-4 space-y-16">
+      <!-- Imaichi -->
+      <div class="card p-8 md:p-12">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="h-64 bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-tertiary)]/10 rounded-2xl flex items-center justify-center">
+            <div class="text-center">
+              <span class="text-6xl block mb-4">🏫</span>
+              <span class="font-fun text-[var(--color-primary-dark)] text-lg">今市校舎</span>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-2xl text-[var(--color-primary-dark)] mb-4">今市校舎</h2>
+            <p class="text-[var(--color-text-secondary)] mb-6 leading-relaxed">
+              日光市の中心部に位置する本校。小学生から高校生まで幅広い学年の生徒が通う活気ある校舎です。
+              集団授業・個別指導ともに対応しています。
+            </p>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-lg">📍</span>
+                <span class="text-[var(--color-text-secondary)]">栃木県日光市</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-lg">🎒</span>
+                <span class="text-[var(--color-text-secondary)]">対象: 小学生〜高校生</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-lg">📝</span>
+                <span class="text-[var(--color-text-secondary)]">集団授業・個別指導</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nikko -->
+      <div class="card p-8 md:p-12">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="md:order-2 h-64 bg-gradient-to-br from-[var(--color-accent-purple)]/10 to-[var(--color-secondary)]/10 rounded-2xl flex items-center justify-center">
+            <div class="text-center">
+              <span class="text-6xl block mb-4">⛩️</span>
+              <span class="font-fun text-[var(--color-primary-dark)] text-lg">日光校舎</span>
+            </div>
+          </div>
+          <div class="md:order-1">
+            <h2 class="text-2xl text-[var(--color-primary-dark)] mb-4">日光校舎</h2>
+            <p class="text-[var(--color-text-secondary)] mb-6 leading-relaxed">
+              自然豊かな日光エリアの校舎。落ち着いた環境で、一人ひとりに寄り添ったきめ細かな指導を行います。
+            </p>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-lg">📍</span>
+                <span class="text-[var(--color-text-secondary)]">栃木県日光市</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-lg">🎒</span>
+                <span class="text-[var(--color-text-secondary)]">対象: 小学生〜高校生</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-lg">📝</span>
+                <span class="text-[var(--color-text-secondary)]">集団授業・個別指導</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-2xl mx-auto px-4 text-center mt-16">
+      <a href="/contact" class="btn-primary">お問い合わせ・見学予約 →</a>
+    </section>
+  </div>
+</Layout>

@@ -1,0 +1,153 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'S&Sセミナー | 勉強以前の居場所から始まる学び',
+  description = '栃木県日光市の進学塾S&Sセミナー。40年以上のソクラテス問答法で、どんな子にもまず笑顔の居場所を。'
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Noto+Sans+JP:wght@300;400;500;700&family=Yusei+Magic&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-nav">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 text-[var(--color-primary-dark)] no-underline">
+          <span class="text-2xl">🏫</span>
+          <span class="font-[var(--font-heading)] font-bold text-lg">S&Sセミナー</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/about" class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary-dark)] no-underline transition-colors text-sm font-medium">私たちについて</a>
+          <a href="/courses" class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary-dark)] no-underline transition-colors text-sm font-medium">コース案内</a>
+          <a href="/evidence" class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary-dark)] no-underline transition-colors text-sm font-medium">エビデンス</a>
+          <a href="/campus" class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary-dark)] no-underline transition-colors text-sm font-medium">校舎案内</a>
+          <a href="/contact" class="btn-primary !py-2 !px-5 !text-sm">お問い合わせ</a>
+        </div>
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-[var(--color-text-primary)]" aria-label="メニュー">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100">
+        <div class="px-4 py-4 flex flex-col gap-3">
+          <a href="/about" class="text-[var(--color-text-secondary)] no-underline py-2 text-base">私たちについて</a>
+          <a href="/courses" class="text-[var(--color-text-secondary)] no-underline py-2 text-base">コース案内</a>
+          <a href="/evidence" class="text-[var(--color-text-secondary)] no-underline py-2 text-base">エビデンス</a>
+          <a href="/campus" class="text-[var(--color-text-secondary)] no-underline py-2 text-base">校舎案内</a>
+          <a href="/contact" class="btn-primary text-center !text-base mt-2">お問い合わせ</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="relative bg-[#1a1a2e] text-white overflow-hidden">
+      <!-- Night sky with stars -->
+      <div class="absolute inset-0">
+        <div class="absolute top-[10%] left-[10%] w-1 h-1 bg-white rounded-full" style="animation: twinkle 3s infinite"></div>
+        <div class="absolute top-[20%] left-[30%] w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full" style="animation: twinkle 2.5s infinite 0.5s"></div>
+        <div class="absolute top-[15%] left-[60%] w-1 h-1 bg-white rounded-full" style="animation: twinkle 4s infinite 1s"></div>
+        <div class="absolute top-[25%] left-[80%] w-1 h-1 bg-[var(--color-accent)] rounded-full" style="animation: twinkle 3.5s infinite 1.5s"></div>
+        <div class="absolute top-[8%] left-[50%] w-1.5 h-1.5 bg-white rounded-full" style="animation: twinkle 2s infinite 0.3s"></div>
+        <div class="absolute top-[30%] left-[20%] w-1 h-1 bg-white rounded-full" style="animation: twinkle 3s infinite 2s"></div>
+        <!-- Moon -->
+        <div class="absolute top-[5%] right-[10%] w-12 h-12 bg-[var(--color-accent)] rounded-full opacity-80 shadow-[0_0_20px_rgba(255,212,59,0.4)]"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-2xl">🏫</span>
+              <span class="font-[var(--font-heading)] font-bold text-xl">S&Sセミナー</span>
+            </div>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              勉強以前の居場所から始まる学び。<br>
+              40年以上のソクラテス問答法で、<br>
+              どんな子にもまず笑顔の居場所を。
+            </p>
+          </div>
+          <div>
+            <h4 class="font-[var(--font-heading)] text-lg mb-4 text-[var(--color-accent)]">校舎案内</h4>
+            <div class="space-y-3 text-sm text-gray-400">
+              <div>
+                <p class="text-white font-medium">今市校舎</p>
+                <p>栃木県日光市</p>
+              </div>
+              <div>
+                <p class="text-white font-medium">日光校舎</p>
+                <p>栃木県日光市</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-[var(--font-heading)] text-lg mb-4 text-[var(--color-accent)]">リンク</h4>
+            <div class="space-y-2 text-sm">
+              <a href="/about" class="block text-gray-400 hover:text-white no-underline transition-colors">私たちについて</a>
+              <a href="/courses" class="block text-gray-400 hover:text-white no-underline transition-colors">コース案内</a>
+              <a href="/evidence" class="block text-gray-400 hover:text-white no-underline transition-colors">エビデンス</a>
+              <a href="/campus" class="block text-gray-400 hover:text-white no-underline transition-colors">校舎案内</a>
+              <a href="/contact" class="block text-gray-400 hover:text-white no-underline transition-colors">お問い合わせ</a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+          <p>&copy; {new Date().getFullYear()} 進学塾S&Sセミナー. All rights reserved.</p>
+        </div>
+      </div>
+
+      <!-- Sleeping children illustration at bottom -->
+      <div class="relative z-10 flex justify-center pb-4 opacity-50">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none">
+          <text x="30" y="25" font-size="20" fill="white" opacity="0.3">💤</text>
+          <text x="80" y="30" font-size="16" fill="white" opacity="0.2">💤</text>
+          <text x="130" y="25" font-size="20" fill="white" opacity="0.3">💤</text>
+        </svg>
+      </div>
+    </footer>
+
+    <script>
+      // Nav background on scroll
+      const nav = document.getElementById('main-nav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav?.classList.add('bg-white/90', 'backdrop-blur-md', 'shadow-sm');
+        } else {
+          nav?.classList.remove('bg-white/90', 'backdrop-blur-md', 'shadow-sm');
+        }
+      });
+
+      // Mobile menu toggle
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuBtn?.addEventListener('click', () => {
+        mobileMenu?.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>
