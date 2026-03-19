@@ -1,0 +1,243 @@
+---
+/**
+ * Parents section — Evidence-based support
+ * Communicates trust and comprehensive child support
+ */
+
+const supports = [
+  {
+    title: 'メンター制度',
+    desc: '学習面だけでなく、子どもの心理的な安全を確保するメンターが付きます。信頼できる大人の存在が、子どもの成長の土台になります。',
+    icon: 'mentor',
+  },
+  {
+    title: '就学継続支援',
+    desc: '学校に通うことが困難な子どもに対して、学びの継続を支援。個別のペースを尊重しながら、社会とのつながりを維持します。',
+    icon: 'support',
+  },
+  {
+    title: 'エビデンスベースの支援',
+    desc: '科学的根拠に基づいた学習支援プログラム。一人ひとりの特性を理解し、効果が実証された方法で成長をサポートします。',
+    icon: 'evidence',
+  },
+  {
+    title: '保護者との連携',
+    desc: '定期的な面談と情報共有。子育てQ&Aの発信、いじめ防止への取り組みなど、保護者と共に子どもを見守る体制を整えています。',
+    icon: 'connect',
+  },
+];
+---
+
+<section class="section parents" id="parents" data-section="parents" data-section-id="parents">
+  <div class="container">
+    <div class="parents-header appear">
+      <h2 class="heading-offgrid">保護者の方へ</h2>
+      <p class="section-subtitle">子どもを丸ごと支える。それが私たちの約束です。</p>
+    </div>
+
+    <div class="parents-message appear appear-delay-1">
+      <div class="parents-message-bg" aria-hidden="true"></div>
+      <p class="parents-message-text">
+        「うちの子、勉強が嫌いで…」<br>
+        「学校に行きたがらなくて…」<br>
+        <strong>大丈夫です。私たちは、そこから始めます。</strong>
+      </p>
+    </div>
+
+    <div class="supports-grid">
+      {supports.map((s, i) => (
+        <div class:list={['support-card', 'appear', `appear-delay-${(i % 4) + 1}`]}>
+          <div class="support-icon" aria-hidden="true">
+            {s.icon === 'mentor' && (
+              <svg viewBox="0 0 56 56" fill="none" stroke="var(--color-you-daidai)" stroke-width="2">
+                <circle cx="28" cy="18" r="10" />
+                <path d="M10,48 Q10,32 28,32 Q46,32 46,48" stroke-linecap="round" />
+                <circle cx="42" cy="14" r="6" opacity="0.4" />
+                <path d="M36,42 Q36,30 42,26" stroke-linecap="round" opacity="0.4" />
+              </svg>
+            )}
+            {s.icon === 'support' && (
+              <svg viewBox="0 0 56 56" fill="none" stroke="var(--color-sora-mizu)" stroke-width="2">
+                <path d="M28,8 L28,48" stroke-linecap="round" />
+                <path d="M16,20 L28,8 L40,20" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M14,36 L28,36 L42,36" stroke-linecap="round" opacity="0.4" />
+                <path d="M18,44 L28,44 L38,44" stroke-linecap="round" opacity="0.3" />
+              </svg>
+            )}
+            {s.icon === 'evidence' && (
+              <svg viewBox="0 0 56 56" fill="none" stroke="var(--color-tatami-kin)" stroke-width="2">
+                <rect x="10" y="8" width="36" height="40" rx="3" />
+                <path d="M18,20 L38,20" stroke-linecap="round" />
+                <path d="M18,28 L34,28" stroke-linecap="round" opacity="0.7" />
+                <path d="M18,36 L30,36" stroke-linecap="round" opacity="0.5" />
+                <circle cx="38" cy="38" r="8" fill="var(--color-sumi-shiro)" stroke="var(--color-tatami-kin)" />
+                <path d="M35,38 L37,40 L42,35" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            )}
+            {s.icon === 'connect' && (
+              <svg viewBox="0 0 56 56" fill="none" stroke="var(--color-shu-aka)" stroke-width="2">
+                <circle cx="18" cy="20" r="8" />
+                <circle cx="38" cy="20" r="8" />
+                <path d="M18,30 Q18,42 28,42 Q38,42 38,30" stroke-linecap="round" />
+                <circle cx="28" cy="44" r="6" fill="none" />
+              </svg>
+            )}
+          </div>
+          <h3 class="support-title">{s.title}</h3>
+          <p class="support-desc">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="parents-stats appear">
+      <div class="stat">
+        <span class="stat-number text-display" data-count="40">40</span>
+        <span class="stat-unit">年以上</span>
+        <span class="stat-label">の歴史</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number text-display" data-count="100">100</span>
+        <span class="stat-unit">時間以上</span>
+        <span class="stat-label">年間講師研修</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number text-display" data-count="2">2</span>
+        <span class="stat-unit">教室</span>
+        <span class="stat-label">日光 & 今市</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .parents {
+    background: var(--zone-bg);
+  }
+
+  .parents-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  /* Hero message */
+  .parents-message {
+    position: relative;
+    padding: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .parents-message-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-you-daidai), #FF8C5C);
+    opacity: 0.08;
+    border-radius: inherit;
+  }
+
+  .parents-message-text {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    line-height: 2;
+    text-align: center;
+    color: var(--color-primary);
+  }
+
+  .parents-message-text strong {
+    display: block;
+    margin-top: var(--space-md);
+    color: var(--color-secondary);
+    font-size: var(--text-2xl);
+  }
+
+  /* Support cards */
+  .supports-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .support-card {
+    padding: var(--space-xl);
+    background: var(--color-sumi-shiro);
+    border-radius: var(--radius-lg);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .support-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .support-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--space-md);
+  }
+
+  .support-title {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .support-desc {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+
+  /* Stats */
+  .parents-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid rgba(26, 26, 46, 0.08);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: var(--text-3xl);
+    color: var(--color-secondary);
+    line-height: 1;
+  }
+
+  .stat-unit {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .stat-label {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    opacity: 0.6;
+    margin-top: var(--space-xs);
+  }
+
+  @media (max-width: 768px) {
+    .supports-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .parents-stats {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .parents-message-text {
+      font-size: var(--text-lg);
+    }
+
+    .parents-message-text strong {
+      font-size: var(--text-xl);
+    }
+  }
+</style>

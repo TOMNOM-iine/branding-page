@@ -1,0 +1,80 @@
+---
+interface Props {
+  color?: string;
+  pattern?: 'wave' | 'zigzag' | 'dots';
+}
+
+const { color = 'var(--color-accent-warm)', pattern = 'wave' } = Astro.props;
+---
+
+<div class="divider" aria-hidden="true">
+  {pattern === 'wave' && (
+    <svg class="divider-svg" viewBox="0 0 1200 60" preserveAspectRatio="none">
+      <path
+        d="M0,30 Q150,0 300,30 Q450,60 600,30 Q750,0 900,30 Q1050,60 1200,30"
+        stroke={color}
+        stroke-width="2"
+        fill="none"
+        class="divider-path"
+      />
+    </svg>
+  )}
+  {pattern === 'zigzag' && (
+    <svg class="divider-svg" viewBox="0 0 1200 40" preserveAspectRatio="none">
+      <path
+        d="M0,20 L60,5 L120,35 L180,5 L240,35 L300,5 L360,35 L420,5 L480,35 L540,5 L600,35 L660,5 L720,35 L780,5 L840,35 L900,5 L960,35 L1020,5 L1080,35 L1140,5 L1200,20"
+        stroke={color}
+        stroke-width="2"
+        fill="none"
+        class="divider-path"
+      />
+    </svg>
+  )}
+  {pattern === 'dots' && (
+    <div class="divider-dots">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <span class="divider-dot" style={`background: ${color}; animation-delay: ${i * 50}ms`} />
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .divider {
+    width: 100%;
+    padding: var(--space-md) 0;
+    overflow: hidden;
+  }
+
+  .divider-svg {
+    width: 100%;
+    height: 40px;
+  }
+
+  .divider-path {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+  }
+
+  .divider.is-visible .divider-path {
+    animation: draw-line 2s var(--ease-out-expo) forwards;
+  }
+
+  .divider-dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .divider-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  .divider.is-visible .divider-dot {
+    animation: fade-in 0.4s ease forwards;
+  }
+</style>

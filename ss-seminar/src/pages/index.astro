@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/hero/HeroCanvas.astro';
+import PhilosophyTimeline from '../components/sections/PhilosophyTimeline.astro';
+import ProgramCards from '../components/sections/ProgramCards.astro';
+import ParentsSection from '../components/sections/ParentsSection.astro';
+import VoiceCarousel from '../components/sections/VoiceCarousel.astro';
+import AccessMap from '../components/sections/AccessMap.astro';
+import PatternDivider from '../components/ui/PatternDivider.astro';
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <HeroCanvas />
+
+  <!-- Section divider -->
+  <PatternDivider color="var(--color-sora-mizu)" pattern="wave" />
+
+  <!-- Philosophy -->
+  <PhilosophyTimeline />
+
+  <!-- Section divider -->
+  <PatternDivider color="var(--color-tatami-kin)" pattern="zigzag" />
+
+  <!-- Programs -->
+  <ProgramCards />
+
+  <!-- Section divider -->
+  <PatternDivider color="var(--color-you-daidai)" pattern="dots" />
+
+  <!-- Parents -->
+  <ParentsSection />
+
+  <!-- Section divider -->
+  <PatternDivider color="var(--color-sakura-hai)" pattern="wave" />
+
+  <!-- Voices -->
+  <VoiceCarousel />
+
+  <!-- Section divider -->
+  <PatternDivider color="var(--color-yoru-ai)" pattern="zigzag" />
+
+  <!-- Access & Contact -->
+  <AccessMap />
+</BaseLayout>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

@@ -1,0 +1,423 @@
+---
+/**
+ * Philosophy section + horizontal scroll timeline
+ * Communicates: 居場所 → 学び flow
+ */
+---
+
+<section class="section philosophy" id="philosophy" data-section="philosophy" data-section-id="philosophy">
+  <div class="container">
+    <div class="philosophy-intro appear">
+      <h2 class="heading-offgrid">私たちの理念</h2>
+      <p class="section-subtitle">40年以上、子どもたちと共に歩んできた学びの場</p>
+    </div>
+
+    <div class="philosophy-grid">
+      <!-- Concept 1: 居場所をつくる -->
+      <div class="philosophy-concept appear appear-delay-1">
+        <div class="concept-illustration" aria-hidden="true">
+          <svg viewBox="0 0 220 200" fill="none">
+            <!-- House / safe space -->
+            <path class="draw-element" d="M110,30 L30,90 L30,170 L190,170 L190,90 Z" stroke="var(--color-sora-mizu)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Roof texture -->
+            <path class="draw-element draw-delay-1" d="M50,85 L110,40 L170,85" stroke="var(--color-sora-mizu)" stroke-width="1.5" stroke-linecap="round" opacity="0.4" />
+            <!-- Door (open, welcoming) -->
+            <path class="draw-element draw-delay-2" d="M85,170 L85,115 Q85,110 90,110 L130,110 Q135,110 135,115 L135,170" stroke="var(--color-you-daidai)" stroke-width="2" stroke-linecap="round" />
+            <!-- Warm light from door -->
+            <path class="draw-element draw-delay-3" d="M90,165 L90,125 L130,125 L130,165" stroke="var(--color-tatami-kin)" stroke-width="1" opacity="0.3" fill="var(--color-tatami-kin)" fill-opacity="0.08" />
+            <!-- Child walking toward door -->
+            <g class="draw-element draw-delay-3" transform="translate(55, 115)">
+              <circle cx="12" cy="8" r="7" stroke="var(--color-primary)" stroke-width="2" />
+              <!-- Happy eyes -->
+              <path d="M9,6 Q10.5,4 12,6" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M14,6 Q15.5,4 17,6" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" />
+              <!-- Smile -->
+              <path d="M9,10 Q12,14 15,10" stroke="var(--color-you-daidai)" stroke-width="1.5" stroke-linecap="round" />
+              <!-- Body walking right -->
+              <path d="M12,15 L12,35" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path d="M12,22 L4,18" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path d="M12,22 L20,28" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path d="M12,35 L5,48" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path d="M12,35 L20,46" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+            </g>
+            <!-- Window with warm glow -->
+            <rect class="draw-element draw-delay-2" x="145" y="115" width="25" height="25" rx="2" stroke="var(--color-sora-mizu)" stroke-width="1.5" />
+            <path class="draw-element draw-delay-3" d="M145,127 L170,127 M157,115 L157,140" stroke="var(--color-sora-mizu)" stroke-width="1" opacity="0.5" />
+            <!-- Stars / warmth particles -->
+            <circle class="geo-accent geo-float-1" cx="165" cy="55" r="3" fill="var(--color-tatami-kin)" opacity="0.5" />
+            <circle class="geo-accent geo-float-2" cx="45" cy="65" r="2" fill="var(--color-sora-mizu)" opacity="0.4" />
+            <path class="geo-accent geo-float-3" d="M195,60 L198,55 L201,60 L198,65 Z" fill="var(--color-you-daidai)" opacity="0.3" />
+          </svg>
+        </div>
+        <h3>居場所をつくる</h3>
+        <p>
+          学びの前に、まず安心できる場所を。やる気がなくても、
+          勉強が嫌いでも大丈夫。ここに来れば、自分でいられる。
+          子どもの笑顔が、すべての始まりです。
+        </p>
+      </div>
+
+      <div class="philosophy-arrow appear appear-delay-2" aria-hidden="true">
+        <svg viewBox="0 0 80 30" fill="none">
+          <path d="M5,15 Q40,5 60,15 Q65,16 70,13" stroke="var(--color-accent-warm)" stroke-width="2" stroke-linecap="round" fill="none" />
+          <path d="M62,8 L72,13 L62,20" stroke="var(--color-accent-warm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
+      </div>
+
+      <!-- Concept 2: 対話で引き出す -->
+      <div class="philosophy-concept appear appear-delay-3">
+        <div class="concept-illustration" aria-hidden="true">
+          <svg viewBox="0 0 220 200" fill="none">
+            <!-- Teacher figure (left) -->
+            <g transform="translate(40, 50)">
+              <circle class="draw-element" cx="25" cy="12" r="12" stroke="var(--color-primary)" stroke-width="2" />
+              <!-- Glasses (Socratic feel) -->
+              <circle class="draw-element draw-delay-1" cx="21" cy="10" r="4" stroke="var(--color-primary)" stroke-width="1.5" />
+              <circle class="draw-element draw-delay-1" cx="31" cy="10" r="4" stroke="var(--color-primary)" stroke-width="1.5" />
+              <path class="draw-element draw-delay-1" d="M25,10 L27,10" stroke="var(--color-primary)" stroke-width="1" />
+              <!-- Gentle smile -->
+              <path class="draw-element draw-delay-2" d="M20,16 Q25,20 30,16" stroke="var(--color-you-daidai)" stroke-width="1.5" stroke-linecap="round" />
+              <!-- Body -->
+              <path class="draw-element draw-delay-2" d="M25,24 L25,65" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" />
+              <!-- Arms gesturing (asking) -->
+              <path class="draw-element draw-delay-3" d="M25,38 L5,30" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path class="draw-element draw-delay-3" d="M25,38 L48,28" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <!-- Legs -->
+              <path class="draw-element draw-delay-3" d="M25,65 L15,85" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path class="draw-element draw-delay-3" d="M25,65 L35,85" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+            </g>
+            <!-- Speech bubble with "?" -->
+            <g class="draw-element draw-delay-3">
+              <path d="M95,35 Q95,20 115,20 L155,20 Q170,20 170,35 L170,55 Q170,70 155,70 L120,70 L105,82 L110,70 Q95,70 95,55 Z" stroke="var(--color-you-daidai)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <text x="132" y="52" text-anchor="middle" font-family="var(--font-display)" font-size="24" fill="var(--color-you-daidai)">？</text>
+            </g>
+            <!-- Student figure (right) -->
+            <g transform="translate(145, 65)">
+              <circle class="draw-element draw-delay-2" cx="20" cy="10" r="10" stroke="var(--color-primary)" stroke-width="2" />
+              <!-- Eyes looking up (thinking) -->
+              <circle class="draw-element draw-delay-3" cx="16" cy="8" r="2" fill="var(--color-primary)" />
+              <circle class="draw-element draw-delay-3" cx="24" cy="8" r="2" fill="var(--color-primary)" />
+              <!-- Thinking mouth -->
+              <path class="draw-element draw-delay-3" d="M16,14 L24,14" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" />
+              <!-- Body -->
+              <path class="draw-element draw-delay-3" d="M20,20 L20,55" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <!-- Hand on chin (thinking pose) -->
+              <path class="draw-element draw-delay-4" d="M20,32 L35,25 L33,18" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path class="draw-element draw-delay-4" d="M20,32 L8,40" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <!-- Legs -->
+              <path class="draw-element draw-delay-4" d="M20,55 L12,72" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path class="draw-element draw-delay-4" d="M20,55 L28,72" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+            </g>
+            <!-- Lightbulb appearing above student -->
+            <g class="draw-element draw-delay-5" transform="translate(175, 40)">
+              <path d="M10,25 Q0,15 5,5 Q10,-2 18,2 Q25,5 22,15 Q20,20 18,25 Z" stroke="var(--color-tatami-kin)" stroke-width="2" stroke-linecap="round" fill="var(--color-tatami-kin)" fill-opacity="0.15" />
+              <path d="M10,25 L18,25" stroke="var(--color-tatami-kin)" stroke-width="2" stroke-linecap="round" />
+              <path d="M11,28 L17,28" stroke="var(--color-tatami-kin)" stroke-width="1.5" stroke-linecap="round" />
+              <!-- Light rays -->
+              <path d="M14,0 L14,-5" stroke="var(--color-tatami-kin)" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M5,3 L1,0" stroke="var(--color-tatami-kin)" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M23,3 L27,0" stroke="var(--color-tatami-kin)" stroke-width="1.5" stroke-linecap="round" />
+            </g>
+            <!-- Connecting dots (dialogue flow) -->
+            <circle class="geo-accent geo-float-1" cx="85" cy="55" r="2.5" fill="var(--color-you-daidai)" opacity="0.4" />
+            <circle class="geo-accent geo-float-2" cx="90" cy="65" r="2" fill="var(--color-you-daidai)" opacity="0.3" />
+            <circle class="geo-accent geo-float-3" cx="88" cy="75" r="1.5" fill="var(--color-you-daidai)" opacity="0.2" />
+          </svg>
+        </div>
+        <h3>対話で引き出す</h3>
+        <p>
+          ソクラテス問答法。答えを教えるのではなく、
+          問いかけによって子ども自身の中にある力を引き出す。
+          40年以上磨き続けてきた、S&S独自の教育メソッドです。
+        </p>
+      </div>
+
+      <div class="philosophy-arrow appear appear-delay-4" aria-hidden="true">
+        <svg viewBox="0 0 80 30" fill="none">
+          <path d="M5,15 Q40,25 60,15 Q65,14 70,17" stroke="var(--color-accent-warm)" stroke-width="2" stroke-linecap="round" fill="none" />
+          <path d="M62,10 L72,17 L62,22" stroke="var(--color-accent-warm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
+      </div>
+
+      <!-- Concept 3: まるごと支える -->
+      <div class="philosophy-concept appear">
+        <div class="concept-illustration" aria-hidden="true">
+          <svg viewBox="0 0 220 200" fill="none">
+            <!-- Large embracing arms / circle of support -->
+            <path class="draw-element" d="M30,100 Q30,30 110,30 Q190,30 190,100 Q190,160 110,170 Q30,160 30,100 Z" stroke="var(--color-tatami-kin)" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+            <!-- Inner warm circle -->
+            <circle class="draw-element draw-delay-1" cx="110" cy="100" r="55" stroke="var(--color-tatami-kin)" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.25" />
+            <!-- Central child (happy, supported) -->
+            <g transform="translate(95, 65)">
+              <circle class="draw-element draw-delay-2" cx="15" cy="10" r="12" stroke="var(--color-primary)" stroke-width="2.5" />
+              <!-- Big happy eyes -->
+              <path class="draw-element draw-delay-3" d="M10,7 Q12,4 14,7" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" />
+              <path class="draw-element draw-delay-3" d="M18,7 Q20,4 22,7" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" />
+              <!-- Big smile -->
+              <path class="draw-element draw-delay-3" d="M8,14 Q15,22 22,14" stroke="var(--color-you-daidai)" stroke-width="2" stroke-linecap="round" />
+              <!-- Body (arms up, joyful) -->
+              <path class="draw-element draw-delay-3" d="M15,22 L15,55" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" />
+              <!-- Arms reaching up (joy) -->
+              <path class="draw-element draw-delay-4" d="M15,32 L-5,18" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path class="draw-element draw-delay-4" d="M15,32 L35,18" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <!-- Legs -->
+              <path class="draw-element draw-delay-4" d="M15,55 L5,72" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+              <path class="draw-element draw-delay-4" d="M15,55 L25,72" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" />
+            </g>
+            <!-- Support figures around (mentors, community) -->
+            <!-- Left mentor -->
+            <g class="draw-element draw-delay-4" transform="translate(35, 80)">
+              <circle cx="12" cy="8" r="8" stroke="var(--color-sora-mizu)" stroke-width="1.5" />
+              <path d="M12,16 L12,38" stroke="var(--color-sora-mizu)" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M12,24 L22,30" stroke="var(--color-sora-mizu)" stroke-width="1.5" stroke-linecap="round" />
+            </g>
+            <!-- Right mentor -->
+            <g class="draw-element draw-delay-5" transform="translate(163, 80)">
+              <circle cx="12" cy="8" r="8" stroke="var(--color-you-daidai)" stroke-width="1.5" />
+              <path d="M12,16 L12,38" stroke="var(--color-you-daidai)" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M12,24 L2,30" stroke="var(--color-you-daidai)" stroke-width="1.5" stroke-linecap="round" />
+            </g>
+            <!-- Top supporter -->
+            <g class="draw-element draw-delay-5" transform="translate(100, 25)">
+              <circle cx="10" cy="6" r="6" stroke="var(--color-shu-aka)" stroke-width="1.5" opacity="0.6" />
+              <path d="M10,12 L10,25" stroke="var(--color-shu-aka)" stroke-width="1.5" stroke-linecap="round" opacity="0.6" />
+            </g>
+            <!-- Connecting lines (support network) -->
+            <path class="draw-element draw-delay-5" d="M55,100 L90,95" stroke="var(--color-sora-mizu)" stroke-width="1" stroke-dasharray="3 4" opacity="0.4" />
+            <path class="draw-element draw-delay-5" d="M175,100 L130,95" stroke="var(--color-you-daidai)" stroke-width="1" stroke-dasharray="3 4" opacity="0.4" />
+            <path class="draw-element draw-delay-5" d="M110,50 L110,75" stroke="var(--color-shu-aka)" stroke-width="1" stroke-dasharray="3 4" opacity="0.3" />
+            <!-- Hearts / warmth symbols -->
+            <g class="geo-accent geo-float-1" transform="translate(70, 55)">
+              <path d="M5,3 Q5,0 8,0 Q11,0 11,3 Q11,7 5,10 Q-1,7 -1,3 Q-1,0 2,0 Q5,0 5,3 Z" fill="var(--color-shu-aka)" opacity="0.3" />
+            </g>
+            <g class="geo-accent geo-float-2" transform="translate(148, 50)">
+              <path d="M4,2.5 Q4,0 6.5,0 Q9,0 9,2.5 Q9,5.5 4,8 Q-1,5.5 -1,2.5 Q-1,0 1.5,0 Q4,0 4,2.5 Z" fill="var(--color-you-daidai)" opacity="0.3" />
+            </g>
+            <circle class="geo-accent geo-float-3" cx="55" cy="155" r="3" fill="var(--color-tatami-kin)" opacity="0.4" />
+            <rect class="geo-accent geo-float-1" x="160" y="150" width="6" height="6" rx="1" fill="var(--color-sora-mizu)" opacity="0.3" transform="rotate(45, 163, 153)" />
+          </svg>
+        </div>
+        <h3>まるごと支える</h3>
+        <p>
+          学習困難な子どもにはエビデンスに基づく支援を。
+          メンター制度、就学継続支援、放課後デイサービス。
+          子どもを丸ごと包摂する、それがS&Sの約束です。
+        </p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-wrapper appear" aria-label="S&Sセミナーの歩み">
+      <h3 class="timeline-title">40年以上の歩み</h3>
+      <div class="timeline-scroll" id="timeline-scroll">
+        <div class="timeline-track">
+          <svg class="timeline-line" viewBox="0 0 1600 4" preserveAspectRatio="none">
+            <line x1="0" y1="2" x2="1600" y2="2" stroke="var(--color-accent-warm)" stroke-width="2" class="timeline-line-path" />
+          </svg>
+          <div class="timeline-nodes">
+            <div class="timeline-node">
+              <span class="timeline-year">1980年代</span>
+              <span class="timeline-dot"></span>
+              <span class="timeline-desc">S&Sセミナー創立。<br>ソクラテス問答法の実践開始</span>
+            </div>
+            <div class="timeline-node">
+              <span class="timeline-year">1990年代</span>
+              <span class="timeline-dot"></span>
+              <span class="timeline-desc">個別指導の本格展開。<br>今市教室を開設</span>
+            </div>
+            <div class="timeline-node">
+              <span class="timeline-year">2000年代</span>
+              <span class="timeline-dot"></span>
+              <span class="timeline-desc">Lepton英語教室を導入。<br>グローバル教育の拡充</span>
+            </div>
+            <div class="timeline-node">
+              <span class="timeline-year">2010年代</span>
+              <span class="timeline-dot"></span>
+              <span class="timeline-desc">放課後デイサービス開始。<br>居場所づくりの深化</span>
+            </div>
+            <div class="timeline-node">
+              <span class="timeline-year">現在</span>
+              <span class="timeline-dot timeline-dot--now"></span>
+              <span class="timeline-desc">オンライン授業開始。<br>子どもまるごと包摂へ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    background: var(--zone-bg);
+  }
+
+  .philosophy-intro {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .philosophy-grid {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .philosophy-concept {
+    flex: 1;
+    text-align: center;
+  }
+
+  .concept-illustration {
+    width: 220px;
+    height: 200px;
+    margin: 0 auto var(--space-lg);
+  }
+
+  .concept-illustration svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* SVG drawing animation for illustration elements */
+  .concept-illustration .draw-element {
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    fill: none;
+    animation: draw-line 1.5s var(--ease-out-expo) forwards;
+  }
+
+  .concept-illustration .draw-delay-1 { animation-delay: 0.3s; }
+  .concept-illustration .draw-delay-2 { animation-delay: 0.6s; }
+  .concept-illustration .draw-delay-3 { animation-delay: 0.9s; }
+  .concept-illustration .draw-delay-4 { animation-delay: 1.2s; }
+  .concept-illustration .draw-delay-5 { animation-delay: 1.5s; }
+
+  .concept-illustration .geo-accent {
+    animation: zone-float 4s ease-in-out infinite;
+  }
+
+  .philosophy-concept h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .philosophy-concept p {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+
+  .philosophy-arrow {
+    flex-shrink: 0;
+    width: 60px;
+    padding-top: 40px;
+    opacity: 0.5;
+  }
+
+  /* Timeline */
+  .timeline-wrapper {
+    margin-top: var(--space-xl);
+  }
+
+  .timeline-title {
+    font-size: var(--text-lg);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+  }
+
+  .timeline-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: var(--space-md);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent-warm) transparent;
+  }
+
+  .timeline-track {
+    position: relative;
+    min-width: 900px;
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+  }
+
+  .timeline-line-path {
+    stroke-dasharray: 1600;
+    stroke-dashoffset: 1600;
+  }
+
+  .timeline-wrapper.is-visible .timeline-line-path {
+    animation: draw-line 2s var(--ease-out-expo) forwards;
+  }
+
+  .timeline-nodes {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    text-align: center;
+    width: 160px;
+  }
+
+  .timeline-year {
+    font-family: var(--font-latin);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+  }
+
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-accent-warm);
+    border: 3px solid var(--color-sumi-shiro);
+    box-shadow: 0 0 0 2px var(--color-accent-warm);
+    z-index: 1;
+  }
+
+  .timeline-dot--now {
+    background: var(--color-secondary);
+    box-shadow: 0 0 0 2px var(--color-secondary), 0 0 12px rgba(255, 107, 53, 0.4);
+  }
+
+  .timeline-desc {
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .philosophy-grid {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .philosophy-arrow {
+      transform: rotate(90deg);
+      padding-top: 0;
+    }
+
+    .philosophy-concept {
+      max-width: 400px;
+    }
+  }
+</style>

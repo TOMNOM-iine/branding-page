@@ -1,0 +1,138 @@
+/* === Animations — 四畳半宇宙 === */
+
+/* SVG stroke drawing */
+@keyframes draw-line {
+  from { stroke-dashoffset: var(--path-length, 1000); }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Fade in up */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Hero background color cycle */
+@keyframes color-cycle {
+  0%, 100% { background-color: var(--color-sumi-shiro); }
+  20% { background-color: #F2E9E4; }
+  40% { background-color: #E8F8F5; }
+  60% { background-color: #FDF8E8; }
+  80% { background-color: #FFF0E8; }
+}
+
+/* Gentle pulse for CTA */
+@keyframes pulse-gentle {
+  0%, 100% { transform: rotate(3deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.03); }
+}
+
+/* Text reveal — character by character */
+@keyframes text-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Geometric zone float */
+@keyframes zone-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Slide from left */
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide from right */
+@keyframes slide-from-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Scale reveal */
+@keyframes scale-reveal {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* === Scroll-triggered appearance === */
+.appear {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.appear.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.appear-delay-1 { transition-delay: 100ms; }
+.appear-delay-2 { transition-delay: 200ms; }
+.appear-delay-3 { transition-delay: 300ms; }
+.appear-delay-4 { transition-delay: 400ms; }
+
+/* === Room transition overlay === */
+.room-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.room-panel {
+  position: absolute;
+  top: 0;
+  width: 25%;
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-slow) var(--ease-in-out-quart);
+}
+
+.room-panel:nth-child(1) { left: 0; background: var(--color-yoru-ai); }
+.room-panel:nth-child(2) { left: 25%; background: var(--color-you-daidai); transition-delay: 50ms; }
+.room-panel:nth-child(3) { left: 50%; background: var(--color-tatami-kin); transition-delay: 100ms; }
+.room-panel:nth-child(4) { left: 75%; background: var(--color-sora-mizu); transition-delay: 150ms; }
+
+.room-overlay.is-transitioning .room-panel {
+  transform: scaleY(1);
+}

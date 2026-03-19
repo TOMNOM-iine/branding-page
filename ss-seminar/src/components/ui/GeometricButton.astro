@@ -1,0 +1,81 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'outline';
+  skew?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  skew = false,
+  class: className = '',
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  class:list={['geo-btn', `geo-btn--${variant}`, { 'geo-btn--skew': skew }, className]}
+>
+  <slot />
+</Tag>
+
+<style>
+  .geo-btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-base);
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .geo-btn--primary {
+    color: var(--color-sumi-shiro);
+    background: var(--color-secondary);
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.25);
+  }
+
+  .geo-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 107, 53, 0.35);
+    color: var(--color-sumi-shiro);
+  }
+
+  .geo-btn--secondary {
+    color: var(--color-sumi-shiro);
+    background: var(--color-primary);
+  }
+
+  .geo-btn--secondary:hover {
+    background: var(--color-sus-take);
+    color: var(--color-sumi-shiro);
+  }
+
+  .geo-btn--outline {
+    color: var(--color-secondary);
+    background: transparent;
+    border: 2px solid var(--color-secondary);
+  }
+
+  .geo-btn--outline:hover {
+    background: var(--color-secondary);
+    color: var(--color-sumi-shiro);
+  }
+
+  .geo-btn--skew {
+    transform: rotate(3deg);
+  }
+
+  .geo-btn--skew:hover {
+    transform: rotate(3deg) scale(1.05);
+  }
+</style>

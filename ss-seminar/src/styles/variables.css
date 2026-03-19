@@ -1,0 +1,99 @@
+/* ============================================
+   S&Sセミナー — 四畳半宇宙 Design System
+   Color as emotional state, not decoration.
+   ============================================ */
+
+:root {
+  /* === Color Palette === */
+  --color-yoru-ai: #1A1A2E;        /* 夜藍 — Primary: serious zones */
+  --color-you-daidai: #FF6B35;     /* 陽橙 — CTA, energy */
+  --color-tatami-kin: #E8D44D;     /* 畳金 — dividers, warmth */
+  --color-sora-mizu: #4ECDC4;      /* 空水 — links, learning zones */
+  --color-sakura-hai: #F2E9E4;     /* 桜灰 — breathing space */
+  --color-shu-aka: #C1292E;        /* 朱赤 — passion, urgency */
+  --color-sumi-shiro: #FAFAF8;     /* 墨白 — page background */
+  --color-sus-take: #3D3D3D;       /* 煤竹 — body text */
+
+  /* === Semantic aliases === */
+  --color-primary: var(--color-yoru-ai);
+  --color-secondary: var(--color-you-daidai);
+  --color-accent-warm: var(--color-tatami-kin);
+  --color-accent-cool: var(--color-sora-mizu);
+  --color-accent-soft: var(--color-sakura-hai);
+  --color-accent-passion: var(--color-shu-aka);
+  --color-bg: var(--color-sumi-shiro);
+  --color-text: var(--color-sus-take);
+
+  /* === Typography === */
+  --font-body: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  --font-heading: 'Shippori Mincho', 'Yu Mincho', serif;
+  --font-display: 'Reggae One', cursive;
+  --font-latin: 'Space Grotesk', sans-serif;
+
+  /* === Type Scale (fluid) === */
+  --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.8rem);
+  --text-sm: clamp(0.8rem, 0.75rem + 0.3vw, 0.9rem);
+  --text-base: clamp(0.95rem, 0.9rem + 0.3vw, 1.05rem);
+  --text-lg: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+  --text-xl: clamp(1.3rem, 1.1rem + 1vw, 1.8rem);
+  --text-2xl: clamp(1.6rem, 1.3rem + 1.5vw, 2.5rem);
+  --text-3xl: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  --text-hero: clamp(2.5rem, 2rem + 3vw, 5rem);
+
+  /* === Spacing === */
+  --space-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --space-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  --space-xl: clamp(2rem, 1.5rem + 3vw, 5rem);
+  --space-2xl: clamp(3rem, 2rem + 5vw, 8rem);
+  --space-section: clamp(4rem, 3rem + 5vw, 10rem);
+
+  /* === Layout === */
+  --max-width: 1200px;
+  --content-width: 800px;
+  --nav-height: 60px;
+
+  /* === Animation === */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 800ms;
+  --duration-glacial: 1600ms;
+
+  /* === Borders & Shadows === */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(26, 26, 46, 0.08);
+  --shadow-md: 0 4px 12px rgba(26, 26, 46, 0.12);
+  --shadow-lg: 0 8px 30px rgba(26, 26, 46, 0.16);
+}
+
+/* === Section color zones === */
+[data-section="philosophy"] {
+  --zone-color: var(--color-sora-mizu);
+  --zone-bg: #E8F8F5;
+}
+
+[data-section="programs"] {
+  --zone-color: var(--color-tatami-kin);
+  --zone-bg: #FDF8E8;
+}
+
+[data-section="parents"] {
+  --zone-color: var(--color-you-daidai);
+  --zone-bg: #FFF0E8;
+}
+
+[data-section="voices"] {
+  --zone-color: var(--color-sakura-hai);
+  --zone-bg: var(--color-sakura-hai);
+}
+
+[data-section="access"] {
+  --zone-color: var(--color-yoru-ai);
+  --zone-bg: #F0F0F5;
+}

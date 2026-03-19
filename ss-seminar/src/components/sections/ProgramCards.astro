@@ -1,0 +1,181 @@
+---
+/**
+ * Programs section — Asymmetric card grid
+ * Each program has its own "emotional color"
+ */
+
+const programs = [
+  {
+    title: '個別指導',
+    subtitle: 'ソクラテス問答法',
+    description: '答えを教えない。問いかけで、子ども自身の中にある答えを引き出す。一人ひとりのペースで、一人ひとりの理解に合わせた完全個別指導。',
+    color: 'var(--color-you-daidai)',
+    icon: 'dialog',
+    span: 2,
+  },
+  {
+    title: 'Lepton英語',
+    subtitle: '小学生からTOEIC600点',
+    description: 'リスニング・スピーキング・リーディング・ライティングの4技能をバランスよく育てる。ネイティブ音声で本物の英語力を。',
+    color: 'var(--color-sora-mizu)',
+    icon: 'globe',
+    span: 1,
+  },
+  {
+    title: '受験対策',
+    subtitle: '高校・大学入試',
+    description: '定期テスト3週間前から無料補習。成績が下がれば上がるまで無料サポート継続。100時間以上の講師研修で磨かれた指導力。',
+    color: 'var(--color-tatami-kin)',
+    icon: 'target',
+    span: 1,
+  },
+  {
+    title: '放課後デイサービス',
+    subtitle: '居場所としての学び場',
+    description: '学習だけでなく、子どもが安心して過ごせる居場所を提供。エビデンスに基づく支援で、一人ひとりの成長を見守ります。',
+    color: 'var(--color-shu-aka)',
+    icon: 'home',
+    span: 2,
+  },
+];
+---
+
+<section class="section programs" id="programs" data-section="programs" data-section-id="programs">
+  <div class="container">
+    <div class="appear">
+      <h2 class="heading-offgrid">プログラム</h2>
+      <p class="section-subtitle">一人ひとりに合わせた、多彩な学びの形</p>
+    </div>
+
+    <div class="programs-grid">
+      {programs.map((program, i) => (
+        <article
+          class:list={['program-card', 'appear', `appear-delay-${(i % 4) + 1}`]}
+          style={`--card-color: ${program.color}; --card-span: ${program.span}`}
+        >
+          <div class="program-card-accent" aria-hidden="true"></div>
+          <div class="program-card-content">
+            <div class="program-card-icon" aria-hidden="true">
+              {program.icon === 'dialog' && (
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8,12 L30,12 L30,28 L20,28 L14,34 L14,28 L8,28 Z" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M18,8 L40,8 L40,24 L34,24" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" />
+                </svg>
+              )}
+              {program.icon === 'globe' && (
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="24" cy="24" r="16" />
+                  <ellipse cx="24" cy="24" rx="8" ry="16" />
+                  <path d="M8,24 L40,24" />
+                  <path d="M10,16 L38,16" opacity="0.5" />
+                  <path d="M10,32 L38,32" opacity="0.5" />
+                </svg>
+              )}
+              {program.icon === 'target' && (
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="24" cy="24" r="16" />
+                  <circle cx="24" cy="24" r="10" />
+                  <circle cx="24" cy="24" r="4" fill="currentColor" />
+                </svg>
+              )}
+              {program.icon === 'home' && (
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8,24 L24,10 L40,24" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M14,22 L14,38 L34,38 L34,22" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M20,38 L20,28 L28,28 L28,38" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              )}
+            </div>
+            <h3 class="program-card-title">{program.title}</h3>
+            <span class="program-card-subtitle">{program.subtitle}</span>
+            <p class="program-card-desc">{program.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .programs {
+    background: var(--zone-bg);
+  }
+
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-2xl);
+  }
+
+  .program-card {
+    position: relative;
+    background: var(--color-sumi-shiro);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--duration-normal) var(--ease-out-expo);
+    grid-column: span var(--card-span, 1);
+  }
+
+  .program-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .program-card:hover .program-card-accent {
+    transform: scaleX(1);
+  }
+
+  .program-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--card-color);
+    transform: scaleX(0.3);
+    transform-origin: left;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .program-card-content {
+    padding: var(--space-xl);
+  }
+
+  .program-card-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--card-color);
+    margin-bottom: var(--space-md);
+  }
+
+  .program-card-title {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-xs);
+  }
+
+  .program-card-subtitle {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--card-color);
+    margin-bottom: var(--space-md);
+  }
+
+  .program-card-desc {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 768px) {
+    .programs-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .program-card {
+      grid-column: span 1 !important;
+    }
+  }
+</style>
