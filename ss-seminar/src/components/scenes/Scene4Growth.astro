@@ -1,0 +1,159 @@
+---
+---
+
+<section class="scene flex items-center justify-center bg-gradient-to-b from-[#FFF7E6] to-[var(--color-bg)]" id="scene-growth">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-center text-[var(--color-primary-dark)] mb-4 scene-fade">
+      一緒に成長する
+    </h2>
+    <p class="text-center text-[var(--color-text-secondary)] mb-16 scene-fade">
+      子どもたちの「わかった!」が花開く場所
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Growth tree SVG -->
+      <div class="relative flex justify-center">
+        <svg viewBox="0 0 300 400" width="300" height="400" id="growth-tree">
+          <!-- Ground -->
+          <ellipse cx="150" cy="380" rx="100" ry="15" fill="#69DB7C" opacity="0.3"/>
+
+          <!-- Trunk -->
+          <path d="M140,380 Q135,320 130,280 Q125,240 140,200" stroke="#8B6914" stroke-width="12" fill="none" stroke-linecap="round" class="tree-part" style="stroke-dasharray: 200; stroke-dashoffset: 200;"/>
+          <path d="M160,380 Q165,320 170,280 Q175,240 160,200" stroke="#8B6914" stroke-width="12" fill="none" stroke-linecap="round" class="tree-part" style="stroke-dasharray: 200; stroke-dashoffset: 200;"/>
+
+          <!-- Branches -->
+          <path d="M140,280 Q100,260 80,240" stroke="#8B6914" stroke-width="6" fill="none" stroke-linecap="round" class="tree-part" style="stroke-dasharray: 100; stroke-dashoffset: 100;"/>
+          <path d="M160,260 Q200,240 220,220" stroke="#8B6914" stroke-width="6" fill="none" stroke-linecap="round" class="tree-part" style="stroke-dasharray: 100; stroke-dashoffset: 100;"/>
+          <path d="M145,230 Q110,210 90,180" stroke="#8B6914" stroke-width="5" fill="none" stroke-linecap="round" class="tree-part" style="stroke-dasharray: 100; stroke-dashoffset: 100;"/>
+          <path d="M155,220 Q190,200 210,170" stroke="#8B6914" stroke-width="5" fill="none" stroke-linecap="round" class="tree-part" style="stroke-dasharray: 100; stroke-dashoffset: 100;"/>
+
+          <!-- Leaves (circles) -->
+          <circle cx="70" cy="230" r="30" fill="#69DB7C" opacity="0" class="leaf"/>
+          <circle cx="90" cy="170" r="25" fill="#51CF66" opacity="0" class="leaf"/>
+          <circle cx="225" cy="210" r="28" fill="#69DB7C" opacity="0" class="leaf"/>
+          <circle cx="215" cy="160" r="24" fill="#40C057" opacity="0" class="leaf"/>
+          <circle cx="150" cy="150" r="35" fill="#69DB7C" opacity="0" class="leaf"/>
+          <circle cx="120" cy="130" r="22" fill="#51CF66" opacity="0" class="leaf"/>
+          <circle cx="180" cy="130" r="22" fill="#40C057" opacity="0" class="leaf"/>
+          <circle cx="150" cy="110" r="28" fill="#69DB7C" opacity="0" class="leaf"/>
+
+          <!-- Fruit/data badges on branches -->
+          <g class="data-badge" opacity="0" transform="translate(55, 215)">
+            <circle r="18" fill="#FFD43B" stroke="white" stroke-width="2"/>
+            <text text-anchor="middle" y="5" font-size="8" fill="#1971C2" font-weight="bold">3週間</text>
+          </g>
+          <g class="data-badge" opacity="0" transform="translate(230, 195)">
+            <circle r="18" fill="#FF8A80" stroke="white" stroke-width="2"/>
+            <text text-anchor="middle" y="5" font-size="8" fill="#1971C2" font-weight="bold">無料</text>
+          </g>
+          <g class="data-badge" opacity="0" transform="translate(80, 155)">
+            <circle r="18" fill="#B197FC" stroke="white" stroke-width="2"/>
+            <text text-anchor="middle" y="5" font-size="8" fill="#1971C2" font-weight="bold">個別</text>
+          </g>
+          <g class="data-badge" opacity="0" transform="translate(220, 145)">
+            <circle r="18" fill="#4DABF7" stroke="white" stroke-width="2"/>
+            <text text-anchor="middle" y="5" font-size="8" fill="white" font-weight="bold">対話</text>
+          </g>
+          <g class="data-badge" opacity="0" transform="translate(150, 90)">
+            <circle r="22" fill="#69DB7C" stroke="white" stroke-width="2"/>
+            <text text-anchor="middle" y="5" font-size="9" fill="white" font-weight="bold">成長!</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Feature cards -->
+      <div class="space-y-6">
+        <div class="card border-l-4 border-[var(--color-primary)] feature-card">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl shrink-0">📝</span>
+            <div>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mb-1">テスト前3週間の無料補習</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                中間・期末テストの3週間前から、土日に無料で補習を実施。テストに向けた準備をしっかりサポートします。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-l-4 border-[var(--color-secondary)] feature-card">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl shrink-0">📈</span>
+            <div>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mb-1">成績が上がるまで無料補習</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                成績が下がった場合、上がるまで無料で補習を継続。結果が出るまで、決して諦めません。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-l-4 border-[var(--color-tertiary)] feature-card">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl shrink-0">👥</span>
+            <div>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mb-1">個別指導 & グループ授業</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                一人ひとりに合わせた個別指導と、仲間と切磋琢磨するグループ授業。お子さまに最適な学び方を。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-l-4 border-[var(--color-accent-purple)] feature-card">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl shrink-0">🤝</span>
+            <div>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mb-1">メンター制度</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                学習だけでなく、生活面もサポートするメンターが一人ひとりに寄り添います。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Fade in headings
+  gsap.utils.toArray('#scene-growth .scene-fade').forEach((el: any) => {
+    gsap.from(el, {
+      opacity: 0, y: 30, duration: 0.6,
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
+    });
+  });
+
+  // Tree draw animation
+  const treeTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#growth-tree',
+      start: 'top 70%',
+      end: 'bottom 50%',
+      scrub: 1,
+    }
+  });
+
+  treeTl.to('.tree-part', { strokeDashoffset: 0, duration: 1, stagger: 0.2 })
+    .to('.leaf', { opacity: 0.7, scale: 1, duration: 0.3, stagger: 0.1 }, '-=0.5')
+    .to('.data-badge', { opacity: 1, scale: 1, duration: 0.3, stagger: 0.15 }, '-=0.3');
+
+  gsap.set('.leaf', { scale: 0, transformOrigin: 'center center' });
+  gsap.set('.data-badge', { scale: 0 });
+
+  // Feature cards slide in from right
+  gsap.utils.toArray('.feature-card').forEach((el: any, i: number) => {
+    gsap.from(el, {
+      opacity: 0,
+      x: 60,
+      duration: 0.6,
+      delay: i * 0.15,
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
+    });
+  });
+</script>

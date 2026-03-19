@@ -1,0 +1,102 @@
+---
+---
+
+<section class="scene flex items-center justify-center bg-[var(--color-bg)]" id="scene-door">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h2 class="text-[var(--color-primary-dark)] mb-6 scene-fade">
+      居場所のドアを開けよう
+    </h2>
+    <p class="text-[var(--color-text-secondary)] mb-12 text-lg scene-fade">
+      最初の一歩は、安心できる場所を見つけること
+    </p>
+
+    <!-- Door animation container -->
+    <div class="relative w-64 h-96 mx-auto" id="door-container">
+      <!-- Door frame -->
+      <div class="absolute inset-0 bg-[#8B6914] rounded-t-3xl">
+        <!-- Warm classroom behind the door -->
+        <div class="absolute inset-2 rounded-t-2xl overflow-hidden bg-gradient-to-b from-[#FFF7E6] to-[#FFE8CC]" id="classroom-behind">
+          <!-- Classroom contents -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center p-4 opacity-0" id="classroom-content">
+            <div class="text-6xl mb-4">😊</div>
+            <p class="font-fun text-[var(--color-primary-dark)] text-lg">ここが、きみの居場所</p>
+            <div class="flex gap-3 mt-4">
+              <span class="text-3xl">📚</span>
+              <span class="text-3xl">✏️</span>
+              <span class="text-3xl">🎨</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The door itself (will animate open) -->
+      <div class="absolute inset-0 origin-left" id="the-door" style="transform-style: preserve-3d; perspective: 800px;">
+        <div class="w-full h-full bg-[var(--color-secondary)] rounded-t-3xl shadow-2xl origin-left" id="door-panel" style="transform-origin: left center;">
+          <!-- Door window -->
+          <div class="absolute top-8 left-1/2 -translate-x-1/2 w-32 h-24 bg-[#FFE0DB] rounded-lg border-2 border-[#FF6B6B]">
+            <div class="w-full h-full flex items-center justify-center">
+              <span class="text-2xl">🏫</span>
+            </div>
+          </div>
+          <!-- Door handle -->
+          <div class="absolute top-1/2 right-6 w-4 h-10 bg-[var(--color-accent)] rounded-full shadow-md"></div>
+          <!-- Door sign -->
+          <div class="absolute bottom-20 left-1/2 -translate-x-1/2 bg-white/90 px-4 py-2 rounded-lg">
+            <span class="font-fun text-[var(--color-primary-dark)] text-sm">ようこそ!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-12 text-[var(--color-text-secondary)] scene-fade text-base">
+      S&Sセミナーは、まず子どもたちが<br>
+      <span class="text-[var(--color-primary-dark)] font-bold">「ここにいていいんだ」</span>と感じられる場所。<br>
+      勉強はその後から、自然に始まります。
+    </p>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Door opening animation on scroll
+  gsap.to('#door-panel', {
+    rotateY: -110,
+    duration: 1,
+    ease: 'power2.inOut',
+    scrollTrigger: {
+      trigger: '#scene-door',
+      start: 'top 60%',
+      end: 'center center',
+      scrub: 1,
+    }
+  });
+
+  // Reveal classroom content after door opens
+  gsap.to('#classroom-content', {
+    opacity: 1,
+    duration: 0.5,
+    scrollTrigger: {
+      trigger: '#scene-door',
+      start: 'center center',
+      toggleActions: 'play none none reverse',
+    }
+  });
+
+  // Fade in text elements
+  gsap.utils.toArray('#scene-door .scene-fade').forEach((el: any) => {
+    gsap.from(el, {
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 80%',
+        toggleActions: 'play none none reverse',
+      }
+    });
+  });
+</script>

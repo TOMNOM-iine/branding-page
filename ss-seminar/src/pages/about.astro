@@ -1,0 +1,131 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="私たちについて | S&Sセミナー" description="S&Sセミナーの40年以上の歴史とソクラテス問答法による教育哲学をご紹介します。">
+  <div class="pt-24 pb-16">
+    <!-- Hero -->
+    <section class="max-w-4xl mx-auto px-4 text-center mb-20">
+      <span class="inline-block bg-[var(--color-primary)]/10 text-[var(--color-primary-dark)] text-sm px-4 py-1.5 rounded-full mb-4">
+        私たちについて
+      </span>
+      <h1 class="text-[var(--color-primary-dark)] mb-6">
+        40年以上、子どもたちと<br>歩んできた道のり
+      </h1>
+      <p class="text-[var(--color-text-secondary)] text-lg max-w-2xl mx-auto">
+        S&Sセミナーは、栃木県日光市で40年以上にわたり、ソクラテス問答法による対話型教育を実践してきました。
+      </p>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="max-w-6xl mx-auto px-4 mb-20">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-[var(--color-primary-dark)] mb-6">ソクラテス問答法とは</h2>
+          <p class="text-[var(--color-text-secondary)] mb-4 leading-relaxed">
+            古代ギリシャの哲学者ソクラテスが実践した、質問と対話を通じて真理に到達する教育法。
+            答えを一方的に教えるのではなく、問いかけを重ねることで、生徒自身が考え、気づき、理解に至ります。
+          </p>
+          <p class="text-[var(--color-text-secondary)] mb-4 leading-relaxed">
+            S&Sセミナーでは、この対話型の学びを40年以上にわたって実践。
+            「なぜ？」「どう思う？」という問いかけが、子どもたちの主体的な学びを引き出します。
+          </p>
+        </div>
+        <div class="flex justify-center">
+          <div class="relative">
+            <!-- Socratic cycle illustration -->
+            <svg viewBox="0 0 300 300" width="280" height="280">
+              <circle cx="150" cy="150" r="120" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-dasharray="8,4" opacity="0.3"/>
+              <!-- Nodes -->
+              <g transform="translate(150, 30)">
+                <circle r="30" fill="var(--color-primary)" opacity="0.9"/>
+                <text text-anchor="middle" y="5" fill="white" font-size="12" font-weight="bold">問う</text>
+              </g>
+              <g transform="translate(268, 150)">
+                <circle r="30" fill="var(--color-accent)" opacity="0.9"/>
+                <text text-anchor="middle" y="5" fill="#1971C2" font-size="12" font-weight="bold">考える</text>
+              </g>
+              <g transform="translate(210, 270)">
+                <circle r="30" fill="var(--color-secondary)" opacity="0.9"/>
+                <text text-anchor="middle" y="5" fill="white" font-size="12" font-weight="bold">対話</text>
+              </g>
+              <g transform="translate(90, 270)">
+                <circle r="30" fill="var(--color-tertiary)" opacity="0.9"/>
+                <text text-anchor="middle" y="5" fill="white" font-size="12" font-weight="bold">気づく</text>
+              </g>
+              <g transform="translate(32, 150)">
+                <circle r="30" fill="var(--color-accent-purple)" opacity="0.9"/>
+                <text text-anchor="middle" y="5" fill="white" font-size="12" font-weight="bold">理解</text>
+              </g>
+              <!-- Arrows -->
+              <path d="M175,50 L240,125" stroke="var(--color-text-secondary)" stroke-width="1.5" fill="none" marker-end="url(#arrow)" opacity="0.4"/>
+              <path d="M260,180 L230,245" stroke="var(--color-text-secondary)" stroke-width="1.5" fill="none" opacity="0.4"/>
+              <path d="M180,270 L120,270" stroke="var(--color-text-secondary)" stroke-width="1.5" fill="none" opacity="0.4"/>
+              <path d="M70,245 L45,180" stroke="var(--color-text-secondary)" stroke-width="1.5" fill="none" opacity="0.4"/>
+              <path d="M45,120 L130,50" stroke="var(--color-text-secondary)" stroke-width="1.5" fill="none" opacity="0.4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="max-w-4xl mx-auto px-4 mb-20">
+      <h2 class="text-center text-[var(--color-primary-dark)] mb-12">あゆみ</h2>
+      <div class="relative">
+        <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-[var(--color-primary)]/20"></div>
+
+        <div class="space-y-12">
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-8">
+            <div class="md:text-right md:pr-8">
+              <span class="font-fun text-[var(--color-primary)] text-2xl">創設期</span>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mt-1">S&Sセミナー誕生</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] mt-2">栃木県日光市にて、ソクラテス問答法をベースとした学習塾として開校。対話を通じた教育への挑戦が始まる。</p>
+            </div>
+            <div class="absolute left-2 md:left-1/2 md:-translate-x-1/2 top-1 w-5 h-5 bg-[var(--color-primary)] rounded-full border-4 border-white"></div>
+          </div>
+
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-8">
+            <div class="md:col-start-2 md:pl-8">
+              <span class="font-fun text-[var(--color-secondary)] text-2xl">発展期</span>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mt-1">日光校舎開校</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] mt-2">今市校舎に加え、日光にも校舎を開設。より多くの子どもたちに居場所と学びを提供。</p>
+            </div>
+            <div class="absolute left-2 md:left-1/2 md:-translate-x-1/2 top-1 w-5 h-5 bg-[var(--color-secondary)] rounded-full border-4 border-white"></div>
+          </div>
+
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-8">
+            <div class="md:text-right md:pr-8">
+              <span class="font-fun text-[var(--color-tertiary)] text-2xl">現在</span>
+              <h3 class="text-lg text-[var(--color-primary-dark)] mt-1">包括的支援の実現</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] mt-2">学習支援に加え、メンター制度、就学継続支援、学習困難支援など、子どもを丸ごと支える体制を確立。</p>
+            </div>
+            <div class="absolute left-2 md:left-1/2 md:-translate-x-1/2 top-1 w-5 h-5 bg-[var(--color-tertiary)] rounded-full border-4 border-white"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="max-w-4xl mx-auto px-4">
+      <h2 class="text-center text-[var(--color-primary-dark)] mb-12">私たちが大切にしていること</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card text-center">
+          <span class="text-4xl mb-4 block">🏡</span>
+          <h3 class="text-lg text-[var(--color-primary-dark)] mb-2">居場所</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">勉強の前に、まず「ここにいていいんだ」と感じられる安心の場所を。</p>
+        </div>
+        <div class="card text-center">
+          <span class="text-4xl mb-4 block">💬</span>
+          <h3 class="text-lg text-[var(--color-primary-dark)] mb-2">対話</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">答えを教えるのではなく、問いかけを通じて自ら気づく力を育む。</p>
+        </div>
+        <div class="card text-center">
+          <span class="text-4xl mb-4 block">🌱</span>
+          <h3 class="text-lg text-[var(--color-primary-dark)] mb-2">包摂</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">どんな子にも、その子に合ったペースで成長できる環境を。</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

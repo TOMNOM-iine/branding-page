@@ -1,0 +1,176 @@
+---
+---
+
+<section class="scene flex items-center justify-center bg-gradient-to-b from-[#E7F5FF] to-[var(--color-bg)]" id="scene-contact">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-center text-[var(--color-primary-dark)] mb-4 scene-fade">
+      物語に参加しよう
+    </h2>
+    <p class="text-center text-[var(--color-text-secondary)] mb-12 scene-fade font-fun text-lg">
+      まずは気軽にお問い合わせください
+    </p>
+
+    <!-- Envelope animation container -->
+    <div class="relative max-w-2xl mx-auto" id="envelope-container">
+      <!-- Envelope SVG -->
+      <div class="flex justify-center mb-8">
+        <svg viewBox="0 0 200 140" width="200" height="140" id="envelope-svg">
+          <!-- Envelope body -->
+          <rect x="10" y="40" width="180" height="90" fill="#FFD43B" rx="6" stroke="#E6A23C" stroke-width="1"/>
+          <!-- Envelope flap (opens on scroll) -->
+          <polygon id="envelope-flap" points="10,40 100,5 190,40" fill="#FFEC99" stroke="#E6A23C" stroke-width="1" style="transform-origin: 100px 40px;"/>
+          <!-- Heart seal -->
+          <text x="100" y="80" text-anchor="middle" font-size="24">💌</text>
+        </svg>
+      </div>
+
+      <!-- Contact form (revealed) -->
+      <div class="card p-8" id="contact-form-card">
+        <form class="space-y-5" id="contact-form">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-1">保護者のお名前</label>
+              <input type="text" name="parent_name" required
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm"
+                placeholder="山田 太郎" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-1">お子さまの学年</label>
+              <select name="grade" required
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm bg-white">
+                <option value="">選択してください</option>
+                <option>小学1年生</option>
+                <option>小学2年生</option>
+                <option>小学3年生</option>
+                <option>小学4年生</option>
+                <option>小学5年生</option>
+                <option>小学6年生</option>
+                <option>中学1年生</option>
+                <option>中学2年生</option>
+                <option>中学3年生</option>
+                <option>高校1年生</option>
+                <option>高校2年生</option>
+                <option>高校3年生</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-1">メールアドレス</label>
+              <input type="email" name="email" required
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm"
+                placeholder="example@email.com" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-1">電話番号</label>
+              <input type="tel" name="phone"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm"
+                placeholder="090-1234-5678" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-1">ご相談内容</label>
+            <textarea name="message" rows="4" required
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm resize-none"
+              placeholder="お気軽にご相談ください。無料体験のお申し込みも承っています。"></textarea>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn-primary text-lg px-10">
+              送信する ✉️
+            </button>
+          </div>
+        </form>
+
+        <!-- Success message (hidden by default) -->
+        <div id="contact-success" class="hidden text-center py-8">
+          <div class="text-5xl mb-4">🎉</div>
+          <h3 class="text-[var(--color-primary-dark)] mb-2">送信完了!</h3>
+          <p class="text-[var(--color-text-secondary)]">お問い合わせありがとうございます。<br>担当者より折り返しご連絡いたします。</p>
+        </div>
+      </div>
+
+      <!-- Alternative contact methods -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+        <div class="card text-center p-6 scene-fade">
+          <span class="text-3xl mb-2 block">📞</span>
+          <p class="text-sm text-[var(--color-text-secondary)] mb-1">お電話でのお問い合わせ</p>
+          <p class="text-lg font-bold text-[var(--color-primary-dark)] font-fun">お気軽にお電話ください</p>
+        </div>
+        <div class="card text-center p-6 scene-fade">
+          <span class="text-3xl mb-2 block">💬</span>
+          <p class="text-sm text-[var(--color-text-secondary)] mb-1">LINEでのお問い合わせ</p>
+          <p class="text-lg font-bold text-[var(--color-tertiary)] font-fun">LINEでも受付中</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Envelope flap opens on scroll
+  gsap.to('#envelope-flap', {
+    attr: { transform: 'rotate(180)' },
+    duration: 1,
+    scrollTrigger: {
+      trigger: '#scene-contact',
+      start: 'top 60%',
+      end: 'top 30%',
+      scrub: 1,
+    }
+  });
+
+  // Form card fades in
+  gsap.from('#contact-form-card', {
+    opacity: 0, y: 30, duration: 0.8,
+    scrollTrigger: { trigger: '#scene-contact', start: 'top 40%', toggleActions: 'play none none reverse' }
+  });
+
+  gsap.utils.toArray('#scene-contact .scene-fade').forEach((el: any, i: number) => {
+    gsap.from(el, {
+      opacity: 0, y: 30, duration: 0.6, delay: i * 0.1,
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
+    });
+  });
+
+  // Form submission handler
+  document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const success = document.getElementById('contact-success');
+
+    // Hide form, show success
+    form.style.display = 'none';
+    success?.classList.remove('hidden');
+
+    // Confetti effect
+    const colors = ['#4DABF7', '#FF8A80', '#69DB7C', '#FFD43B', '#B197FC'];
+    for (let i = 0; i < 30; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.cssText = `
+        position: fixed; width: 10px; height: 10px; top: -10px;
+        left: ${Math.random() * 100}%; z-index: 9999; pointer-events: none;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+        animation: confetti-fall ${2 + Math.random() * 2}s ease-in-out forwards;
+        animation-delay: ${Math.random() * 0.5}s;
+      `;
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 4000);
+    }
+  });
+</script>
+
+<style>
+  @keyframes confetti-fall {
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
