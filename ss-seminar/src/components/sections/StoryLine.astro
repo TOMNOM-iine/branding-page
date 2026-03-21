@@ -64,7 +64,7 @@ const steps = [
 <section class="storyline" id="storyline" aria-label="居場所から学びへのストーリー">
   <div class="storyline-header appear">
     <p class="storyline-label text-latin">Our Vision</p>
-    <h2 class="storyline-title">居場所から、学びへ。</h2>
+    <h2 class="storyline-title text-display">居場所から、学びへ。</h2>
     <p class="storyline-subtitle">一人ひとりのペースで。スモールステップで。</p>
   </div>
 
@@ -231,18 +231,36 @@ const steps = [
     pointer-events: none;
   }
 
-  /* ===== LINES — start invisible, born faintly, then grow vivid ===== */
+  /* ===== LINES — invisible → born (faint + flowing) → alive (vivid) ===== */
   .sline {
     opacity: 0;
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
     transition: opacity 2s var(--ease-out-expo), stroke-width 1.5s var(--ease-out-expo);
   }
 
-  /* Phase 1: born — faint, thin, ghostly appearance */
+  /* Phase 1: born — faint ghost + line flows in */
   .sline.is-born {
     opacity: 0.1;
+    animation: line-flow 4s var(--ease-out-expo) forwards;
   }
 
-  .sline-trunk.is-born { opacity: 0.12; }
+  .sline-trunk.is-born { opacity: 0.12; animation-duration: 3s; }
+  .sline-branch-a.is-born { animation-duration: 3.5s; animation-delay: 0.5s; }
+  .sline-branch-b.is-born { animation-duration: 3.5s; animation-delay: 1s; }
+  .sline-spread-1.is-born { animation-duration: 4s; animation-delay: 1.5s; }
+  .sline-spread-2.is-born { animation-duration: 4s; animation-delay: 2s; }
+  .sline-bloom-1.is-born { animation-duration: 3s; animation-delay: 2.5s; }
+  .sline-bloom-2.is-born { animation-duration: 3s; animation-delay: 2.7s; }
+  .sline-bloom-3.is-born { animation-duration: 3s; animation-delay: 2.9s; }
+  .sline-bloom-4.is-born { animation-duration: 3s; animation-delay: 3.1s; }
+  .sline-bloom-5.is-born { animation-duration: 3s; animation-delay: 3.3s; }
+  .sline-bloom-6.is-born { animation-duration: 3s; animation-delay: 3.5s; }
+
+  @keyframes line-flow {
+    0% { stroke-dashoffset: 3000; }
+    100% { stroke-dashoffset: 0; }
+  }
 
   /* Phase 2: alive — thick, vibrant, fully present */
   .sline.is-alive {
@@ -265,7 +283,7 @@ const steps = [
   /* Dots — invisible initially, bloom when step activates */
   .sdot {
     opacity: 0;
-    transition: opacity 0.8s var(--ease-out-expo), r 0.6s var(--ease-spring);
+    transition: opacity 0.8s var(--ease-out-expo);
   }
 
   .sdot.is-alive {
@@ -273,12 +291,16 @@ const steps = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sline { opacity: 0.15 !important; }
+    .sline {
+      opacity: 0.15 !important;
+      stroke-dashoffset: 0 !important;
+      animation: none !important;
+    }
     .sdot { opacity: 0.6 !important; }
   }
 
   /* No-JS fallback */
-  :global(.no-js) .sline { opacity: 0.15; }
+  :global(.no-js) .sline { opacity: 0.15; stroke-dashoffset: 0; animation: none; }
   :global(.no-js) .sdot { opacity: 0.6; }
 
   /* ===== STEPS ===== */
@@ -344,10 +366,13 @@ const steps = [
   }
 
   .storyline-step-title {
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
+    font-weight: 400;
     margin-bottom: var(--space-sm);
     color: var(--color-primary);
-    line-height: 1.3;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
   }
 
   .storyline-step-text {
