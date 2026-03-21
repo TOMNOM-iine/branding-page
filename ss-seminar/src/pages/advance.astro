@@ -23,26 +23,31 @@ const allAchievements = {
 <BaseLayout title="ADVANCE — 学習超特急 | S&Sセミナー" description="居場所の先にある全速力の世界。SSメソッドで難関校合格。">
 <div class="adv">
 
-  <!-- ===== 1. IMPACT: 実績を最初にドーンと ===== -->
-  <section class="adv-impact">
-    <div class="adv-impact-noise" aria-hidden="true"></div>
-    <div class="adv-impact-content">
-      <span class="adv-impact-label adv-reveal" data-d="0">TRACK RECORD</span>
-      <div class="adv-impact-schools">
-        {topSchools.map((school, i) => (
-          <span class="adv-impact-school adv-reveal" data-d={i}>{school}</span>
-        ))}
-      </div>
-      <p class="adv-impact-line adv-reveal" data-d="4">全員、ここから始まった。</p>
-    </div>
-  </section>
-
-  <!-- ===== 2. HERO: タイトル ===== -->
+  <!-- ===== 1. HERO ===== -->
   <section class="adv-hero">
     <div class="adv-hero-content">
       <span class="adv-badge adv-reveal" data-d="0">ADVANCE</span>
       <h1 class="adv-title adv-reveal" data-d="1">居場所の、<br>その先。</h1>
       <p class="adv-sub adv-reveal" data-d="2">安心が生まれたら、<br>次は全速力だ。</p>
+    </div>
+  </section>
+
+  <!-- ===== 2. IMPACT: 1校ずつドーンと ===== -->
+  <section class="adv-impact">
+    <div class="adv-impact-intro adv-reveal" data-d="0">
+      <span class="adv-impact-label">TRACK RECORD</span>
+      <p class="adv-impact-lead">ここから、ここまで行った。</p>
+    </div>
+    <div class="adv-impact-reel" id="impact-reel">
+      {topSchools.map((school, i) => (
+        <div class="adv-impact-slide" data-index={i}>
+          <span class="adv-impact-school">{school}</span>
+          <span class="adv-impact-tag">合格</span>
+        </div>
+      ))}
+    </div>
+    <div class="adv-impact-close adv-reveal" data-d="0">
+      <p class="adv-impact-all">全員、ここから始まった。</p>
     </div>
   </section>
 
@@ -177,24 +182,17 @@ const allAchievements = {
     margin-bottom: var(--space-2xl);
   }
 
-  /* ===== 1. IMPACT — 実績を最初にドーン ===== */
+  /* ===== 2. IMPACT — 1校ずつドーンと ===== */
   .adv-impact {
-    position: relative;
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--nav-height) var(--space-md) var(--space-xl);
-    overflow: hidden;
+    padding: var(--space-xl) var(--space-md);
+    border-top: 1px solid rgba(255,255,255,0.04);
   }
-  .adv-impact-noise {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 40%, rgba(255,107,53,0.08) 0%, transparent 70%);
-    pointer-events: none;
+
+  .adv-impact-intro {
+    text-align: center;
+    padding: var(--space-2xl) 0;
   }
-  .adv-impact-content { position: relative; text-align: center; max-width: 1000px; }
+
   .adv-impact-label {
     display: block;
     font-family: var(--font-latin);
@@ -202,29 +200,86 @@ const allAchievements = {
     font-weight: 700;
     letter-spacing: 0.5em;
     color: var(--color-you-daidai);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-md);
   }
-  .adv-impact-schools {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-2xl);
-  }
-  .adv-impact-school {
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 4vw, 3.5rem);
-    font-weight: 400;
-    color: #fff;
-    letter-spacing: 0.06em;
-    line-height: 1.3;
-    text-shadow: 0 0 40px rgba(255,107,53,0.15);
-  }
-  .adv-impact-line {
+
+  .adv-impact-lead {
     font-family: var(--font-heading);
     font-size: var(--text-2xl);
-    color: #666;
-    letter-spacing: 0.15em;
+    color: #555;
+    letter-spacing: 0.1em;
+  }
+
+  /* Reel: each school gets its own full-width row */
+  .adv-impact-reel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .adv-impact-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    min-height: 40vh;
+    padding: var(--space-xl) var(--space-md);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    /* Animation: starts invisible */
+    opacity: 0;
+    transform: scale(0.9) translateZ(0);
+    transition: opacity 0.8s var(--ease-smooth, ease),
+                transform 1.2s var(--ease-out-quart, ease);
+    will-change: opacity, transform;
+  }
+
+  .adv-impact-slide.is-visible {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+
+  .adv-impact-school {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 7rem);
+    font-weight: 400;
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(255,107,53,0.12);
+  }
+
+  .adv-impact-tag {
+    font-family: var(--font-latin);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: 0.2em;
+    color: var(--color-you-daidai);
+    border: 2px solid var(--color-you-daidai);
+    padding: var(--space-xs) var(--space-md);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.5s ease 0.6s, transform 0.5s var(--ease-out-quart, ease) 0.6s;
+  }
+
+  .adv-impact-slide.is-visible .adv-impact-tag {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Every other slide: school name slightly offset */
+  .adv-impact-slide:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .adv-impact-close {
+    text-align: center;
+    padding: var(--space-2xl) 0;
+  }
+
+  .adv-impact-all {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    color: #fff;
+    letter-spacing: 0.08em;
   }
 
   /* ===== 2. HERO ===== */
@@ -497,6 +552,7 @@ const allAchievements = {
 <script>
   const reveals = document.querySelectorAll('.adv-reveal');
   const bars = document.querySelectorAll('.adv-pb');
+  const slides = document.querySelectorAll('.adv-impact-slide');
 
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -522,5 +578,17 @@ const allAchievements = {
   bars.forEach(b => {
     if (b.getBoundingClientRect().top < window.innerHeight) b.classList.add('is-visible');
     bObs.observe(b);
+  });
+
+  // Impact slides — each school revealed individually
+  const slideObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('is-visible');
+    });
+  }, { threshold: 0.3 });
+
+  slides.forEach(s => {
+    if (s.getBoundingClientRect().top < window.innerHeight) s.classList.add('is-visible');
+    slideObs.observe(s);
   });
 </script>
