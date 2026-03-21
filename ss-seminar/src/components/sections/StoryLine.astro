@@ -16,6 +16,8 @@ const steps = [
     text: 'やる気がなくても大丈夫。ドアは開いている。まずは、ここに来るだけでいい。',
     accent: 'var(--color-you-daidai)',
     side: 'right',
+    imageAlt: '教室のドアを開ける子ども',
+    imageHint: '教室入口・歓迎の雰囲気',
   },
   {
     id: 'step-belong',
@@ -24,6 +26,8 @@ const steps = [
     text: '温かいお茶。「今日どうだった？」。自分のペースでいられる場所。安心が生まれる。',
     accent: 'var(--color-sora-mizu)',
     side: 'left',
+    imageAlt: '教室でリラックスする生徒たち',
+    imageHint: '温かい教室の雰囲気・笑顔',
   },
   {
     id: 'step-curiosity',
@@ -32,6 +36,8 @@ const steps = [
     text: '先生が問いかける。「なんでだと思う？」。答えを教えない。自分で考える楽しさに出会う。',
     accent: 'var(--color-tatami-kin)',
     side: 'right',
+    imageAlt: '先生と対話する生徒',
+    imageHint: 'ソクラテス問答法の対話風景',
   },
   {
     id: 'step-challenge',
@@ -40,6 +46,8 @@ const steps = [
     text: '「ちょっとやってみる？」。小さな一歩。間違えても大丈夫。ここでは誰も笑わない。',
     accent: 'var(--color-you-daidai)',
     side: 'left',
+    imageAlt: '問題に取り組む生徒',
+    imageHint: '集中して学ぶ姿・ノートに書く',
   },
   {
     id: 'step-grow',
@@ -48,6 +56,8 @@ const steps = [
     text: '「わかった！」の瞬間。自分で考え、自分で見つけた答え。それが一生の力になる。',
     accent: 'var(--color-sora-mizu)',
     side: 'right',
+    imageAlt: '達成感を感じる生徒の笑顔',
+    imageHint: '笑顔・達成感・自信',
   },
 ];
 ---
@@ -214,10 +224,33 @@ const steps = [
           <div class="storyline-step-badge" aria-hidden="true">
             <span class="storyline-step-number">{i + 1}</span>
           </div>
-          <div class="storyline-step-content">
-            <span class="storyline-step-label text-latin">{step.label}</span>
-            <h3 class="storyline-step-title">{step.title}</h3>
-            <p class="storyline-step-text">{step.text}</p>
+          <div class="storyline-step-body">
+            <div class="storyline-step-content">
+              <span class="storyline-step-label text-latin">{step.label}</span>
+              <h3 class="storyline-step-title">{step.title}</h3>
+              <p class="storyline-step-text">{step.text}</p>
+            </div>
+            <!-- Image placeholder — replace src with actual photos -->
+            <div class="storyline-step-image" data-step={i + 1}>
+              <div class="storyline-step-image-placeholder">
+                <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                  <rect x="10" y="18" width="60" height="44" rx="4" stroke="var(--step-accent)" stroke-width="1.5" opacity="0.3" />
+                  <circle cx="30" cy="35" r="6" stroke="var(--step-accent)" stroke-width="1" opacity="0.3" />
+                  <path d="M10,52 L30,38 L45,48 L55,40 L70,52 L70,62 L10,62 Z" fill="var(--step-accent)" opacity="0.08" />
+                </svg>
+                <span class="storyline-step-image-hint">{step.imageHint}</span>
+              </div>
+              {/* Uncomment and replace when real images are ready:
+              <img
+                src={`/images/story-step-${i + 1}.jpg`}
+                alt={step.imageAlt}
+                width="400"
+                height="300"
+                loading="lazy"
+                decoding="async"
+              />
+              */}
+            </div>
           </div>
         </div>
       ))}
@@ -369,17 +402,17 @@ const steps = [
     display: flex;
     align-items: flex-start;
     gap: var(--space-lg);
-    max-width: 400px;
+    max-width: 560px;
     padding: 0 var(--space-md);
   }
 
   .storyline-step--right {
     margin-left: auto;
-    margin-right: 10%;
+    margin-right: 5%;
   }
 
   .storyline-step--left {
-    margin-left: 10%;
+    margin-left: 5%;
     margin-right: auto;
   }
 
@@ -402,6 +435,14 @@ const steps = [
     font-weight: 700;
     font-size: var(--text-lg);
     color: white;
+  }
+
+  /* Step body — text + image layout */
+  .storyline-step-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
   /* Step content */
@@ -431,6 +472,47 @@ const steps = [
     line-height: 2;
     color: var(--color-text);
     opacity: 0.8;
+  }
+
+  /* Step image */
+  .storyline-step-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-sumi-shiro);
+    border: 1px solid rgba(26, 26, 46, 0.06);
+  }
+
+  .storyline-step-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Placeholder state (before real images) */
+  .storyline-step-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background: linear-gradient(135deg, rgba(26,26,46,0.02), rgba(26,26,46,0.04));
+  }
+
+  .storyline-step-image-placeholder svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.5;
+  }
+
+  .storyline-step-image-hint {
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    opacity: 0.3;
+    font-style: italic;
   }
 
   /* Ending */
@@ -491,6 +573,10 @@ const steps = [
     .storyline-step-title {
       font-size: var(--text-xl);
     }
+
+    .storyline-step-image {
+      aspect-ratio: 16 / 9;
+    }
   }
 </style>
 
@@ -537,12 +623,12 @@ const steps = [
           });
         });
 
-        // Main scroll animation
+        // Main scroll animation — starts early so line is visible immediately
         ScrollTrigger.create({
-          trigger: '.storyline-canvas',
-          start: 'top 70%',
-          end: 'bottom 30%',
-          scrub: 0.8,
+          trigger: '.storyline',
+          start: 'top 95%',
+          end: 'bottom 10%',
+          scrub: 0.5,
           onUpdate: (self) => {
             const progress = self.progress;
 
@@ -558,7 +644,7 @@ const steps = [
 
             // Show dots as line reaches them — each with bloom effect
             dots.forEach((dot, i) => {
-              const threshold = (i + 0.8) / (dots.length + 1);
+              const threshold = (i + 0.5) / (dots.length + 0.5);
               if (progress > threshold) {
                 if (!dot.classList.contains('is-visible')) {
                   dot.classList.add('is-visible');
@@ -578,7 +664,7 @@ const steps = [
 
             // Sprout branches — progressively more at each step
             branches.forEach((branch, i) => {
-              const threshold = (i + 1.2) / (branches.length + 1);
+              const threshold = (i + 0.8) / (branches.length + 0.5);
               if (progress > threshold) {
                 if (!branch.classList.contains('is-sprouting')) {
                   branch.classList.add('is-sprouting');
