@@ -231,76 +231,81 @@ const steps = [
     pointer-events: none;
   }
 
-  /* ===== LINES — invisible → born (faint + flowing) → alive (vivid) ===== */
-  .sline {
+  /* ===== TRUNK — draws from top to bottom via JS clip-path ===== */
+  .sline-trunk {
+    opacity: 0.4;
+    /* JS controls clip-path to reveal from top down */
+    clip-path: inset(0 0 100% 0);
+    transition: stroke-width 1s var(--ease-out-expo);
+  }
+
+  .sline-trunk.is-drawing {
+    /* clip-path animated by JS — this class just signals state */
+  }
+
+  .sline-trunk.is-complete {
+    clip-path: inset(0 0 0% 0);
+  }
+
+  /* ===== BRANCHES — hidden, spring to life when trunk reaches them ===== */
+  .sline:not(.sline-trunk) {
     opacity: 0;
-    stroke-dasharray: 3000;
-    stroke-dashoffset: 3000;
-    transition: opacity 2s var(--ease-out-expo), stroke-width 1.5s var(--ease-out-expo);
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    transition: opacity 0.8s var(--ease-out-expo), stroke-width 1s var(--ease-out-expo),
+                stroke-dashoffset 2.5s var(--ease-out-expo);
   }
 
-  /* Phase 1: born — faint ghost + line flows in */
-  .sline.is-born {
-    opacity: 0.1;
-    animation: line-flow 4s var(--ease-out-expo) forwards;
+  .sline:not(.sline-trunk).is-sprouting {
+    stroke-dashoffset: 0;
   }
 
-  .sline-trunk.is-born { opacity: 0.12; animation-duration: 3s; }
-  .sline-branch-a.is-born { animation-duration: 3.5s; animation-delay: 0.5s; }
-  .sline-branch-b.is-born { animation-duration: 3.5s; animation-delay: 1s; }
-  .sline-spread-1.is-born { animation-duration: 4s; animation-delay: 1.5s; }
-  .sline-spread-2.is-born { animation-duration: 4s; animation-delay: 2s; }
-  .sline-bloom-1.is-born { animation-duration: 3s; animation-delay: 2.5s; }
-  .sline-bloom-2.is-born { animation-duration: 3s; animation-delay: 2.7s; }
-  .sline-bloom-3.is-born { animation-duration: 3s; animation-delay: 2.9s; }
-  .sline-bloom-4.is-born { animation-duration: 3s; animation-delay: 3.1s; }
-  .sline-bloom-5.is-born { animation-duration: 3s; animation-delay: 3.3s; }
-  .sline-bloom-6.is-born { animation-duration: 3s; animation-delay: 3.5s; }
+  /* Branch opacity by layer — deeper = more branches, thinner */
+  .sline-branch-a.is-sprouting,
+  .sline-branch-b.is-sprouting { opacity: 0.25; }
+  .sline-spread-1.is-sprouting,
+  .sline-spread-2.is-sprouting { opacity: 0.2; }
+  .sline-bloom-1.is-sprouting,
+  .sline-bloom-2.is-sprouting,
+  .sline-bloom-3.is-sprouting,
+  .sline-bloom-4.is-sprouting,
+  .sline-bloom-5.is-sprouting,
+  .sline-bloom-6.is-sprouting { opacity: 0.15; }
 
-  @keyframes line-flow {
-    0% { stroke-dashoffset: 3000; }
-    100% { stroke-dashoffset: 0; }
-  }
-
-  /* Phase 2: alive — thick, vibrant, fully present */
-  .sline.is-alive {
-    opacity: 0.35;
-    stroke-width: 3;
-  }
-
-  .sline-trunk.is-alive { opacity: 0.45; stroke-width: 3.5; }
-  .sline-branch-a.is-alive { opacity: 0.3; stroke-width: 2.5; }
-  .sline-branch-b.is-alive { opacity: 0.3; stroke-width: 2.5; }
+  /* When fully alive (step reached) — thicker and more vivid */
+  .sline.is-alive { stroke-width: 3; }
+  .sline-trunk.is-alive { stroke-width: 3.5; opacity: 0.5; }
+  .sline-branch-a.is-alive { opacity: 0.35; stroke-width: 2.5; }
+  .sline-branch-b.is-alive { opacity: 0.35; stroke-width: 2.5; }
   .sline-spread-1.is-alive,
-  .sline-spread-2.is-alive { opacity: 0.25; stroke-width: 1.8; }
+  .sline-spread-2.is-alive { opacity: 0.3; stroke-width: 2; }
   .sline-bloom-1.is-alive,
   .sline-bloom-2.is-alive,
   .sline-bloom-3.is-alive,
   .sline-bloom-4.is-alive,
   .sline-bloom-5.is-alive,
-  .sline-bloom-6.is-alive { opacity: 0.2; stroke-width: 1.2; }
+  .sline-bloom-6.is-alive { opacity: 0.25; stroke-width: 1.5; }
 
-  /* Dots — invisible initially, bloom when step activates */
+  /* Dots — invisible initially, bloom when trunk reaches them */
   .sdot {
     opacity: 0;
-    transition: opacity 0.8s var(--ease-out-expo);
+    transition: opacity 0.6s var(--ease-out-expo);
   }
 
   .sdot.is-alive {
     opacity: 1;
   }
 
+  /* Reduced motion: show everything static */
   @media (prefers-reduced-motion: reduce) {
-    .sline {
-      opacity: 0.15 !important;
-      stroke-dashoffset: 0 !important;
-      animation: none !important;
-    }
+    .sline-trunk { clip-path: none !important; opacity: 0.2 !important; }
+    .sline:not(.sline-trunk) { opacity: 0.15 !important; stroke-dashoffset: 0 !important; }
     .sdot { opacity: 0.6 !important; }
   }
 
   /* No-JS fallback */
-  :global(.no-js) .sline { opacity: 0.15; stroke-dashoffset: 0; animation: none; }
+  :global(.no-js) .sline-trunk { clip-path: none; opacity: 0.2; }
+  :global(.no-js) .sline:not(.sline-trunk) { opacity: 0.15; stroke-dashoffset: 0; }
   :global(.no-js) .sdot { opacity: 0.6; }
 
   /* ===== STEPS ===== */
@@ -456,107 +461,108 @@ const steps = [
 
 <script>
   /**
-   * Animation: lines are always visible (thin/faint).
-   * As each step enters viewport, associated lines "come alive" —
-   * thicker, more opaque, vibrant. Creates a "birth" effect
-   * without the line disappearing before the user sees it.
-   *
-   * Fallback: without JS, CSS shows all lines at low opacity.
+   * The trunk line draws from top to bottom as user scrolls.
+   * When the trunk passes each step's Y position, branches sprout from there.
+   * The trunk uses clip-path (inset bottom %) so already-drawn parts stay visible.
+   * Branches use stroke-dashoffset CSS transition.
    */
   if (typeof window !== 'undefined') {
     const isMobile = window.innerWidth < 768;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!isMobile && !prefersReducedMotion) {
-      const allLines = document.querySelectorAll('.sline');
+      const canvas = document.querySelector('.storyline-canvas') as HTMLElement;
+      const trunk = document.querySelector('.sline-trunk') as SVGPathElement;
+      const dots = document.querySelectorAll('.sdot');
 
-      // Phase 1: When storyline section enters viewport, all lines "are born" — faint ghostly appearance
-      const birthObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            // Stagger birth of all lines for organic feel
-            allLines.forEach((line, i) => {
-              setTimeout(() => line.classList.add('is-born'), i * 200);
-            });
-            birthObserver.disconnect();
-          });
-        },
-        { threshold: 0, rootMargin: '0px 0px 0px 0px' }
-      );
+      if (canvas && trunk) {
+        // Which branches sprout at each step (cumulative)
+        const stepBranches: Record<number, string[]> = {
+          1: [],
+          2: ['.sline-branch-a'],
+          3: ['.sline-branch-b'],
+          4: ['.sline-spread-1', '.sline-spread-2'],
+          5: ['.sline-bloom-1', '.sline-bloom-2', '.sline-bloom-3',
+              '.sline-bloom-4', '.sline-bloom-5', '.sline-bloom-6'],
+        };
 
-      const storylineSection = document.querySelector('.storyline');
-      if (storylineSection) birthObserver.observe(storylineSection);
+        // Step thresholds as % of storyline height (approximate Y positions)
+        const stepThresholds = [0.15, 0.30, 0.45, 0.60, 0.78];
 
-      // Phase 2: Each step brings its lines fully alive
-      // Step progression: trunk only → +branch → +branch → +spread → +bloom (everything)
-      const stepLineMap: Record<number, string[]> = {
-        1: ['.sline-trunk'],
-        2: ['.sline-branch-a'],
-        3: ['.sline-branch-b'],
-        4: ['.sline-spread-1', '.sline-spread-2'],
-        5: ['.sline-bloom-1', '.sline-bloom-2', '.sline-bloom-3', '.sline-bloom-4', '.sline-bloom-5', '.sline-bloom-6'],
-      };
+        const activatedSteps = new Set<number>();
 
-      const stepObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
+        function updateTrunk() {
+          const rect = canvas.getBoundingClientRect();
+          const canvasTop = rect.top;
+          const canvasHeight = rect.height;
+          const viewH = window.innerHeight;
 
-            const stepNum = Number(entry.target.getAttribute('data-step'));
-            if (!stepNum) return;
+          // How far we've scrolled into the canvas (0 = top just entered, 1 = bottom leaving)
+          const scrolledInto = (viewH - canvasTop) / (canvasHeight + viewH);
+          const progress = Math.max(0, Math.min(1, scrolledInto));
 
-            // Activate NEW lines for this step (staggered)
-            const newSelectors = stepLineMap[stepNum] || [];
-            newSelectors.forEach((sel, i) => {
-              const el = document.querySelector(sel);
-              if (el) {
-                setTimeout(() => el.classList.add('is-alive'), i * 200);
+          // Trunk: reveal from top down using clip-path
+          // progress 0 = nothing shown, 1 = fully shown
+          // Map progress so trunk starts drawing early and finishes at ~90%
+          const trunkProgress = Math.min(1, progress * 1.3);
+          const clipBottom = 100 - (trunkProgress * 100);
+          trunk.style.clipPath = `inset(0 0 ${clipBottom}% 0)`;
+
+          // Check each step threshold
+          stepThresholds.forEach((threshold, i) => {
+            const stepNum = i + 1;
+            if (progress >= threshold && !activatedSteps.has(stepNum)) {
+              activatedSteps.add(stepNum);
+
+              // Dot blooms
+              dots[i]?.classList.add('is-alive');
+
+              // Previous step's trunk becomes "alive" (thicker)
+              if (stepNum >= 2) {
+                trunk.classList.add('is-alive');
               }
-            });
 
-            // Also make all PREVIOUS steps' lines alive (in case scrolled fast)
-            for (let s = 1; s <= stepNum; s++) {
-              (stepLineMap[s] || []).forEach(sel => {
-                document.querySelector(sel)?.classList.add('is-alive');
+              // Sprout new branches for this step
+              const newBranches = stepBranches[stepNum] || [];
+              newBranches.forEach((sel, j) => {
+                const branch = document.querySelector(sel);
+                if (branch) {
+                  setTimeout(() => {
+                    branch.classList.add('is-sprouting');
+                    // After sprouting animation, make it "alive" (thicker)
+                    setTimeout(() => branch.classList.add('is-alive'), 1500);
+                  }, j * 300);
+                }
               });
+
+              // Also activate any previous branches that might have been missed (fast scroll)
+              for (let s = 1; s < stepNum; s++) {
+                (stepBranches[s] || []).forEach(sel => {
+                  const b = document.querySelector(sel);
+                  b?.classList.add('is-sprouting');
+                  b?.classList.add('is-alive');
+                });
+                dots[s - 1]?.classList.add('is-alive');
+              }
             }
-
-            // Activate dot
-            const dot = document.querySelector(`.sdot-${stepNum}`);
-            if (dot) dot.classList.add('is-alive');
           });
-        },
-        { threshold: 0.3, rootMargin: '0px 0px -5% 0px' }
-      );
-
-      document.querySelectorAll('.storyline-step').forEach(step => {
-        stepObserver.observe(step);
-      });
-
-      // Check already-visible elements on load
-      const checkVisible = (el: Element) => {
-        const rect = el.getBoundingClientRect();
-        return rect.top < window.innerHeight && rect.bottom > 0;
-      };
-
-      if (storylineSection && checkVisible(storylineSection)) {
-        allLines.forEach(line => line.classList.add('is-born'));
-      }
-
-      document.querySelectorAll('.storyline-step').forEach(step => {
-        if (checkVisible(step)) {
-          const stepNum = Number(step.getAttribute('data-step'));
-          for (let s = 1; s <= stepNum; s++) {
-            (stepLineMap[s] || []).forEach(sel => {
-              const el = document.querySelector(sel);
-              el?.classList.add('is-born');
-              el?.classList.add('is-alive');
-            });
-            document.querySelector(`.sdot-${s}`)?.classList.add('is-alive');
-          }
         }
-      });
+
+        // Run on scroll (throttled via rAF)
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              updateTrunk();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+
+        // Initial check
+        updateTrunk();
+      }
     }
   }
 </script>
