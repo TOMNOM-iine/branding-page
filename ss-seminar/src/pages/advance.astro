@@ -431,18 +431,29 @@ const methods = [
     flex-direction: column;
     gap: var(--space-sm);
     margin-bottom: var(--space-md);
+    /* This container defines 100% for bar widths */
+    width: 100%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .pyramid-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: var(--w) auto auto;
     align-items: center;
     gap: var(--space-md);
+    min-height: 36px;
   }
 
-  /* Pyramid bars — always full width, animate via scaleX */
+  .pyramid-row--highlight {
+    min-height: 52px;
+  }
+
+  /* Pyramid bars — fixed width from grid, animate via scaleX */
   .pyramid-bar {
     height: 28px;
-    width: var(--w);
+    width: 100%;
     background: var(--c);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     opacity: 0.7;
