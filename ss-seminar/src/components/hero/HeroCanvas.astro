@@ -224,36 +224,36 @@
     height: 100%;
   }
 
-  /* Geometric lines — stroke drawing animation */
+  /* Geometric lines — smooth stroke drawing */
   .geo-line {
     stroke-dasharray: 1200;
     stroke-dashoffset: 1200;
-    animation: draw-line 2s var(--ease-out-expo) forwards;
+    animation: draw-line 3s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)) forwards;
   }
 
-  .geo-line-1 { animation-delay: 0.3s; }
-  .geo-line-2 { animation-delay: 0.5s; }
-  .geo-line-3 { animation-delay: 0.7s; }
-  .geo-line-4 { animation-delay: 0.9s; }
+  .geo-line-1 { animation-delay: 0.5s; }
+  .geo-line-2 { animation-delay: 0.8s; }
+  .geo-line-3 { animation-delay: 1.1s; }
+  .geo-line-4 { animation-delay: 1.4s; }
 
-  /* Illustration drawing */
+  /* Illustration drawing — slower, more organic */
   .draw-element {
     stroke-dasharray: 500;
     stroke-dashoffset: 500;
-    animation: draw-line 1.5s var(--ease-out-expo) forwards;
+    animation: draw-line 2.5s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)) forwards;
     fill: none;
   }
 
-  .draw-delay-1 { animation-delay: 1.2s; }
-  .draw-delay-2 { animation-delay: 1.5s; }
-  .draw-delay-3 { animation-delay: 1.8s; }
-  .draw-delay-4 { animation-delay: 2.1s; }
-  .draw-delay-5 { animation-delay: 2.4s; }
-  .draw-delay-6 { animation-delay: 2.7s; }
+  .draw-delay-1 { animation-delay: 1.5s; }
+  .draw-delay-2 { animation-delay: 1.9s; }
+  .draw-delay-3 { animation-delay: 2.3s; }
+  .draw-delay-4 { animation-delay: 2.7s; }
+  .draw-delay-5 { animation-delay: 3.1s; }
+  .draw-delay-6 { animation-delay: 3.5s; }
 
-  /* Floating accents */
+  /* Floating accents — slower, more gentle */
   .geo-accent {
-    animation: zone-float 4s ease-in-out infinite;
+    animation: zone-float 6s ease-in-out infinite;
   }
 
   .geo-float-1 { animation-delay: 0s; }
@@ -283,9 +283,10 @@
   .hero-char {
     display: inline-block;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fade-in-up 0.6s var(--ease-out-expo) forwards;
-    animation-delay: calc(1s + var(--i) * 0.12s);
+    transform: translateY(16px) translateZ(0);
+    will-change: opacity, transform;
+    animation: fade-in-up 1s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)) forwards;
+    animation-delay: calc(1.2s + var(--i) * 0.15s);
   }
 
   .hero-break {
@@ -297,8 +298,8 @@
     font-size: var(--text-xl);
     color: var(--color-text);
     opacity: 0;
-    animation: fade-in-up 0.8s var(--ease-out-expo) forwards;
-    animation-delay: 2.5s;
+    animation: fade-in-up 1.2s var(--ease-smooth, cubic-bezier(0.22, 0.61, 0.36, 1)) forwards;
+    animation-delay: 3s;
     margin-bottom: var(--space-xl);
     line-height: 1.8;
   }
@@ -322,8 +323,8 @@
   }
 
   .hero-cta {
-    animation: fade-in-up 0.6s var(--ease-out-expo) forwards, pulse-gentle 3s ease-in-out infinite;
-    animation-delay: 3s, 4s;
+    animation: fade-in-up 1.2s var(--ease-smooth, cubic-bezier(0.22, 0.61, 0.36, 1)) forwards, pulse-gentle 4s ease-in-out infinite;
+    animation-delay: 3.5s, 5s;
   }
 
   .hero-cta:hover {

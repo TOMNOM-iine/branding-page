@@ -39,12 +39,12 @@
       const heroCanvas = hero.querySelector('.hero-canvas');
       const heroBg = hero.querySelector('.hero-bg');
 
-      // Pin the hero and create parallax on scroll
+      // Pin the hero and create parallax on scroll — smooth scrub
       ScrollTrigger.create({
         trigger: hero,
         start: 'top top',
         end: 'bottom top',
-        scrub: true,
+        scrub: 1.5,
         onUpdate: (self) => {
           const progress = self.progress;
           if (heroContent) {
@@ -80,7 +80,7 @@
         trigger: philosophySection,
         start: 'top 90%',
         end: 'top 30%',
-        scrub: 0.5,
+        scrub: 1.2,
         onUpdate: (self) => {
           const progress = self.progress;
           panels.forEach((panel, i) => {
@@ -121,7 +121,7 @@
         trigger: section,
         start: 'top 80%',
         end: 'top 20%',
-        scrub: 0.3,
+        scrub: 1,
         onUpdate: (self) => {
           // Subtle background opacity pulse on scroll
           const progress = self.progress;
@@ -148,7 +148,7 @@
         trigger: '.timeline-wrapper',
         start: 'top 70%',
         end: 'bottom 50%',
-        scrub: 0.5,
+        scrub: 1.2,
         onUpdate: (self) => {
           gsap.set(timelineLine, {
             strokeDashoffset: lineLength * (1 - self.progress),
@@ -224,7 +224,7 @@
         trigger: path.closest('.divider'),
         start: 'top 80%',
         end: 'bottom 50%',
-        scrub: 0.5,
+        scrub: 1.2,
         onUpdate: (self) => {
           gsap.set(path, {
             strokeDashoffset: length * (1 - self.progress),
@@ -266,7 +266,7 @@
         trigger: hero,
         start: 'top top',
         end: 'bottom top',
-        scrub: true,
+        scrub: 1.5,
         onUpdate: (self) => {
           const speed = 0.5 + i * 0.3;
           gsap.set(accent, {
