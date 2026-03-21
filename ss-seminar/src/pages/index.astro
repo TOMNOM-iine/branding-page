@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroCanvas from '../components/hero/HeroCanvas.astro';
+import StoryLine from '../components/sections/StoryLine.astro';
 import PhilosophyTimeline from '../components/sections/PhilosophyTimeline.astro';
 import ProgramCards from '../components/sections/ProgramCards.astro';
 import ParentsSection from '../components/sections/ParentsSection.astro';
@@ -12,6 +13,9 @@ import PatternDivider from '../components/ui/PatternDivider.astro';
 <BaseLayout>
   <!-- Hero -->
   <HeroCanvas />
+
+  <!-- Story: 居場所 → 学び のジャーニー -->
+  <StoryLine />
 
   <!-- Section divider -->
   <PatternDivider color="var(--color-sora-mizu)" pattern="wave" />
