@@ -1,0 +1,576 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const achievements = {
+  publicHigh: [
+    '宇都宮高校', '栃木女子高校', '栃木高校', '宇都宮中央高校',
+    '鹿沼高校', '鹿沼東高校', '宇都宮白楊', '小山工業高等専門学校',
+    '今市工業高校', '今市高校', '日光明峰高校',
+  ],
+  tokushoku: ['鹿沼高校', '鹿沼東高校', '今市高校', '日光明峰高校'],
+  privateHigh: [
+    '宇都宮短大付属高校', '作新学院高校', '文星芸大付属高校',
+  ],
+  national: [
+    '金沢大学', '群馬県立女子大学', '高知県立大学', '新潟県立大学',
+    '会津大学', '長岡技術科学大学',
+  ],
+  privateUni: [
+    '東京理科大学', '法政大学', '昭和女子大学', '国際医療福祉大学',
+    '独協医科大学', 'フェリス女学院', '帝京大学', '日本工業大学',
+    '白百合女子大学', '目白大学', '玉川大学',
+  ],
+};
+
+const methods = [
+  {
+    num: '01',
+    title: 'SSメソッド（問答法）',
+    desc: '教師が一方的に答えを教えない。質問により解のプロセスを生徒から導き出す。受動的学習から能動的学習へ転換し、理解の深化と定着率を飛躍的に向上。関東15塾の塾長参加の研修でも実績のある体系化されたノウハウ。',
+    stat: '定着率 3.5倍',
+    statSub: '「聞くだけ」vs「問答法」',
+  },
+  {
+    num: '02',
+    title: '学習接点の最大化',
+    desc: '授業は毎回録画しオンラインアーカイブ化。専用Webサイトから授業要約・宿題確認が可能。導入動画も視聴し放題。欠席しても、いつでもどこでも追いつける。',
+    stat: '24時間',
+    statSub: 'いつでもアクセス可能',
+  },
+  {
+    num: '03',
+    title: 'オリジナル教材と教師育成',
+    desc: '問答法に最適化されたオリジナル教材10種以上。暗記事項を最小化する設計。年100時間以上の講師研修で質を担保。',
+    stat: '10種+',
+    statSub: 'オリジナル教材',
+  },
+  {
+    num: '04',
+    title: '圧倒的学習量',
+    desc: '「MOMO時間表」で計画管理。定期テスト3週間前から毎週末の無料補習（年48時間以上）。勤勉性・やり切る力を育成。成績が下がれば上がるまで無料サポート継続。',
+    stat: '年48h+',
+    statSub: 'テスト対策補習',
+  },
+  {
+    num: '05',
+    title: 'SS式進路指導',
+    desc: '県内の私立・公立・通信校を全て訪問調査済み。校風、生徒傾向、スキル、部活の知識で3年間をイメージし就学継続できるマッチングを実現。元作新学院進路指導担当が常勤。',
+    stat: '全校',
+    statSub: '訪問調査済み',
+  },
+];
+---
+
+<BaseLayout
+  title="アドバンス — 学習超特急 | S&Sセミナー"
+  description="居場所の先に広がる、成績にこだわる世界。SSメソッド（問答法）で宇都宮高校、東京理科大学など難関校への合格実績。30年以上の指導ノウハウ。"
+>
+  <section class="advance-page">
+    <div class="container">
+      <!-- Hero -->
+      <div class="advance-hero appear">
+        <div class="advance-hero-badge">ADVANCE</div>
+        <h1 class="advance-hero-title text-display">
+          居場所の、<br>その先へ。
+        </h1>
+        <p class="advance-hero-sub">
+          安心が生まれたら、次は挑戦だ。<br>
+          ここからは、全速力で駆け抜ける。
+        </p>
+        <div class="advance-hero-line" aria-hidden="true">
+          <svg viewBox="0 0 800 60" preserveAspectRatio="none">
+            <path d="M0,50 Q200,10 400,30 Q600,50 800,10" stroke="var(--color-primary)" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#advance-brush)" />
+            <defs>
+              <filter id="advance-brush" x="-5%" y="-20%" width="110%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="5" />
+                <feDisplacementMap in="SourceGraphic" scale="4" />
+              </filter>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Contrast statement -->
+      <div class="advance-contrast appear appear-delay-1">
+        <div class="contrast-card contrast-card--ibasho">
+          <span class="contrast-label">居場所</span>
+          <p>やる気がなくても大丈夫。<br>まずは、ここに。</p>
+        </div>
+        <div class="contrast-arrow" aria-hidden="true">
+          <svg viewBox="0 0 60 30" fill="none">
+            <path d="M5,15 L50,15 M42,5 L55,15 L42,25" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="contrast-card contrast-card--advance">
+          <span class="contrast-label">超特急</span>
+          <p>全速力で、トップを目指す。<br>30年の実績が、証明する。</p>
+        </div>
+      </div>
+
+      <!-- SS Method -->
+      <div class="advance-section appear">
+        <h2 class="advance-section-title text-display">SSメソッド</h2>
+        <p class="advance-section-sub">30年以上磨き続けた、学力を飛躍させる独自メソッド</p>
+
+        <div class="method-grid">
+          {methods.map((m) => (
+            <div class="method-card appear">
+              <div class="method-num">{m.num}</div>
+              <div class="method-body">
+                <h3 class="method-title">{m.title}</h3>
+                <p class="method-desc">{m.desc}</p>
+                <div class="method-stat">
+                  <span class="method-stat-value">{m.stat}</span>
+                  <span class="method-stat-label">{m.statSub}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Learning Science -->
+      <div class="advance-section appear">
+        <h2 class="advance-section-title text-display">科学的根拠</h2>
+        <p class="advance-section-sub">2-4-7の法則 — 海馬に長期記憶として刻む</p>
+
+        <div class="science-block">
+          <div class="science-pyramid">
+            <div class="pyramid-row pyramid-row--top">
+              <span class="pyramid-bar" style="--w: 30%; --c: var(--color-shu-aka)"></span>
+              <span class="pyramid-label">聞くだけ <strong>5%</strong></span>
+            </div>
+            <div class="pyramid-row">
+              <span class="pyramid-bar" style="--w: 45%; --c: var(--color-you-daidai)"></span>
+              <span class="pyramid-label">読む <strong>10%</strong></span>
+            </div>
+            <div class="pyramid-row">
+              <span class="pyramid-bar" style="--w: 60%; --c: var(--color-tatami-kin)"></span>
+              <span class="pyramid-label">視聴覚 <strong>20%</strong></span>
+            </div>
+            <div class="pyramid-row">
+              <span class="pyramid-bar" style="--w: 75%; --c: var(--color-sora-mizu)"></span>
+              <span class="pyramid-label">議論する <strong>50%</strong></span>
+            </div>
+            <div class="pyramid-row pyramid-row--highlight">
+              <span class="pyramid-bar" style="--w: 100%; --c: var(--color-primary)"></span>
+              <span class="pyramid-label">問答法（教え合う） <strong>90%</strong></span>
+            </div>
+          </div>
+          <p class="science-note">学習定着率ピラミッド — SSメソッドは最も定着率の高い「自ら説明する」手法を採用</p>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="advance-section appear">
+        <h2 class="advance-section-title text-display">合格実績</h2>
+        <p class="advance-section-sub">居場所から始まった子どもたちが、ここまで到達する</p>
+
+        <div class="achieve-grid">
+          <div class="achieve-block appear">
+            <h3 class="achieve-category">国公立大学</h3>
+            <ul class="achieve-list achieve-list--gold">
+              {achievements.national.map(s => <li>{s}</li>)}
+            </ul>
+          </div>
+          <div class="achieve-block appear">
+            <h3 class="achieve-category">私立大学</h3>
+            <ul class="achieve-list">
+              {achievements.privateUni.map(s => <li>{s}</li>)}
+            </ul>
+          </div>
+          <div class="achieve-block appear">
+            <h3 class="achieve-category">公立高校</h3>
+            <ul class="achieve-list achieve-list--gold">
+              {achievements.publicHigh.map(s => <li>{s}</li>)}
+            </ul>
+          </div>
+          <div class="achieve-block appear">
+            <h3 class="achieve-category">特色選抜合格</h3>
+            <ul class="achieve-list">
+              {achievements.tokushoku.map(s => <li>{s}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="advance-cta appear">
+        <div class="advance-cta-inner">
+          <p class="advance-cta-text text-display">居場所から始まって、<br>どこまでも行ける。</p>
+          <div class="advance-cta-buttons">
+            <a href="/trial" class="advance-cta-btn advance-cta-btn--primary">体験授業を申し込む</a>
+            <a href="/#access" class="advance-cta-btn advance-cta-btn--secondary">お問い合わせ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>
+
+<style>
+  .advance-page {
+    padding-top: calc(var(--nav-height) + var(--space-2xl));
+    padding-bottom: var(--space-2xl);
+  }
+
+  /* Hero */
+  .advance-hero {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .advance-hero-badge {
+    display: inline-block;
+    font-family: var(--font-latin);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    letter-spacing: 0.3em;
+    padding: var(--space-xs) var(--space-lg);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .advance-hero-title {
+    font-size: var(--text-hero);
+    line-height: 1.2;
+    margin-bottom: var(--space-lg);
+  }
+
+  .advance-hero-sub {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    line-height: 2;
+    color: var(--color-text);
+    opacity: 0.7;
+    margin-bottom: var(--space-xl);
+  }
+
+  .advance-hero-line {
+    max-width: 600px;
+    margin: 0 auto;
+    height: 60px;
+  }
+
+  .advance-hero-line svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+  }
+
+  /* Contrast */
+  .advance-contrast {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+    flex-wrap: wrap;
+  }
+
+  .contrast-card {
+    flex: 1;
+    max-width: 320px;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .contrast-card--ibasho {
+    background: var(--color-sakura-hai);
+  }
+
+  .contrast-card--advance {
+    background: var(--color-primary);
+    color: var(--color-sumi-shiro);
+  }
+
+  .contrast-label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .contrast-card--advance .contrast-label {
+    color: var(--color-you-daidai);
+  }
+
+  .contrast-card p {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    line-height: 1.8;
+  }
+
+  .contrast-arrow {
+    flex-shrink: 0;
+    width: 60px;
+  }
+
+  /* Section */
+  .advance-section {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .advance-section-title {
+    font-size: var(--text-2xl);
+    text-align: center;
+    margin-bottom: var(--space-sm);
+  }
+
+  .advance-section-sub {
+    text-align: center;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    opacity: 0.6;
+    margin-bottom: var(--space-xl);
+  }
+
+  /* Methods */
+  .method-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .method-card {
+    display: flex;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-sumi-shiro);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--color-primary);
+    transition: transform var(--duration-fast) var(--ease-smooth);
+  }
+
+  .method-card:hover {
+    transform: translateX(4px);
+  }
+
+  .method-num {
+    font-family: var(--font-latin);
+    font-weight: 700;
+    font-size: var(--text-3xl);
+    color: var(--color-primary);
+    opacity: 0.15;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .method-body { flex: 1; }
+
+  .method-title {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .method-desc {
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    opacity: 0.8;
+    margin-bottom: var(--space-md);
+  }
+
+  .method-stat {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(26, 26, 46, 0.04);
+    border-radius: var(--radius-sm);
+  }
+
+  .method-stat-value {
+    font-family: var(--font-latin);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    color: var(--color-secondary);
+  }
+
+  .method-stat-label {
+    font-size: var(--text-xs);
+    opacity: 0.6;
+  }
+
+  /* Science */
+  .science-block {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .science-pyramid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .pyramid-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .pyramid-bar {
+    height: 28px;
+    width: var(--w);
+    background: var(--c);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    opacity: 0.7;
+    transition: opacity var(--duration-fast);
+  }
+
+  .pyramid-row--highlight .pyramid-bar {
+    opacity: 1;
+    height: 36px;
+  }
+
+  .pyramid-label {
+    font-size: var(--text-sm);
+    white-space: nowrap;
+  }
+
+  .pyramid-label strong {
+    font-family: var(--font-latin);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-left: var(--space-xs);
+  }
+
+  .pyramid-row--highlight .pyramid-label {
+    font-weight: 700;
+    font-size: var(--text-base);
+  }
+
+  .science-note {
+    font-size: var(--text-xs);
+    text-align: center;
+    opacity: 0.5;
+    font-style: italic;
+  }
+
+  /* Achievements */
+  .achieve-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .achieve-block {
+    padding: var(--space-lg);
+    background: var(--color-sumi-shiro);
+    border-radius: var(--radius-lg);
+  }
+
+  .achieve-category {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--color-primary);
+    letter-spacing: 0.04em;
+  }
+
+  .achieve-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .achieve-list li {
+    font-size: var(--text-sm);
+    padding: 2px 10px;
+    background: rgba(26, 26, 46, 0.04);
+    border-radius: 50px;
+    color: var(--color-primary);
+  }
+
+  .achieve-list--gold li {
+    background: rgba(232, 212, 77, 0.15);
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+
+  /* CTA */
+  .advance-cta {
+    margin-top: var(--space-2xl);
+  }
+
+  .advance-cta-inner {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: var(--color-primary);
+    border-radius: var(--radius-lg);
+    color: var(--color-sumi-shiro);
+  }
+
+  .advance-cta-text {
+    font-size: var(--text-2xl);
+    color: var(--color-sumi-shiro);
+    margin-bottom: var(--space-xl);
+    line-height: 1.5;
+  }
+
+  .advance-cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+  }
+
+  .advance-cta-btn {
+    font-weight: 700;
+    font-size: var(--text-base);
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast) var(--ease-smooth);
+  }
+
+  .advance-cta-btn--primary {
+    background: var(--color-secondary);
+    color: var(--color-sumi-shiro);
+  }
+
+  .advance-cta-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+    color: var(--color-sumi-shiro);
+  }
+
+  .advance-cta-btn--secondary {
+    background: rgba(250, 250, 248, 0.15);
+    color: var(--color-sumi-shiro);
+    border: 1px solid rgba(250, 250, 248, 0.3);
+  }
+
+  .advance-cta-btn--secondary:hover {
+    background: rgba(250, 250, 248, 0.25);
+    color: var(--color-sumi-shiro);
+  }
+
+  @media (max-width: 768px) {
+    .advance-contrast {
+      flex-direction: column;
+    }
+
+    .contrast-card { max-width: 100%; }
+
+    .contrast-arrow {
+      transform: rotate(90deg);
+    }
+
+    .achieve-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .advance-cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

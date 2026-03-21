@@ -117,8 +117,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
         <li><a href="/#programs" data-section="programs">プログラム</a></li>
         <li><a href="/#parents" data-section="parents">保護者の方へ</a></li>
         <li><a href="/#voices" data-section="voices">声</a></li>
+        <li><a href="/advance" class="nav-advance-link">超特急</a></li>
         <li><a href="/group">グループ</a></li>
-        <li><a href="/#access" data-section="access">アクセス</a></li>
         <li><a href="/trial" class="nav-cta-link">体験申込</a></li>
       </ul>
       <button
@@ -249,6 +249,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-semin
       .nav-links a.is-active {
         color: var(--color-secondary);
         background: rgba(255, 107, 53, 0.08);
+      }
+
+      .nav-advance-link {
+        color: var(--color-primary) !important;
+        font-weight: 700 !important;
+        border-bottom: 2px solid var(--color-primary) !important;
+        border-radius: 0 !important;
+        padding-bottom: 2px !important;
+      }
+
+      .nav-advance-link:hover {
+        color: var(--color-secondary) !important;
+        border-bottom-color: var(--color-secondary) !important;
       }
 
       .nav-cta-link {
