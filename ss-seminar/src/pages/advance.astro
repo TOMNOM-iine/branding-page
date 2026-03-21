@@ -439,20 +439,22 @@ const methods = [
     gap: var(--space-md);
   }
 
-  /* Pyramid bars — animate width from 0 */
+  /* Pyramid bars — always full width, animate via scaleX */
   .pyramid-bar {
     height: 28px;
-    width: 0;
-    max-width: var(--w);
+    width: var(--w);
     background: var(--c);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     opacity: 0.7;
-    transition: width 1.2s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1.2s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
                 opacity 0.5s ease;
+    will-change: transform;
   }
 
   .pyramid-bar.is-grown {
-    width: var(--w);
+    transform: scaleX(1);
   }
 
   /* SS method bar — special glow */
@@ -468,9 +470,9 @@ const methods = [
   .pyramid-label {
     font-size: var(--text-sm);
     white-space: nowrap;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.6s ease, transform 0.6s var(--ease-out-quart, ease);
+    opacity: 0.3;
+    transform: translateX(-8px);
+    transition: opacity 0.6s ease 0.3s, transform 0.6s var(--ease-out-quart, ease) 0.3s;
   }
 
   .pyramid-label.is-shown {
