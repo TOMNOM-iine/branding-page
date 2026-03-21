@@ -1,11 +1,10 @@
 ---
 /**
- * StoryLine — 居場所からスモールステップで学びへ向かうビジョン
+ * StoryLine — 居場所からスモールステップで学びへ
  *
- * 1本の大きな有機的SVG曲線が画面全幅を使って蛇行し、5つのステップを繋ぐ。
- * 線はスクロールで「生まれていく」ように描画される。
- * 各ステップではドットが脈打ち、枝分かれの小さな線が芽生える。
- * CSSフォールバック有り。
+ * 線は最初から薄く見えている。スクロールで「生まれる」=太く濃く輝く。
+ * 下に行くほど枝分かれが増え、広がり・つながりを表現。
+ * 1本 → 2本 → 3本 → 多くの線へ。
  */
 
 const steps = [
@@ -70,156 +69,88 @@ const steps = [
   </div>
 
   <div class="storyline-canvas">
-    <!-- Full-width SVG with sweeping organic curve -->
-    <svg class="storyline-svg" viewBox="0 0 1200 3000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <!-- Full-width SVG — lines ALWAYS visible (thin/faint), become alive on scroll -->
+    <svg class="storyline-svg" viewBox="0 0 1200 3200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
-        <!-- Glow filter for the line tip -->
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <!-- Gradient along the path -->
-        <linearGradient id="line-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#FF6B35" stop-opacity="0.15" />
-          <stop offset="20%" stop-color="#4ECDC4" stop-opacity="0.25" />
-          <stop offset="40%" stop-color="#E8D44D" stop-opacity="0.3" />
-          <stop offset="60%" stop-color="#FF6B35" stop-opacity="0.35" />
-          <stop offset="80%" stop-color="#4ECDC4" stop-opacity="0.4" />
-          <stop offset="100%" stop-color="#1A1A2E" stop-opacity="0.5" />
+        <linearGradient id="line-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--color-you-daidai)" />
+          <stop offset="30%" stop-color="var(--color-sora-mizu)" />
+          <stop offset="60%" stop-color="var(--color-tatami-kin)" />
+          <stop offset="100%" stop-color="var(--color-sora-mizu)" />
         </linearGradient>
       </defs>
 
-      <!-- Shadow/echo line (wider, more transparent) -->
+      <!-- === LAYER 1: Main trunk — always visible thin, becomes thick === -->
       <path
-        class="storyline-echo"
-        d="M600,0 Q600,80 600,150
-           Q200,300 300,500
-           Q400,650 800,550
-           Q1050,480 900,750
-           Q750,950 400,900
-           Q150,860 300,1100
-           Q450,1300 800,1200
-           Q1000,1150 900,1400
-           Q800,1600 400,1550
-           Q200,1520 300,1750
-           Q400,1950 700,1900
-           Q900,1870 800,2100
-           Q700,2300 500,2350
-           Q400,2400 500,2500
-           Q600,2600 600,2800
-           Q600,2900 600,3000"
-        stroke="url(#line-gradient)"
-        stroke-width="40"
-        fill="none"
-        stroke-linecap="round"
-        opacity="0.08"
-      />
-
-      <!-- Main journey line — large sweeping curves -->
-      <path
-        class="storyline-path"
-        d="M600,0 Q600,80 600,150
-           Q200,300 300,500
-           Q400,650 800,550
-           Q1050,480 900,750
-           Q750,950 400,900
-           Q150,860 300,1100
-           Q450,1300 800,1200
-           Q1000,1150 900,1400
-           Q800,1600 400,1550
-           Q200,1520 300,1750
-           Q400,1950 700,1900
-           Q900,1870 800,2100
-           Q700,2300 500,2350
-           Q400,2400 500,2500
-           Q600,2600 600,2800
-           Q600,2900 600,3000"
+        class="sline sline-trunk"
+        d="M600,0 C600,200 250,300 350,550
+           S850,500 800,750
+           S200,900 350,1100
+           S900,1200 800,1400
+           S300,1500 400,1700
+           S800,1900 700,2100
+           S400,2300 500,2500
+           C550,2650 600,2800 600,3000"
         stroke="var(--color-primary)"
-        stroke-width="2.5"
+        stroke-width="2"
         fill="none"
         stroke-linecap="round"
       />
 
-      <!-- Branching tendrils at each step — "life sprouting" -->
-      <!-- Step 1 branches -->
-      <g class="storyline-branch storyline-branch-1">
-        <path d="M400,400 Q350,350 320,300" stroke="var(--color-you-daidai)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M400,400 Q430,340 480,320" stroke="var(--color-you-daidai)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <circle cx="320" cy="300" r="4" fill="var(--color-you-daidai)" opacity="0" />
-        <circle cx="480" cy="320" r="3" fill="var(--color-you-daidai)" opacity="0" />
-      </g>
+      <!-- === LAYER 2: Second line — emerges at step 2 === -->
+      <path
+        class="sline sline-branch-a"
+        d="M800,750 C900,850 950,1000 850,1100
+           S650,1300 700,1500
+           S550,1700 600,1900
+           C650,2100 680,2400 650,2700"
+        stroke="var(--color-sora-mizu)"
+        stroke-width="1.5"
+        fill="none"
+        stroke-linecap="round"
+      />
 
-      <!-- Step 2 branches -->
-      <g class="storyline-branch storyline-branch-2">
-        <path d="M800,600 Q850,550 900,520" stroke="var(--color-sora-mizu)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M750,650 Q700,600 650,580" stroke="var(--color-sora-mizu)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <circle cx="900" cy="520" r="4" fill="var(--color-sora-mizu)" opacity="0" />
-        <circle cx="650" cy="580" r="3" fill="var(--color-sora-mizu)" opacity="0" />
-      </g>
+      <!-- === LAYER 3: Third line — emerges at step 3 === -->
+      <path
+        class="sline sline-branch-b"
+        d="M350,1100 C200,1200 150,1400 250,1550
+           S450,1700 400,1900
+           S300,2100 350,2300
+           C400,2500 500,2700 550,2900"
+        stroke="var(--color-tatami-kin)"
+        stroke-width="1.5"
+        fill="none"
+        stroke-linecap="round"
+      />
 
-      <!-- Step 3 branches -->
-      <g class="storyline-branch storyline-branch-3">
-        <path d="M400,1000 Q350,950 280,940" stroke="var(--color-tatami-kin)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M450,1050 Q500,1000 550,980" stroke="var(--color-tatami-kin)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M350,1050 Q300,1020 260,1030" stroke="var(--color-tatami-kin)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <circle cx="280" cy="940" r="4" fill="var(--color-tatami-kin)" opacity="0" />
-        <circle cx="550" cy="980" r="3" fill="var(--color-tatami-kin)" opacity="0" />
-        <circle cx="260" cy="1030" r="3" fill="var(--color-tatami-kin)" opacity="0" />
-      </g>
+      <!-- === LAYER 4: Spreading lines — emerge at step 4 === -->
+      <path class="sline sline-spread-1" d="M700,1500 C800,1600 950,1650 1000,1800 S900,2000 950,2200 C970,2400 900,2600 850,2800" stroke="var(--color-you-daidai)" stroke-width="1" fill="none" stroke-linecap="round" />
+      <path class="sline sline-spread-2" d="M400,1700 C300,1800 200,1900 180,2100 S250,2300 200,2500 C180,2650 220,2800 280,2900" stroke="var(--color-sora-mizu)" stroke-width="1" fill="none" stroke-linecap="round" />
 
-      <!-- Step 4 branches (more!) -->
-      <g class="storyline-branch storyline-branch-4">
-        <path d="M800,1300 Q850,1250 920,1240" stroke="var(--color-you-daidai)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M750,1350 Q700,1300 640,1280" stroke="var(--color-you-daidai)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M850,1350 Q900,1320 940,1340" stroke="var(--color-you-daidai)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M700,1400 Q650,1380 600,1390" stroke="var(--color-you-daidai)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <circle cx="920" cy="1240" r="4" fill="var(--color-you-daidai)" opacity="0" />
-        <circle cx="640" cy="1280" r="3" fill="var(--color-you-daidai)" opacity="0" />
-        <circle cx="940" cy="1340" r="3" fill="var(--color-you-daidai)" opacity="0" />
-        <circle cx="600" cy="1390" r="3" fill="var(--color-you-daidai)" opacity="0" />
-      </g>
+      <!-- === LAYER 5: Blooming — step 5, many thin lines === -->
+      <path class="sline sline-bloom-1" d="M600,2100 C500,2200 350,2250 300,2400 S350,2600 320,2800" stroke="var(--color-sora-mizu)" stroke-width="0.8" fill="none" stroke-linecap="round" />
+      <path class="sline sline-bloom-2" d="M700,2100 C800,2200 900,2300 920,2450 S880,2650 900,2850" stroke="var(--color-tatami-kin)" stroke-width="0.8" fill="none" stroke-linecap="round" />
+      <path class="sline sline-bloom-3" d="M500,2500 C400,2550 300,2600 250,2700 S280,2850 250,3000" stroke="var(--color-you-daidai)" stroke-width="0.8" fill="none" stroke-linecap="round" />
+      <path class="sline sline-bloom-4" d="M650,2500 C750,2550 850,2580 900,2700 S870,2850 900,3000" stroke="var(--color-sora-mizu)" stroke-width="0.8" fill="none" stroke-linecap="round" />
+      <path class="sline sline-bloom-5" d="M550,2700 C500,2750 430,2800 400,2900 S430,2980 420,3100" stroke="var(--color-tatami-kin)" stroke-width="0.6" fill="none" stroke-linecap="round" />
+      <path class="sline sline-bloom-6" d="M700,2700 C750,2780 800,2850 830,2950 S800,3050 820,3150" stroke="var(--color-you-daidai)" stroke-width="0.6" fill="none" stroke-linecap="round" />
 
-      <!-- Step 5 branches (most — blooming!) -->
-      <g class="storyline-branch storyline-branch-5">
-        <path d="M600,1900 Q550,1850 480,1830" stroke="var(--color-sora-mizu)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M650,1950 Q700,1900 760,1880" stroke="var(--color-sora-mizu)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M580,2000 Q520,1970 460,1980" stroke="var(--color-sora-mizu)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M680,2000 Q740,1970 800,1960" stroke="var(--color-sora-mizu)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M550,2050 Q490,2040 440,2060" stroke="var(--color-tatami-kin)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <path d="M700,2050 Q760,2030 820,2050" stroke="var(--color-you-daidai)" stroke-width="1" fill="none" stroke-linecap="round" opacity="0" />
-        <circle cx="480" cy="1830" r="5" fill="var(--color-sora-mizu)" opacity="0" />
-        <circle cx="760" cy="1880" r="5" fill="var(--color-sora-mizu)" opacity="0" />
-        <circle cx="460" cy="1980" r="4" fill="var(--color-sora-mizu)" opacity="0" />
-        <circle cx="800" cy="1960" r="4" fill="var(--color-sora-mizu)" opacity="0" />
-        <circle cx="440" cy="2060" r="3" fill="var(--color-tatami-kin)" opacity="0" />
-        <circle cx="820" cy="2050" r="3" fill="var(--color-you-daidai)" opacity="0" />
-      </g>
-
-      <!-- Main step dots (pulse) -->
-      <circle class="storyline-dot storyline-dot-1" cx="350" cy="450" r="12" fill="var(--color-you-daidai)" opacity="0" />
-      <circle class="storyline-dot storyline-dot-2" cx="850" cy="650" r="12" fill="var(--color-sora-mizu)" opacity="0" />
-      <circle class="storyline-dot storyline-dot-3" cx="350" cy="1000" r="12" fill="var(--color-tatami-kin)" opacity="0" />
-      <circle class="storyline-dot storyline-dot-4" cx="850" cy="1350" r="12" fill="var(--color-you-daidai)" opacity="0" />
-      <circle class="storyline-dot storyline-dot-5" cx="600" cy="1950" r="14" fill="var(--color-sora-mizu)" opacity="0" />
-
-      <!-- Pulse rings around dots -->
-      <circle class="storyline-pulse storyline-pulse-1" cx="350" cy="450" r="12" fill="none" stroke="var(--color-you-daidai)" stroke-width="1" opacity="0" />
-      <circle class="storyline-pulse storyline-pulse-2" cx="850" cy="650" r="12" fill="none" stroke="var(--color-sora-mizu)" stroke-width="1" opacity="0" />
-      <circle class="storyline-pulse storyline-pulse-3" cx="350" cy="1000" r="12" fill="none" stroke="var(--color-tatami-kin)" stroke-width="1" opacity="0" />
-      <circle class="storyline-pulse storyline-pulse-4" cx="850" cy="1350" r="12" fill="none" stroke="var(--color-you-daidai)" stroke-width="1" opacity="0" />
-      <circle class="storyline-pulse storyline-pulse-5" cx="600" cy="1950" r="14" fill="none" stroke="var(--color-sora-mizu)" stroke-width="1" opacity="0" />
+      <!-- Step dots -->
+      <circle class="sdot sdot-1" cx="350" cy="550" r="10" fill="var(--color-you-daidai)" />
+      <circle class="sdot sdot-2" cx="800" cy="750" r="10" fill="var(--color-sora-mizu)" />
+      <circle class="sdot sdot-3" cx="350" cy="1100" r="10" fill="var(--color-tatami-kin)" />
+      <circle class="sdot sdot-4" cx="800" cy="1400" r="10" fill="var(--color-you-daidai)" />
+      <circle class="sdot sdot-5" cx="600" cy="2100" r="12" fill="var(--color-sora-mizu)" />
     </svg>
 
-    <!-- Step cards overlaid on the curve -->
+    <!-- Step cards -->
     <div class="storyline-steps">
       {steps.map((step, i) => (
         <div
           class:list={['storyline-step', `storyline-step--${step.side}`, 'appear']}
           id={step.id}
-          style={`--step-accent: ${step.accent}; --step-index: ${i}`}
+          data-step={i + 1}
+          style={`--step-accent: ${step.accent}`}
         >
           <div class="storyline-step-badge" aria-hidden="true">
             <span class="storyline-step-number">{i + 1}</span>
@@ -230,7 +161,6 @@ const steps = [
               <h3 class="storyline-step-title">{step.title}</h3>
               <p class="storyline-step-text">{step.text}</p>
             </div>
-            <!-- Image placeholder — replace src with actual photos -->
             <div class="storyline-step-image" data-step={i + 1}>
               <div class="storyline-step-image-placeholder">
                 <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
@@ -240,16 +170,6 @@ const steps = [
                 </svg>
                 <span class="storyline-step-image-hint">{step.imageHint}</span>
               </div>
-              {/* Uncomment and replace when real images are ready:
-              <img
-                src={`/images/story-step-${i + 1}.jpg`}
-                alt={step.imageAlt}
-                width="400"
-                height="300"
-                loading="lazy"
-                decoding="async"
-              />
-              */}
             </div>
           </div>
         </div>
@@ -257,7 +177,6 @@ const steps = [
     </div>
   </div>
 
-  <!-- Ending flourish -->
   <div class="storyline-ending appear">
     <p class="storyline-ending-text">
       この道のりは、一人ひとり違う。<br>
@@ -274,7 +193,6 @@ const steps = [
     overflow: hidden;
   }
 
-  /* Header */
   .storyline-header {
     text-align: center;
     margin-bottom: var(--space-xl);
@@ -290,10 +208,7 @@ const steps = [
     margin-bottom: var(--space-sm);
   }
 
-  .storyline-title {
-    font-size: var(--text-3xl);
-    margin-bottom: var(--space-sm);
-  }
+  .storyline-title { font-size: var(--text-3xl); margin-bottom: var(--space-sm); }
 
   .storyline-subtitle {
     font-family: var(--font-heading);
@@ -302,7 +217,6 @@ const steps = [
     opacity: 0.6;
   }
 
-  /* Canvas — full width SVG backdrop */
   .storyline-canvas {
     position: relative;
     min-height: 200vh;
@@ -317,76 +231,57 @@ const steps = [
     pointer-events: none;
   }
 
-  /* Main line — CSS fallback */
-  .storyline-path {
-    stroke-dasharray: 8000;
-    stroke-dashoffset: 0;
-    opacity: 0.15;
-    transition: opacity 1s ease;
-  }
-
-  .storyline-echo {
-    opacity: 0.06;
-  }
-
-  /* GSAP controlled state */
-  .storyline-path.gsap-controlled {
-    opacity: 0.4;
-  }
-
-  .storyline-echo.gsap-controlled {
-    opacity: 0.05;
-  }
-
-  /* Dots — CSS fallback shows them */
-  .storyline-dot {
+  /* ===== LINES — start invisible, born faintly, then grow vivid ===== */
+  .sline {
     opacity: 0;
-    transition: opacity 0.8s var(--ease-out-expo), r 0.5s var(--ease-spring);
+    transition: opacity 2s var(--ease-out-expo), stroke-width 1.5s var(--ease-out-expo);
   }
 
-  .storyline-dot.is-visible {
+  /* Phase 1: born — faint, thin, ghostly appearance */
+  .sline.is-born {
+    opacity: 0.1;
+  }
+
+  .sline-trunk.is-born { opacity: 0.12; }
+
+  /* Phase 2: alive — thick, vibrant, fully present */
+  .sline.is-alive {
+    opacity: 0.35;
+    stroke-width: 3;
+  }
+
+  .sline-trunk.is-alive { opacity: 0.45; stroke-width: 3.5; }
+  .sline-branch-a.is-alive { opacity: 0.3; stroke-width: 2.5; }
+  .sline-branch-b.is-alive { opacity: 0.3; stroke-width: 2.5; }
+  .sline-spread-1.is-alive,
+  .sline-spread-2.is-alive { opacity: 0.25; stroke-width: 1.8; }
+  .sline-bloom-1.is-alive,
+  .sline-bloom-2.is-alive,
+  .sline-bloom-3.is-alive,
+  .sline-bloom-4.is-alive,
+  .sline-bloom-5.is-alive,
+  .sline-bloom-6.is-alive { opacity: 0.2; stroke-width: 1.2; }
+
+  /* Dots — invisible initially, bloom when step activates */
+  .sdot {
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-out-expo), r 0.6s var(--ease-spring);
+  }
+
+  .sdot.is-alive {
     opacity: 1;
   }
 
-  /* Pulse rings */
-  .storyline-pulse {
-    opacity: 0;
-  }
-
-  .storyline-pulse.is-pulsing {
-    opacity: 0.4;
-    animation: dot-pulse 2s ease-out infinite;
-  }
-
-  @keyframes dot-pulse {
-    0% { r: 12; opacity: 0.5; }
-    100% { r: 35; opacity: 0; }
-  }
-
-  /* Branches — sprouting tendrils */
-  .storyline-branch path,
-  .storyline-branch circle {
-    transition: opacity 0.8s var(--ease-out-expo);
-  }
-
-  .storyline-branch.is-sprouting path {
-    opacity: 0.4;
-  }
-
-  .storyline-branch.is-sprouting circle {
-    opacity: 0.6;
-  }
-
-  /* CSS fallback */
   @media (prefers-reduced-motion: reduce) {
-    .storyline-dot { opacity: 0.8; }
-    .storyline-path { stroke-dashoffset: 0 !important; opacity: 0.2; }
-    .storyline-branch path { opacity: 0.3; }
-    .storyline-branch circle { opacity: 0.4; }
-    .storyline-pulse { display: none; }
+    .sline { opacity: 0.15 !important; }
+    .sdot { opacity: 0.6 !important; }
   }
 
-  /* Steps — overlaid cards */
+  /* No-JS fallback */
+  :global(.no-js) .sline { opacity: 0.15; }
+  :global(.no-js) .sdot { opacity: 0.6; }
+
+  /* ===== STEPS ===== */
   .storyline-steps {
     position: relative;
     z-index: 2;
@@ -406,17 +301,9 @@ const steps = [
     padding: 0 var(--space-md);
   }
 
-  .storyline-step--right {
-    margin-left: auto;
-    margin-right: 5%;
-  }
+  .storyline-step--right { margin-left: auto; margin-right: 5%; }
+  .storyline-step--left { margin-left: 5%; margin-right: auto; }
 
-  .storyline-step--left {
-    margin-left: 5%;
-    margin-right: auto;
-  }
-
-  /* Step number badge */
   .storyline-step-badge {
     flex-shrink: 0;
     width: 48px;
@@ -437,7 +324,6 @@ const steps = [
     color: white;
   }
 
-  /* Step body — text + image layout */
   .storyline-step-body {
     flex: 1;
     display: flex;
@@ -445,10 +331,7 @@ const steps = [
     gap: var(--space-md);
   }
 
-  /* Step content */
-  .storyline-step-content {
-    flex: 1;
-  }
+  .storyline-step-content { flex: 1; }
 
   .storyline-step-label {
     display: block;
@@ -474,7 +357,7 @@ const steps = [
     opacity: 0.8;
   }
 
-  /* Step image */
+  /* Image placeholder */
   .storyline-step-image {
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -484,36 +367,17 @@ const steps = [
     border: 1px solid rgba(26, 26, 46, 0.06);
   }
 
-  .storyline-step-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .storyline-step-image img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* Placeholder state (before real images) */
   .storyline-step-image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: var(--space-sm);
     background: linear-gradient(135deg, rgba(26,26,46,0.02), rgba(26,26,46,0.04));
   }
 
-  .storyline-step-image-placeholder svg {
-    width: 80px;
-    height: 80px;
-    opacity: 0.5;
-  }
-
-  .storyline-step-image-hint {
-    font-size: var(--text-xs);
-    color: var(--color-text);
-    opacity: 0.3;
-    font-style: italic;
-  }
+  .storyline-step-image-placeholder svg { width: 80px; height: 80px; opacity: 0.5; }
+  .storyline-step-image-hint { font-size: var(--text-xs); color: var(--color-text); opacity: 0.3; font-style: italic; }
 
   /* Ending */
   .storyline-ending {
@@ -537,18 +401,12 @@ const steps = [
 
   /* Mobile */
   @media (max-width: 768px) {
-    .storyline-canvas {
-      min-height: auto;
-    }
-
-    .storyline-svg {
-      display: none;
-    }
+    .storyline-canvas { min-height: auto; }
+    .storyline-svg { display: none; }
 
     .storyline-steps {
       gap: var(--space-xl);
       padding: var(--space-lg) 0;
-      /* Mobile: vertical line via CSS border */
       border-left: 2px solid rgba(26, 26, 46, 0.1);
       margin-left: var(--space-lg);
       padding-left: var(--space-lg);
@@ -561,142 +419,119 @@ const steps = [
     }
 
     .storyline-step-badge {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       margin-left: calc(-1 * var(--space-lg) - 19px);
     }
 
-    .storyline-step-number {
-      font-size: var(--text-sm);
-    }
-
-    .storyline-step-title {
-      font-size: var(--text-xl);
-    }
-
-    .storyline-step-image {
-      aspect-ratio: 16 / 9;
-    }
+    .storyline-step-number { font-size: var(--text-sm); }
+    .storyline-step-title { font-size: var(--text-xl); }
+    .storyline-step-image { aspect-ratio: 16 / 9; }
   }
 </style>
 
 <script>
-  // GSAP enhancement — line grows, dots bloom, tendrils sprout
+  /**
+   * Animation: lines are always visible (thin/faint).
+   * As each step enters viewport, associated lines "come alive" —
+   * thicker, more opaque, vibrant. Creates a "birth" effect
+   * without the line disappearing before the user sees it.
+   *
+   * Fallback: without JS, CSS shows all lines at low opacity.
+   */
   if (typeof window !== 'undefined') {
-    import('gsap').then(({ gsap }) => {
-      import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
-        gsap.registerPlugin(ScrollTrigger);
+    const isMobile = window.innerWidth < 768;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const isMobile = window.innerWidth < 768;
+    if (!isMobile && !prefersReducedMotion) {
+      const allLines = document.querySelectorAll('.sline');
 
-        if (prefersReducedMotion || isMobile) return;
-
-        const path = document.querySelector('.storyline-path') as SVGPathElement;
-        const echo = document.querySelector('.storyline-echo') as SVGPathElement;
-        const dots = document.querySelectorAll('.storyline-dot');
-        const pulses = document.querySelectorAll('.storyline-pulse');
-        const branches = document.querySelectorAll('.storyline-branch');
-
-        if (!path) return;
-
-        // Setup
-        const pathLength = path.getTotalLength();
-        path.style.strokeDasharray = String(pathLength);
-        path.style.strokeDashoffset = String(pathLength);
-        path.classList.add('gsap-controlled');
-
-        if (echo) {
-          const echoLength = echo.getTotalLength();
-          echo.style.strokeDasharray = String(echoLength);
-          echo.style.strokeDashoffset = String(echoLength);
-          echo.classList.add('gsap-controlled');
-        }
-
-        // Branch paths — setup stroke dash for drawing
-        branches.forEach(branch => {
-          branch.querySelectorAll('path').forEach(p => {
-            const el = p as SVGPathElement;
-            const len = el.getTotalLength();
-            el.style.strokeDasharray = String(len);
-            el.style.strokeDashoffset = String(len);
+      // Phase 1: When storyline section enters viewport, all lines "are born" — faint ghostly appearance
+      const birthObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            // Stagger birth of all lines for organic feel
+            allLines.forEach((line, i) => {
+              setTimeout(() => line.classList.add('is-born'), i * 200);
+            });
+            birthObserver.disconnect();
           });
-        });
+        },
+        { threshold: 0, rootMargin: '0px 0px 0px 0px' }
+      );
 
-        // Main scroll animation — starts early so line is visible immediately
-        ScrollTrigger.create({
-          trigger: '.storyline',
-          start: 'top 95%',
-          end: 'bottom 10%',
-          scrub: 0.5,
-          onUpdate: (self) => {
-            const progress = self.progress;
+      const storylineSection = document.querySelector('.storyline');
+      if (storylineSection) birthObserver.observe(storylineSection);
 
-            // Draw main line
-            path.style.strokeDashoffset = String(pathLength * (1 - progress));
+      // Phase 2: Each step brings its lines fully alive
+      // Step progression: trunk only → +branch → +branch → +spread → +bloom (everything)
+      const stepLineMap: Record<number, string[]> = {
+        1: ['.sline-trunk'],
+        2: ['.sline-branch-a'],
+        3: ['.sline-branch-b'],
+        4: ['.sline-spread-1', '.sline-spread-2'],
+        5: ['.sline-bloom-1', '.sline-bloom-2', '.sline-bloom-3', '.sline-bloom-4', '.sline-bloom-5', '.sline-bloom-6'],
+      };
 
-            // Draw echo line slightly behind
-            if (echo) {
-              const echoLength = echo.getTotalLength();
-              const echoProgress = Math.max(0, progress - 0.02);
-              echo.style.strokeDashoffset = String(echoLength * (1 - echoProgress));
+      const stepObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+
+            const stepNum = Number(entry.target.getAttribute('data-step'));
+            if (!stepNum) return;
+
+            // Activate NEW lines for this step (staggered)
+            const newSelectors = stepLineMap[stepNum] || [];
+            newSelectors.forEach((sel, i) => {
+              const el = document.querySelector(sel);
+              if (el) {
+                setTimeout(() => el.classList.add('is-alive'), i * 200);
+              }
+            });
+
+            // Also make all PREVIOUS steps' lines alive (in case scrolled fast)
+            for (let s = 1; s <= stepNum; s++) {
+              (stepLineMap[s] || []).forEach(sel => {
+                document.querySelector(sel)?.classList.add('is-alive');
+              });
             }
 
-            // Show dots as line reaches them — each with bloom effect
-            dots.forEach((dot, i) => {
-              const threshold = (i + 0.5) / (dots.length + 0.5);
-              if (progress > threshold) {
-                if (!dot.classList.contains('is-visible')) {
-                  dot.classList.add('is-visible');
-                  // Bloom animation
-                  gsap.fromTo(dot, { attr: { r: 0 } }, {
-                    attr: { r: i === 4 ? 14 : 12 },
-                    duration: 0.6,
-                    ease: 'elastic.out(1, 0.5)',
-                  });
-                  // Start pulse
-                  if (pulses[i]) {
-                    pulses[i].classList.add('is-pulsing');
-                  }
-                }
-              }
-            });
+            // Activate dot
+            const dot = document.querySelector(`.sdot-${stepNum}`);
+            if (dot) dot.classList.add('is-alive');
+          });
+        },
+        { threshold: 0.3, rootMargin: '0px 0px -5% 0px' }
+      );
 
-            // Sprout branches — progressively more at each step
-            branches.forEach((branch, i) => {
-              const threshold = (i + 0.8) / (branches.length + 0.5);
-              if (progress > threshold) {
-                if (!branch.classList.contains('is-sprouting')) {
-                  branch.classList.add('is-sprouting');
-                  // Animate branch paths drawing
-                  branch.querySelectorAll('path').forEach((p, j) => {
-                    gsap.to(p, {
-                      strokeDashoffset: 0,
-                      opacity: 0.4 - j * 0.05,
-                      duration: 1.2,
-                      delay: j * 0.15,
-                      ease: 'expo.out',
-                    });
-                  });
-                  // Animate branch dots appearing
-                  branch.querySelectorAll('circle').forEach((c, j) => {
-                    gsap.to(c, {
-                      opacity: 0.6,
-                      duration: 0.8,
-                      delay: 0.3 + j * 0.1,
-                      ease: 'expo.out',
-                    });
-                  });
-                }
-              }
-            });
-          },
-        });
+      document.querySelectorAll('.storyline-step').forEach(step => {
+        stepObserver.observe(step);
       });
-    }).catch(() => {
-      // CSS fallback
-      document.querySelectorAll('.storyline-dot').forEach(d => d.classList.add('is-visible'));
-      document.querySelectorAll('.storyline-branch').forEach(b => b.classList.add('is-sprouting'));
-    });
+
+      // Check already-visible elements on load
+      const checkVisible = (el: Element) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+      };
+
+      if (storylineSection && checkVisible(storylineSection)) {
+        allLines.forEach(line => line.classList.add('is-born'));
+      }
+
+      document.querySelectorAll('.storyline-step').forEach(step => {
+        if (checkVisible(step)) {
+          const stepNum = Number(step.getAttribute('data-step'));
+          for (let s = 1; s <= stepNum; s++) {
+            (stepLineMap[s] || []).forEach(sel => {
+              const el = document.querySelector(sel);
+              el?.classList.add('is-born');
+              el?.classList.add('is-alive');
+            });
+            document.querySelector(`.sdot-${s}`)?.classList.add('is-alive');
+          }
+        }
+      });
+    }
   }
 </script>
