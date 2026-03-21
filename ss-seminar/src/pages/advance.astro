@@ -113,8 +113,8 @@ const methods = [
         <p class="advance-section-sub">30年以上磨き続けた、学力を飛躍させる独自メソッド</p>
 
         <div class="method-grid">
-          {methods.map((m) => (
-            <div class="method-card appear">
+          {methods.map((m, i) => (
+            <div class="method-card appear" data-method={i} style={`--method-delay: ${i * 150}ms`}>
               <div class="method-num">{m.num}</div>
               <div class="method-body">
                 <h3 class="method-title">{m.title}</h3>
@@ -135,29 +135,38 @@ const methods = [
         <p class="advance-section-sub">2-4-7の法則 — 海馬に長期記憶として刻む</p>
 
         <div class="science-block">
-          <div class="science-pyramid">
-            <div class="pyramid-row pyramid-row--top">
-              <span class="pyramid-bar" style="--w: 30%; --c: var(--color-shu-aka)"></span>
+          <div class="science-pyramid" id="pyramid">
+            <div class="pyramid-row" data-delay="0">
+              <span class="pyramid-bar pyramid-bar--anim" style="--w: 5.5%; --c: var(--color-shu-aka)"></span>
               <span class="pyramid-label">聞くだけ <strong>5%</strong></span>
             </div>
-            <div class="pyramid-row">
-              <span class="pyramid-bar" style="--w: 45%; --c: var(--color-you-daidai)"></span>
+            <div class="pyramid-row" data-delay="1">
+              <span class="pyramid-bar pyramid-bar--anim" style="--w: 11%; --c: var(--color-shu-aka); opacity: 0.8"></span>
               <span class="pyramid-label">読む <strong>10%</strong></span>
             </div>
-            <div class="pyramid-row">
-              <span class="pyramid-bar" style="--w: 60%; --c: var(--color-tatami-kin)"></span>
+            <div class="pyramid-row" data-delay="2">
+              <span class="pyramid-bar pyramid-bar--anim" style="--w: 22%; --c: var(--color-you-daidai)"></span>
               <span class="pyramid-label">視聴覚 <strong>20%</strong></span>
             </div>
-            <div class="pyramid-row">
-              <span class="pyramid-bar" style="--w: 75%; --c: var(--color-sora-mizu)"></span>
+            <div class="pyramid-row" data-delay="3">
+              <span class="pyramid-bar pyramid-bar--anim" style="--w: 33%; --c: var(--color-tatami-kin)"></span>
+              <span class="pyramid-label">デモを見る <strong>30%</strong></span>
+            </div>
+            <div class="pyramid-row" data-delay="4">
+              <span class="pyramid-bar pyramid-bar--anim" style="--w: 55%; --c: var(--color-sora-mizu)"></span>
               <span class="pyramid-label">議論する <strong>50%</strong></span>
             </div>
-            <div class="pyramid-row pyramid-row--highlight">
-              <span class="pyramid-bar" style="--w: 100%; --c: var(--color-primary)"></span>
-              <span class="pyramid-label">問答法（教え合う） <strong>90%</strong></span>
+            <div class="pyramid-row" data-delay="5">
+              <span class="pyramid-bar pyramid-bar--anim" style="--w: 83%; --c: var(--color-sora-mizu); opacity: 0.8"></span>
+              <span class="pyramid-label">実践する <strong>75%</strong></span>
+            </div>
+            <div class="pyramid-row pyramid-row--highlight" data-delay="6">
+              <span class="pyramid-bar pyramid-bar--anim pyramid-bar--ss" style="--w: 100%; --c: var(--color-primary)"></span>
+              <span class="pyramid-label">問答法（教え合う） <strong class="ss-percent">90%</strong></span>
+              <span class="pyramid-ss-badge">← SSメソッド</span>
             </div>
           </div>
-          <p class="science-note">学習定着率ピラミッド — SSメソッドは最も定着率の高い「自ら説明する」手法を採用</p>
+          <p class="science-note">ラーニングピラミッド（NTL Institute） — SSメソッドは最も定着率の高い「教える/説明する」手法を30年以上実践</p>
         </div>
       </div>
 
@@ -349,7 +358,14 @@ const methods = [
   }
 
   .method-card:hover {
-    transform: translateX(4px);
+    transform: translateX(8px);
+    box-shadow: var(--shadow-md);
+    border-left-width: 6px;
+  }
+
+  /* Staggered entrance for method cards */
+  .method-card.appear {
+    transition-delay: var(--method-delay, 0ms);
   }
 
   .method-num {
@@ -390,6 +406,13 @@ const methods = [
     font-weight: 700;
     font-size: var(--text-xl);
     color: var(--color-secondary);
+    display: inline-block;
+    transform: scale(1);
+    transition: transform 0.3s var(--ease-spring, ease);
+  }
+
+  .method-card:hover .method-stat-value {
+    transform: scale(1.15);
   }
 
   .method-stat-label {
@@ -416,23 +439,43 @@ const methods = [
     gap: var(--space-md);
   }
 
+  /* Pyramid bars — animate width from 0 */
   .pyramid-bar {
     height: 28px;
-    width: var(--w);
+    width: 0;
+    max-width: var(--w);
     background: var(--c);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     opacity: 0.7;
-    transition: opacity var(--duration-fast);
+    transition: width 1.2s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
+                opacity 0.5s ease;
+  }
+
+  .pyramid-bar.is-grown {
+    width: var(--w);
+  }
+
+  /* SS method bar — special glow */
+  .pyramid-bar--ss.is-grown {
+    opacity: 1;
+    box-shadow: 0 2px 20px rgba(26, 26, 46, 0.2);
   }
 
   .pyramid-row--highlight .pyramid-bar {
-    opacity: 1;
-    height: 36px;
+    height: 44px;
   }
 
   .pyramid-label {
     font-size: var(--text-sm);
     white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.6s ease, transform 0.6s var(--ease-out-quart, ease);
+  }
+
+  .pyramid-label.is-shown {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .pyramid-label strong {
@@ -444,7 +487,29 @@ const methods = [
 
   .pyramid-row--highlight .pyramid-label {
     font-weight: 700;
+    font-size: var(--text-lg);
+  }
+
+  /* SS percent — count-up effect via CSS */
+  .ss-percent {
+    font-size: var(--text-2xl) !important;
+    color: var(--color-secondary) !important;
+  }
+
+  /* SS badge */
+  .pyramid-ss-badge {
+    font-family: var(--font-display);
     font-size: var(--text-base);
+    color: var(--color-secondary);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.8s ease 1.5s, transform 0.8s var(--ease-out-quart, ease) 1.5s;
+    white-space: nowrap;
+  }
+
+  .pyramid-ss-badge.is-shown {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .science-note {
@@ -452,6 +517,7 @@ const methods = [
     text-align: center;
     opacity: 0.5;
     font-style: italic;
+    margin-top: var(--space-md);
   }
 
   /* Achievements */
@@ -574,3 +640,47 @@ const methods = [
     }
   }
 </style>
+
+<script>
+  // Pyramid bar growth animation — staggered from top to bottom
+  const pyramid = document.getElementById('pyramid');
+  if (pyramid) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          const rows = pyramid.querySelectorAll('.pyramid-row');
+          rows.forEach((row, i) => {
+            const delay = parseInt(row.getAttribute('data-delay') || '0') * 200;
+            const bar = row.querySelector('.pyramid-bar');
+            const label = row.querySelector('.pyramid-label');
+            const badge = row.querySelector('.pyramid-ss-badge');
+
+            setTimeout(() => {
+              bar?.classList.add('is-grown');
+              setTimeout(() => label?.classList.add('is-shown'), 300);
+              if (badge) setTimeout(() => badge.classList.add('is-shown'), 600);
+            }, delay);
+          });
+
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(pyramid);
+
+    // Check if already visible
+    const rect = pyramid.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      const rows = pyramid.querySelectorAll('.pyramid-row');
+      rows.forEach(row => {
+        row.querySelector('.pyramid-bar')?.classList.add('is-grown');
+        row.querySelector('.pyramid-label')?.classList.add('is-shown');
+        row.querySelector('.pyramid-ss-badge')?.classList.add('is-shown');
+      });
+    }
+  }
+</script>
