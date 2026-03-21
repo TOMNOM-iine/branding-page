@@ -72,15 +72,20 @@ const steps = [
     <!-- Full-width SVG — lines ALWAYS visible (thin/faint), become alive on scroll -->
     <svg class="storyline-svg" viewBox="0 0 1200 3200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
-        <!-- Rough brush edge — ink on washi paper -->
-        <filter id="ink-rough" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" seed="3" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
+        <!-- 暴力的な筆エッジ — 和紙に叩きつけた墨 -->
+        <filter id="ink-brutal" x="-15%" y="-15%" width="130%" height="130%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="6" seed="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="G" />
         </filter>
-        <!-- Heavier distortion for splatter -->
-        <filter id="ink-splatter" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="4" seed="11" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
+        <!-- 飛沫用の極端な歪み -->
+        <filter id="ink-explode" x="-30%" y="-30%" width="160%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="5" seed="17" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <!-- かすれ（ドライブラシ）— 毛が見える -->
+        <filter id="ink-kasure" x="-5%" y="-20%" width="110%" height="140%">
+          <feTurbulence type="turbulence" baseFrequency="0.06 0.005" numOctaves="3" seed="7" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
 
@@ -93,149 +98,173 @@ const steps = [
       <!-- The trunk is drawn as a FILLED shape, not a stroked line.
            This allows thick-thin pressure variation along the curve.
            Entry: thick (筆を降ろす). Middle: variable. Exit: thin trail. -->
-      <g class="sline sline-trunk" filter="url(#ink-rough)">
-        <!-- Main body — thick filled brush stroke shape -->
+      <!-- ====== 幹: 巨大筆の一筆書き — 幅80-150px ====== -->
+      <!-- 全身で叩きつけるように書く。入筆で墨が溜まり、走って細くなり、また叩きつける。 -->
+      <g class="sline sline-trunk" filter="url(#ink-brutal)">
+        <!-- メイン筆跡 — 巨大な filled shape -->
         <path d="
-          M590,0 C588,20 592,50 595,80
-          C585,150 540,200 480,280
-          Q400,350 360,420 Q330,480 340,530
-          Q345,560 370,570 Q410,560 460,530
-          Q550,490 640,480 Q750,470 810,510
-          Q850,540 830,600 Q800,680 790,730
-          Q785,760 790,780 Q810,790 840,780
-          Q880,750 900,720 Q910,700 890,750
-          Q840,850 720,900 Q580,950 420,980
-          Q300,1010 280,1060 Q260,1110 320,1120
-          Q360,1130 400,1120 Q500,1090 600,1100
-          Q730,1115 820,1160 Q900,1200 870,1280
-          Q840,1360 800,1390 Q780,1400 790,1410
-          Q830,1400 870,1370 Q900,1340 880,1380
-          Q830,1460 720,1490 Q580,1520 440,1560
-          Q340,1600 350,1660 Q360,1700 420,1700
-          Q520,1690 620,1710 Q740,1740 810,1800
-          Q860,1850 830,1920 Q790,1990 720,2040
-          Q680,2070 660,2090 Q640,2110 660,2110
-          Q700,2100 740,2080 Q780,2050 760,2100
-          Q710,2180 620,2230 Q520,2290 470,2370
-          Q430,2440 470,2490 Q510,2520 560,2530
-          Q610,2530 640,2560 Q650,2600 620,2680
-          Q600,2760 590,2850 Q585,2940 590,3000
-          L610,3000
-          Q615,2940 620,2850 Q630,2760 650,2680
-          Q680,2600 670,2560 Q660,2530 640,2520
-          Q600,2510 560,2510 Q510,2500 490,2460
-          Q470,2420 500,2370 Q550,2290 640,2230
-          Q730,2180 780,2100 Q800,2050 770,2080
-          Q730,2110 690,2120 Q660,2120 680,2100
-          Q700,2070 740,2040 Q810,1990 850,1920
-          Q880,1850 840,1800 Q780,1730 660,1700
-          Q560,1680 440,1690 Q380,1690 370,1660
-          Q360,1620 400,1580 Q480,1540 600,1510
-          Q740,1480 850,1450 Q920,1420 910,1380
-          Q900,1340 850,1370 Q810,1400 770,1410
-          Q750,1420 760,1400 Q780,1370 800,1340
-          Q870,1250 840,1180 Q800,1130 700,1110
-          Q600,1090 480,1100 Q390,1110 340,1130
-          Q280,1150 260,1110 Q240,1060 300,1010
-          Q380,960 520,940 Q700,910 820,850
-          Q890,800 910,750 Q930,700 900,720
-          Q870,750 830,780 Q790,800 770,790
-          Q750,770 760,740 Q770,700 780,660
-          Q810,580 780,530 Q740,490 650,490
-          Q550,500 460,540 Q400,570 360,580
-          Q320,590 310,560 Q300,520 320,460
-          Q350,380 420,310 Q500,220 560,150
-          Q580,100 585,50 Q590,20 595,0
+          M540,0 C520,30 500,80 480,130
+          C430,220 320,280 250,380
+          Q180,470 200,530 Q220,580 300,580
+          Q420,570 550,500 Q700,430 830,470
+          Q940,500 920,600 Q890,720 820,780
+          Q740,840 700,850 Q680,860 720,870
+          Q800,870 880,830 Q960,780 980,820
+          Q1000,880 920,970 Q800,1060 620,1080
+          Q420,1100 280,1120 Q180,1140 200,1200
+          Q220,1260 340,1260 Q500,1250 660,1270
+          Q830,1290 920,1360 Q980,1420 920,1500
+          Q850,1580 750,1610 Q680,1630 690,1650
+          Q720,1660 800,1640 Q900,1600 940,1640
+          Q980,1680 920,1760 Q820,1860 680,1920
+          Q520,1980 380,2050 Q260,2120 280,2200
+          Q300,2280 420,2300 Q560,2310 680,2360
+          Q800,2420 780,2520 Q740,2620 660,2720
+          Q600,2800 580,2900 Q570,2960 580,3050
+          L680,3050
+          Q690,2960 700,2900 Q720,2800 780,2720
+          Q860,2620 880,2520 Q900,2420 780,2360
+          Q660,2310 520,2300 Q380,2280 360,2200
+          Q340,2120 460,2050 Q600,1980 760,1920
+          Q900,1860 1000,1760 Q1060,1680 1020,1640
+          Q980,1600 880,1640 Q800,1660 770,1650
+          Q760,1630 830,1610 Q930,1580 1000,1500
+          Q1060,1420 1000,1360 Q930,1290 760,1270
+          Q600,1250 440,1260 Q300,1260 280,1200
+          Q260,1140 360,1120 Q500,1100 700,1080
+          Q880,1060 1000,970 Q1080,880 1060,820
+          Q1040,780 960,830 Q880,870 800,870
+          Q760,870 780,860 Q800,850 820,840
+          Q900,780 970,720 Q1000,600 980,500
+          Q960,430 830,430 Q700,430 550,500
+          Q420,570 300,580 Q220,580 200,530
+          Q180,470 250,380 Q320,280 430,220
+          Q500,130 520,80 Q540,30 560,0
           Z"
           fill="var(--color-primary)"
-          opacity="0.55"
+          opacity="0.5"
         />
-        <!-- Ink pooling at pressure points — darker concentrated areas -->
-        <ellipse cx="340" cy="540" rx="35" ry="25" fill="var(--color-primary)" opacity="0.15" transform="rotate(-10, 340, 540)" />
-        <ellipse cx="800" cy="750" rx="30" ry="22" fill="var(--color-primary)" opacity="0.15" transform="rotate(15, 800, 750)" />
-        <ellipse cx="320" cy="1100" rx="38" ry="28" fill="var(--color-primary)" opacity="0.18" transform="rotate(-5, 320, 1100)" />
-        <ellipse cx="800" cy="1400" rx="40" ry="30" fill="var(--color-primary)" opacity="0.2" transform="rotate(8, 800, 1400)" />
-        <ellipse cx="650" cy="2100" rx="50" ry="35" fill="var(--color-primary)" opacity="0.22" transform="rotate(-3, 650, 2100)" />
+
+        <!-- 墨溜まり — 筆を叩きつけた場所に墨が溜まる（巨大） -->
+        <ellipse cx="250" cy="500" rx="80" ry="55" fill="var(--color-primary)" opacity="0.2" transform="rotate(-15, 250, 500)" />
+        <ellipse cx="880" cy="720" rx="70" ry="50" fill="var(--color-primary)" opacity="0.2" transform="rotate(20, 880, 720)" />
+        <ellipse cx="250" cy="1160" rx="90" ry="60" fill="var(--color-primary)" opacity="0.22" transform="rotate(-8, 250, 1160)" />
+        <ellipse cx="920" cy="1450" rx="85" ry="55" fill="var(--color-primary)" opacity="0.25" transform="rotate(12, 920, 1450)" />
+        <ellipse cx="350" cy="2150" rx="100" ry="70" fill="var(--color-primary)" opacity="0.28" transform="rotate(-5, 350, 2150)" />
+
+        <!-- かすれ（ドライブラシ）— 筆が走る中間部分 -->
+        <g filter="url(#ink-kasure)" opacity="0.15">
+          <rect x="400" y="440" width="250" height="8" fill="var(--color-primary)" transform="rotate(-15, 525, 444)" />
+          <rect x="350" y="460" width="280" height="5" fill="var(--color-primary)" transform="rotate(-12, 490, 462)" />
+          <rect x="420" y="480" width="200" height="6" fill="var(--color-primary)" transform="rotate(-18, 520, 483)" />
+          <rect x="700" y="930" width="200" height="7" fill="var(--color-primary)" transform="rotate(10, 800, 933)" />
+          <rect x="680" y="950" width="240" height="5" fill="var(--color-primary)" transform="rotate(8, 800, 952)" />
+          <rect x="400" y="1550" width="250" height="8" fill="var(--color-primary)" transform="rotate(-5, 525, 1554)" />
+          <rect x="420" y="1570" width="220" height="5" fill="var(--color-primary)" transform="rotate(-3, 530, 1572)" />
+          <rect x="500" y="1950" width="200" height="7" fill="var(--color-primary)" transform="rotate(-10, 600, 1953)" />
+          <rect x="480" y="1970" width="240" height="5" fill="var(--color-primary)" transform="rotate(-8, 600, 1972)" />
+          <rect x="520" y="1990" width="180" height="6" fill="var(--color-primary)" transform="rotate(-12, 610, 1993)" />
+        </g>
       </g>
 
-      <!-- ====== SPLATTER TRAILS — 墨飛沫 at direction changes ====== -->
-      <g class="ink-splatters" filter="url(#ink-splatter)">
-        <!-- Step 1 area — light spray -->
-        <circle cx="310" cy="500" r="8" fill="var(--color-primary)" opacity="0.2" />
-        <circle cx="290" cy="520" r="4" fill="var(--color-primary)" opacity="0.15" />
-        <circle cx="395" cy="490" r="5" fill="var(--color-primary)" opacity="0.12" />
-        <circle cx="280" cy="545" r="3" fill="var(--color-primary)" opacity="0.1" />
-        <!-- Step 2 area — medium spray -->
-        <circle cx="850" cy="700" r="10" fill="var(--color-primary)" opacity="0.2" />
-        <circle cx="870" cy="720" r="6" fill="var(--color-primary)" opacity="0.15" />
-        <circle cx="830" cy="690" r="4" fill="var(--color-primary)" opacity="0.12" />
-        <circle cx="890" cy="740" r="3" fill="var(--color-primary)" opacity="0.1" />
-        <circle cx="760" cy="770" r="5" fill="var(--color-primary)" opacity="0.1" />
-        <!-- Step 3 area — heavier spray -->
-        <circle cx="260" cy="1060" r="12" fill="var(--color-primary)" opacity="0.22" />
-        <circle cx="240" cy="1080" r="7" fill="var(--color-primary)" opacity="0.18" />
-        <circle cx="380" cy="1070" r="5" fill="var(--color-primary)" opacity="0.15" />
-        <circle cx="250" cy="1120" r="6" fill="var(--color-primary)" opacity="0.12" />
-        <circle cx="395" cy="1100" r="4" fill="var(--color-primary)" opacity="0.1" />
-        <circle cx="230" cy="1050" r="3" fill="var(--color-primary)" opacity="0.08" />
-        <!-- Step 4 area — wild spray -->
-        <circle cx="850" cy="1350" r="14" fill="var(--color-primary)" opacity="0.25" />
-        <circle cx="870" cy="1370" r="8" fill="var(--color-primary)" opacity="0.2" />
-        <circle cx="750" cy="1420" r="6" fill="var(--color-primary)" opacity="0.15" />
-        <circle cx="890" cy="1390" r="5" fill="var(--color-primary)" opacity="0.12" />
-        <circle cx="720" cy="1380" r="7" fill="var(--color-primary)" opacity="0.1" />
-        <circle cx="910" cy="1360" r="4" fill="var(--color-primary)" opacity="0.08" />
-        <circle cx="830" cy="1440" r="5" fill="var(--color-primary)" opacity="0.08" />
-        <circle cx="700" cy="1400" r="3" fill="var(--color-primary)" opacity="0.06" />
-        <!-- Step 5 area — EXPLOSIVE spray 大爆発 -->
-        <circle cx="580" cy="2050" r="18" fill="var(--color-primary)" opacity="0.28" />
-        <circle cx="620" cy="2040" r="12" fill="var(--color-primary)" opacity="0.22" />
-        <circle cx="540" cy="2080" r="10" fill="var(--color-primary)" opacity="0.2" />
-        <circle cx="700" cy="2060" r="8" fill="var(--color-primary)" opacity="0.18" />
-        <circle cx="500" cy="2100" r="7" fill="var(--color-primary)" opacity="0.15" />
-        <circle cx="730" cy="2090" r="6" fill="var(--color-primary)" opacity="0.12" />
-        <circle cx="480" cy="2050" r="5" fill="var(--color-primary)" opacity="0.1" />
-        <circle cx="750" cy="2120" r="5" fill="var(--color-primary)" opacity="0.1" />
-        <circle cx="460" cy="2110" r="4" fill="var(--color-primary)" opacity="0.08" />
-        <circle cx="770" cy="2070" r="4" fill="var(--color-primary)" opacity="0.08" />
-        <circle cx="520" cy="2130" r="3" fill="var(--color-primary)" opacity="0.06" />
-        <circle cx="690" cy="2140" r="3" fill="var(--color-primary)" opacity="0.06" />
+      <!-- ====== 墨飛沫 — 巨大・爆発的・200%野蛮 ====== -->
+      <g class="ink-splatters" filter="url(#ink-explode)">
+        <!-- Step 1: 入筆の衝撃 — 筆が紙に叩きつけられた瞬間 -->
+        <circle cx="180" cy="450" r="25" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="140" cy="420" r="15" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="220" cy="480" r="12" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="120" cy="500" r="8" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="260" cy="430" r="6" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="100" cy="460" r="5" fill="var(--color-primary)" opacity="0.1" />
+        <!-- 飛沫の軌跡 — 筆が走った方向に飛び散る -->
+        <ellipse cx="300" cy="410" rx="20" ry="4" fill="var(--color-primary)" opacity="0.12" transform="rotate(-30, 300, 410)" />
+        <ellipse cx="150" cy="530" rx="15" ry="3" fill="var(--color-primary)" opacity="0.1" transform="rotate(20, 150, 530)" />
+
+        <!-- Step 2: 方向転換の激しい飛沫 -->
+        <circle cx="980" cy="680" r="30" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="1020" cy="650" r="18" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="950" cy="720" r="14" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="1050" cy="700" r="10" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="920" cy="660" r="8" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="1080" cy="730" r="6" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="900" cy="750" r="5" fill="var(--color-primary)" opacity="0.08" />
+        <ellipse cx="1030" cy="620" rx="25" ry="5" fill="var(--color-primary)" opacity="0.12" transform="rotate(40, 1030, 620)" />
+
+        <!-- Step 3: さらに激しく — 墨が暴れる -->
+        <circle cx="140" cy="1100" r="35" fill="var(--color-primary)" opacity="0.28" />
+        <circle cx="100" cy="1060" r="22" fill="var(--color-primary)" opacity="0.22" />
+        <circle cx="180" cy="1150" r="16" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="80" cy="1130" r="12" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="230" cy="1080" r="10" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="60" cy="1090" r="8" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="200" cy="1180" r="7" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="120" cy="1020" r="5" fill="var(--color-primary)" opacity="0.06" />
+        <ellipse cx="110" cy="1170" rx="30" ry="6" fill="var(--color-primary)" opacity="0.1" transform="rotate(-20, 110, 1170)" />
+        <ellipse cx="250" cy="1050" rx="18" ry="4" fill="var(--color-primary)" opacity="0.08" transform="rotate(15, 250, 1050)" />
+
+        <!-- Step 4: 暴風 — 筆が叫ぶ -->
+        <circle cx="1020" cy="1400" r="40" fill="var(--color-primary)" opacity="0.3" />
+        <circle cx="1060" cy="1360" r="25" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="980" cy="1450" r="20" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="1100" cy="1420" r="15" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="940" cy="1380" r="12" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="1120" cy="1380" r="10" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="900" cy="1430" r="8" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="1140" cy="1450" r="6" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="880" cy="1350" r="5" fill="var(--color-primary)" opacity="0.06" />
+        <ellipse cx="1080" cy="1330" rx="35" ry="7" fill="var(--color-primary)" opacity="0.12" transform="rotate(30, 1080, 1330)" />
+        <ellipse cx="920" cy="1480" rx="28" ry="5" fill="var(--color-primary)" opacity="0.1" transform="rotate(-25, 920, 1480)" />
+
+        <!-- Step 5: 大 爆 発 — 全身の力で叩きつけた最後の一撃 -->
+        <circle cx="400" cy="2100" r="55" fill="var(--color-primary)" opacity="0.32" />
+        <circle cx="340" cy="2050" r="35" fill="var(--color-primary)" opacity="0.28" />
+        <circle cx="480" cy="2150" r="30" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="300" cy="2170" r="25" fill="var(--color-primary)" opacity="0.22" />
+        <circle cx="550" cy="2080" r="20" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="250" cy="2100" r="18" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="600" cy="2180" r="15" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="200" cy="2050" r="12" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="650" cy="2120" r="10" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="180" cy="2180" r="8" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="700" cy="2060" r="8" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="150" cy="2130" r="6" fill="var(--color-primary)" opacity="0.06" />
+        <circle cx="720" cy="2160" r="5" fill="var(--color-primary)" opacity="0.05" />
+        <!-- 飛沫の弧 — 筆が宙を舞った軌跡 -->
+        <ellipse cx="300" cy="1980" rx="50" ry="8" fill="var(--color-primary)" opacity="0.1" transform="rotate(-35, 300, 1980)" />
+        <ellipse cx="550" cy="2220" rx="40" ry="6" fill="var(--color-primary)" opacity="0.08" transform="rotate(25, 550, 2220)" />
+        <ellipse cx="200" cy="2240" rx="35" ry="5" fill="var(--color-primary)" opacity="0.06" transform="rotate(-15, 200, 2240)" />
       </g>
 
-      <!-- ====== BRANCHES — filled brush shapes (not stroked) ====== -->
-      <!-- Branch A: splits from step 2, thick entry thinning out -->
-      <path class="sline sline-branch-a" filter="url(#ink-rough)"
-        d="M790,740 Q830,750 860,800 Q900,870 880,960 Q860,1050 820,1100
-           Q780,1150 750,1200 Q720,1280 730,1380 Q740,1480 720,1560
-           Q700,1650 680,1740 Q660,1850 660,1950 Q660,2100 660,2300
-           Q660,2500 650,2680
-           L660,2680
-           Q670,2500 670,2300 Q670,2100 670,1950 Q670,1850 690,1740
-           Q710,1650 730,1560 Q750,1480 740,1380 Q730,1280 760,1200
-           Q790,1150 830,1100 Q870,1050 890,960 Q910,870 870,800
-           Q840,750 800,740 Z"
+      <!-- ====== BRANCHES — 太い筆の枝分かれ ====== -->
+      <path class="sline sline-branch-a" filter="url(#ink-brutal)"
+        d="M820,730 Q880,750 920,830 Q960,920 930,1030 Q900,1120 850,1180
+           Q780,1260 750,1360 Q730,1480 740,1600 Q750,1740 720,1880
+           Q690,2020 670,2200 Q660,2400 650,2680
+           L700,2680
+           Q710,2400 720,2200 Q740,2020 770,1880 Q800,1740 790,1600
+           Q780,1480 800,1360 Q830,1260 900,1180 Q950,1120 980,1030
+           Q1010,920 970,830 Q930,750 870,730 Z"
         fill="var(--color-primary)" opacity="0" />
 
-      <!-- Branch B: splits from step 3 -->
-      <path class="sline sline-branch-b" filter="url(#ink-rough)"
-        d="M340,1100 Q300,1130 260,1200 Q220,1280 230,1380
-           Q240,1500 280,1580 Q320,1660 340,1760 Q360,1880 350,2000
-           Q340,2150 360,2300 Q380,2500 400,2700 Q420,2850 440,2900
-           L450,2900
-           Q430,2850 410,2700 Q390,2500 370,2300 Q350,2150 360,2000
-           Q370,1880 350,1760 Q330,1660 290,1580 Q250,1500 240,1380
-           Q230,1280 270,1200 Q310,1130 350,1100 Z"
+      <path class="sline sline-branch-b" filter="url(#ink-brutal)"
+        d="M280,1140 Q220,1180 170,1280 Q130,1400 160,1540
+           Q190,1680 240,1780 Q300,1900 310,2050 Q320,2220 340,2420
+           Q360,2620 380,2800 Q400,2900 410,2950
+           L460,2950
+           Q450,2900 430,2800 Q410,2620 390,2420 Q370,2220 360,2050
+           Q350,1900 290,1780 Q240,1680 210,1540 Q180,1400 220,1280
+           Q270,1180 330,1140 Z"
         fill="var(--color-primary)" opacity="0" />
 
       <!-- ====== SPREADING VEINS — thinner filled shapes ====== -->
-      <path class="sline sline-spread-1" filter="url(#ink-rough)"
+      <path class="sline sline-spread-1" filter="url(#ink-brutal)"
         d="M730,1480 Q800,1530 870,1620 Q940,1720 960,1850 Q970,2000 940,2150
            Q910,2350 880,2550 Q860,2700 850,2800
            L856,2800
            Q866,2700 886,2550 Q916,2350 946,2150 Q976,2000 966,1850
            Q946,1720 876,1620 Q806,1530 736,1480 Z"
         fill="var(--color-primary)" opacity="0" />
-      <path class="sline sline-spread-2" filter="url(#ink-rough)"
+      <path class="sline sline-spread-2" filter="url(#ink-brutal)"
         d="M300,1580 Q250,1640 210,1750 Q180,1870 190,2020
            Q200,2200 230,2380 Q260,2560 280,2700 Q290,2850 290,2900
            L296,2900
@@ -244,51 +273,52 @@ const steps = [
         fill="var(--color-primary)" opacity="0" />
 
       <!-- ====== BLOOM VEINS — many thin wild strokes ====== -->
-      <path class="sline sline-bloom-1" filter="url(#ink-rough)" d="M640,2100 Q580,2150 500,2250 Q430,2360 380,2500 Q350,2620 340,2780 L345,2780 Q355,2620 385,2500 Q435,2360 505,2250 Q585,2150 645,2100 Z" fill="var(--color-primary)" opacity="0" />
-      <path class="sline sline-bloom-2" filter="url(#ink-rough)" d="M680,2100 Q740,2150 820,2250 Q890,2360 920,2500 Q940,2620 950,2800 L955,2800 Q945,2620 925,2500 Q895,2360 825,2250 Q745,2150 685,2100 Z" fill="var(--color-primary)" opacity="0" />
-      <path class="sline sline-bloom-3" filter="url(#ink-rough)" d="M480,2400 Q420,2440 350,2530 Q300,2620 280,2750 Q270,2880 270,2980 L275,2980 Q275,2880 285,2750 Q305,2620 355,2530 Q425,2440 485,2400 Z" fill="var(--color-primary)" opacity="0" />
-      <path class="sline sline-bloom-4" filter="url(#ink-rough)" d="M720,2400 Q780,2440 850,2530 Q900,2620 920,2750 Q930,2880 930,2980 L935,2980 Q935,2880 925,2750 Q905,2620 855,2530 Q785,2440 725,2400 Z" fill="var(--color-primary)" opacity="0" />
-      <path class="sline sline-bloom-5" filter="url(#ink-rough)" d="M530,2600 Q490,2640 440,2720 Q400,2800 390,2900 Q385,2980 390,3050 L395,3050 Q390,2980 395,2900 Q405,2800 445,2720 Q495,2640 535,2600 Z" fill="var(--color-primary)" opacity="0" />
-      <path class="sline sline-bloom-6" filter="url(#ink-rough)" d="M680,2600 Q720,2640 770,2720 Q810,2800 820,2900 Q825,2980 820,3050 L825,3050 Q830,2980 825,2900 Q815,2800 775,2720 Q725,2640 685,2600 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-1" filter="url(#ink-brutal)" d="M640,2100 Q580,2150 500,2250 Q430,2360 380,2500 Q350,2620 340,2780 L345,2780 Q355,2620 385,2500 Q435,2360 505,2250 Q585,2150 645,2100 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-2" filter="url(#ink-brutal)" d="M680,2100 Q740,2150 820,2250 Q890,2360 920,2500 Q940,2620 950,2800 L955,2800 Q945,2620 925,2500 Q895,2360 825,2250 Q745,2150 685,2100 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-3" filter="url(#ink-brutal)" d="M480,2400 Q420,2440 350,2530 Q300,2620 280,2750 Q270,2880 270,2980 L275,2980 Q275,2880 285,2750 Q305,2620 355,2530 Q425,2440 485,2400 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-4" filter="url(#ink-brutal)" d="M720,2400 Q780,2440 850,2530 Q900,2620 920,2750 Q930,2880 930,2980 L935,2980 Q935,2880 925,2750 Q905,2620 855,2530 Q785,2440 725,2400 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-5" filter="url(#ink-brutal)" d="M530,2600 Q490,2640 440,2720 Q400,2800 390,2900 Q385,2980 390,3050 L395,3050 Q390,2980 395,2900 Q405,2800 445,2720 Q495,2640 535,2600 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-6" filter="url(#ink-brutal)" d="M680,2600 Q720,2640 770,2720 Q810,2800 820,2900 Q825,2980 820,3050 L825,3050 Q830,2980 825,2900 Q815,2800 775,2720 Q725,2640 685,2600 Z" fill="var(--color-primary)" opacity="0" />
 
       <!-- ====== INK POOLS at steps — 墨溜まり ====== -->
-      <g class="sdot sdot-1" filter="url(#ink-splatter)">
-        <ellipse cx="350" cy="545" rx="22" ry="18" fill="var(--color-primary)" transform="rotate(-15, 350, 545)" />
-        <circle cx="325" cy="530" r="5" fill="var(--color-primary)" />
-        <circle cx="375" cy="555" r="4" fill="var(--color-primary)" />
-        <circle cx="340" cy="570" r="3" fill="var(--color-primary)" />
+      <!-- ====== 墨溜まりドット — 筆を叩きつけた衝撃の跡 ====== -->
+      <g class="sdot sdot-1" filter="url(#ink-explode)">
+        <ellipse cx="280" cy="520" rx="60" ry="45" fill="var(--color-primary)" transform="rotate(-18, 280, 520)" />
+        <circle cx="230" cy="490" r="15" fill="var(--color-primary)" />
+        <circle cx="340" cy="540" r="12" fill="var(--color-primary)" />
+        <circle cx="260" cy="570" r="8" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-2" filter="url(#ink-splatter)">
-        <ellipse cx="800" cy="745" rx="25" ry="20" fill="var(--color-primary)" transform="rotate(10, 800, 745)" />
-        <circle cx="830" cy="730" r="6" fill="var(--color-primary)" />
-        <circle cx="775" cy="760" r="5" fill="var(--color-primary)" />
-        <circle cx="820" cy="770" r="3" fill="var(--color-primary)" />
+      <g class="sdot sdot-2" filter="url(#ink-explode)">
+        <ellipse cx="880" cy="730" rx="65" ry="50" fill="var(--color-primary)" transform="rotate(14, 880, 730)" />
+        <circle cx="940" cy="700" r="18" fill="var(--color-primary)" />
+        <circle cx="830" cy="760" r="14" fill="var(--color-primary)" />
+        <circle cx="910" cy="780" r="10" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-3" filter="url(#ink-splatter)">
-        <ellipse cx="340" cy="1095" rx="30" ry="24" fill="var(--color-primary)" transform="rotate(-8, 340, 1095)" />
-        <circle cx="310" cy="1080" r="7" fill="var(--color-primary)" />
-        <circle cx="370" cy="1110" r="6" fill="var(--color-primary)" />
-        <circle cx="325" cy="1120" r="4" fill="var(--color-primary)" />
-        <circle cx="365" cy="1080" r="3" fill="var(--color-primary)" />
+      <g class="sdot sdot-3" filter="url(#ink-explode)">
+        <ellipse cx="260" cy="1150" rx="75" ry="55" fill="var(--color-primary)" transform="rotate(-10, 260, 1150)" />
+        <circle cx="190" cy="1120" r="20" fill="var(--color-primary)" />
+        <circle cx="340" cy="1170" r="16" fill="var(--color-primary)" />
+        <circle cx="230" cy="1200" r="12" fill="var(--color-primary)" />
+        <circle cx="310" cy="1120" r="8" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-4" filter="url(#ink-splatter)">
-        <ellipse cx="800" cy="1395" rx="35" ry="28" fill="var(--color-primary)" transform="rotate(12, 800, 1395)" />
-        <circle cx="840" cy="1375" r="8" fill="var(--color-primary)" />
-        <circle cx="765" cy="1415" r="7" fill="var(--color-primary)" />
-        <circle cx="820" cy="1425" r="5" fill="var(--color-primary)" />
-        <circle cx="755" cy="1385" r="4" fill="var(--color-primary)" />
-        <circle cx="845" cy="1410" r="3" fill="var(--color-primary)" />
+      <g class="sdot sdot-4" filter="url(#ink-explode)">
+        <ellipse cx="920" cy="1450" rx="80" ry="60" fill="var(--color-primary)" transform="rotate(15, 920, 1450)" />
+        <circle cx="990" cy="1420" r="22" fill="var(--color-primary)" />
+        <circle cx="860" cy="1480" r="18" fill="var(--color-primary)" />
+        <circle cx="950" cy="1510" r="14" fill="var(--color-primary)" />
+        <circle cx="840" cy="1430" r="10" fill="var(--color-primary)" />
+        <circle cx="1000" cy="1480" r="8" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-5" filter="url(#ink-splatter)">
-        <ellipse cx="650" cy="2095" rx="45" ry="35" fill="var(--color-primary)" transform="rotate(-5, 650, 2095)" />
-        <circle cx="600" cy="2070" r="10" fill="var(--color-primary)" />
-        <circle cx="700" cy="2075" r="9" fill="var(--color-primary)" />
-        <circle cx="620" cy="2130" r="8" fill="var(--color-primary)" />
-        <circle cx="680" cy="2120" r="7" fill="var(--color-primary)" />
-        <circle cx="580" cy="2090" r="5" fill="var(--color-primary)" />
-        <circle cx="720" cy="2100" r="5" fill="var(--color-primary)" />
-        <circle cx="560" cy="2110" r="4" fill="var(--color-primary)" />
-        <circle cx="740" cy="2080" r="4" fill="var(--color-primary)" />
+      <g class="sdot sdot-5" filter="url(#ink-explode)">
+        <ellipse cx="380" cy="2150" rx="100" ry="75" fill="var(--color-primary)" transform="rotate(-8, 380, 2150)" />
+        <circle cx="280" cy="2100" r="30" fill="var(--color-primary)" />
+        <circle cx="480" cy="2120" r="25" fill="var(--color-primary)" />
+        <circle cx="320" cy="2210" r="20" fill="var(--color-primary)" />
+        <circle cx="450" cy="2200" r="18" fill="var(--color-primary)" />
+        <circle cx="240" cy="2170" r="14" fill="var(--color-primary)" />
+        <circle cx="520" cy="2160" r="12" fill="var(--color-primary)" />
+        <circle cx="200" cy="2130" r="10" fill="var(--color-primary)" />
+        <circle cx="550" cy="2190" r="8" fill="var(--color-primary)" />
       </g>
     </svg>
 
