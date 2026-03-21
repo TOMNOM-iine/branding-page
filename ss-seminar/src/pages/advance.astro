@@ -137,31 +137,31 @@ const methods = [
         <div class="science-block">
           <div class="science-pyramid" id="pyramid">
             <div class="pyramid-row" data-delay="0">
-              <span class="pyramid-bar pyramid-bar--anim" style="--w: 5.5%; --c: var(--color-shu-aka)"></span>
+              <span class="pyramid-bar pyramid-bar--anim" style="width: 35px; --c: var(--color-shu-aka)"></span>
               <span class="pyramid-label">聞くだけ <strong>5%</strong></span>
             </div>
             <div class="pyramid-row" data-delay="1">
-              <span class="pyramid-bar pyramid-bar--anim" style="--w: 11%; --c: var(--color-shu-aka); opacity: 0.8"></span>
+              <span class="pyramid-bar pyramid-bar--anim" style="width: 70px; --c: var(--color-shu-aka); opacity: 0.8"></span>
               <span class="pyramid-label">読む <strong>10%</strong></span>
             </div>
             <div class="pyramid-row" data-delay="2">
-              <span class="pyramid-bar pyramid-bar--anim" style="--w: 22%; --c: var(--color-you-daidai)"></span>
+              <span class="pyramid-bar pyramid-bar--anim" style="width: 140px; --c: var(--color-you-daidai)"></span>
               <span class="pyramid-label">視聴覚 <strong>20%</strong></span>
             </div>
             <div class="pyramid-row" data-delay="3">
-              <span class="pyramid-bar pyramid-bar--anim" style="--w: 33%; --c: var(--color-tatami-kin)"></span>
+              <span class="pyramid-bar pyramid-bar--anim" style="width: 210px; --c: var(--color-tatami-kin)"></span>
               <span class="pyramid-label">デモを見る <strong>30%</strong></span>
             </div>
             <div class="pyramid-row" data-delay="4">
-              <span class="pyramid-bar pyramid-bar--anim" style="--w: 55%; --c: var(--color-sora-mizu)"></span>
+              <span class="pyramid-bar pyramid-bar--anim" style="width: 350px; --c: var(--color-sora-mizu)"></span>
               <span class="pyramid-label">議論する <strong>50%</strong></span>
             </div>
             <div class="pyramid-row" data-delay="5">
-              <span class="pyramid-bar pyramid-bar--anim" style="--w: 83%; --c: var(--color-sora-mizu); opacity: 0.8"></span>
+              <span class="pyramid-bar pyramid-bar--anim" style="width: 525px; --c: var(--color-sora-mizu); opacity: 0.8"></span>
               <span class="pyramid-label">実践する <strong>75%</strong></span>
             </div>
             <div class="pyramid-row pyramid-row--highlight" data-delay="6">
-              <span class="pyramid-bar pyramid-bar--anim pyramid-bar--ss" style="--w: 100%; --c: var(--color-primary)"></span>
+              <span class="pyramid-bar pyramid-bar--anim pyramid-bar--ss" style="width: 700px; --c: var(--color-primary)"></span>
               <span class="pyramid-label">問答法（教え合う） <strong class="ss-percent">90%</strong></span>
               <span class="pyramid-ss-badge">← SSメソッド</span>
             </div>
@@ -431,29 +431,23 @@ const methods = [
     flex-direction: column;
     gap: var(--space-sm);
     margin-bottom: var(--space-md);
-    /* This container defines 100% for bar widths */
-    width: 100%;
     max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    overflow: hidden;
   }
 
   .pyramid-row {
-    display: grid;
-    grid-template-columns: var(--w) auto auto;
+    display: flex;
     align-items: center;
     gap: var(--space-md);
-    min-height: 36px;
+    flex-wrap: wrap;
   }
 
-  .pyramid-row--highlight {
-    min-height: 52px;
-  }
-
-  /* Pyramid bars — fixed width from grid, animate via scaleX */
+  /* Pyramid bars — width set inline (px), animated via scaleX */
   .pyramid-bar {
     height: 28px;
-    width: 100%;
+    /* width is set inline on each bar */
+    max-width: 100%;
+    flex-shrink: 0;
     background: var(--c);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     opacity: 0.7;
