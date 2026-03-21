@@ -72,152 +72,223 @@ const steps = [
     <!-- Full-width SVG — lines ALWAYS visible (thin/faint), become alive on scroll -->
     <svg class="storyline-svg" viewBox="0 0 1200 3200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
-        <!-- Brush texture filter — roughens edges like ink on paper -->
-        <filter id="brush-texture" x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="2" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+        <!-- Rough brush edge — ink on washi paper -->
+        <filter id="ink-rough" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" seed="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
         </filter>
-        <!-- Heavier brush for trunk -->
-        <filter id="brush-heavy" x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+        <!-- Heavier distortion for splatter -->
+        <filter id="ink-splatter" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="4" seed="11" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
 
-      <!-- ====== INK SPLATTERS — wild, scattered, 野蛮 ====== -->
-      <g class="ink-splatters" opacity="0.12">
-        <!-- Splatter near step 1 -->
-        <circle cx="380" cy="520" r="15" fill="var(--color-primary)" />
-        <circle cx="395" cy="510" r="5" fill="var(--color-primary)" />
-        <circle cx="365" cy="540" r="8" fill="var(--color-primary)" />
-        <circle cx="410" cy="530" r="3" fill="var(--color-primary)" />
-        <circle cx="340" cy="560" r="4" fill="var(--color-primary)" />
-        <!-- Splatter near step 2 -->
-        <circle cx="820" cy="720" r="12" fill="var(--color-primary)" />
-        <circle cx="840" cy="740" r="6" fill="var(--color-primary)" />
-        <circle cx="795" cy="760" r="4" fill="var(--color-primary)" />
-        <circle cx="860" cy="710" r="3" fill="var(--color-primary)" />
-        <!-- Splatter near step 3 — more scattered -->
-        <circle cx="330" cy="1080" r="18" fill="var(--color-primary)" />
-        <circle cx="310" cy="1060" r="7" fill="var(--color-primary)" />
-        <circle cx="360" cy="1110" r="5" fill="var(--color-primary)" />
-        <circle cx="295" cy="1090" r="4" fill="var(--color-primary)" />
-        <circle cx="375" cy="1070" r="3" fill="var(--color-primary)" />
-        <circle cx="345" cy="1130" r="6" fill="var(--color-primary)" />
-        <!-- Splatter near step 4 — even wilder -->
-        <circle cx="780" cy="1380" r="20" fill="var(--color-primary)" />
-        <circle cx="810" cy="1360" r="8" fill="var(--color-primary)" />
-        <circle cx="760" cy="1410" r="6" fill="var(--color-primary)" />
-        <circle cx="830" cy="1400" r="4" fill="var(--color-primary)" />
-        <circle cx="740" cy="1370" r="5" fill="var(--color-primary)" />
-        <circle cx="850" cy="1390" r="3" fill="var(--color-primary)" />
-        <circle cx="770" cy="1430" r="7" fill="var(--color-primary)" />
-        <!-- Splatter near step 5 — explosive bloom -->
-        <circle cx="580" cy="2080" r="25" fill="var(--color-primary)" />
-        <circle cx="620" cy="2060" r="10" fill="var(--color-primary)" />
-        <circle cx="550" cy="2110" r="8" fill="var(--color-primary)" />
-        <circle cx="640" cy="2100" r="6" fill="var(--color-primary)" />
-        <circle cx="560" cy="2050" r="5" fill="var(--color-primary)" />
-        <circle cx="600" cy="2130" r="9" fill="var(--color-primary)" />
-        <circle cx="530" cy="2090" r="4" fill="var(--color-primary)" />
-        <circle cx="660" cy="2070" r="4" fill="var(--color-primary)" />
-        <circle cx="580" cy="2150" r="7" fill="var(--color-primary)" />
-      </g>
+      <!-- ============================================================
+           巨大筆書道 — 大字書道スタイル
+           全身で書く一筆書き。墨溜まり、かすれ、飛沫。
+           ============================================================ -->
 
-      <!-- ====== TRUNK — bold brush stroke, thick-thin variation ====== -->
-      <!-- Multiple overlapping paths simulate brush pressure variation -->
-      <g class="sline sline-trunk" filter="url(#brush-heavy)">
-        <!-- Main thick stroke -->
-        <path
-          d="M600,0 C600,180 280,280 350,520
-             S820,480 800,740
-             S220,880 350,1080
-             S880,1180 800,1380
-             S320,1480 400,1680
-             S780,1880 700,2080
-             S420,2280 500,2480
-             C550,2630 600,2780 600,2980"
-          stroke="var(--color-primary)"
-          stroke-width="8"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+      <!-- ====== TRUNK: 幹 — filled path for pressure variation ====== -->
+      <!-- The trunk is drawn as a FILLED shape, not a stroked line.
+           This allows thick-thin pressure variation along the curve.
+           Entry: thick (筆を降ろす). Middle: variable. Exit: thin trail. -->
+      <g class="sline sline-trunk" filter="url(#ink-rough)">
+        <!-- Main body — thick filled brush stroke shape -->
+        <path d="
+          M590,0 C588,20 592,50 595,80
+          C585,150 540,200 480,280
+          Q400,350 360,420 Q330,480 340,530
+          Q345,560 370,570 Q410,560 460,530
+          Q550,490 640,480 Q750,470 810,510
+          Q850,540 830,600 Q800,680 790,730
+          Q785,760 790,780 Q810,790 840,780
+          Q880,750 900,720 Q910,700 890,750
+          Q840,850 720,900 Q580,950 420,980
+          Q300,1010 280,1060 Q260,1110 320,1120
+          Q360,1130 400,1120 Q500,1090 600,1100
+          Q730,1115 820,1160 Q900,1200 870,1280
+          Q840,1360 800,1390 Q780,1400 790,1410
+          Q830,1400 870,1370 Q900,1340 880,1380
+          Q830,1460 720,1490 Q580,1520 440,1560
+          Q340,1600 350,1660 Q360,1700 420,1700
+          Q520,1690 620,1710 Q740,1740 810,1800
+          Q860,1850 830,1920 Q790,1990 720,2040
+          Q680,2070 660,2090 Q640,2110 660,2110
+          Q700,2100 740,2080 Q780,2050 760,2100
+          Q710,2180 620,2230 Q520,2290 470,2370
+          Q430,2440 470,2490 Q510,2520 560,2530
+          Q610,2530 640,2560 Q650,2600 620,2680
+          Q600,2760 590,2850 Q585,2940 590,3000
+          L610,3000
+          Q615,2940 620,2850 Q630,2760 650,2680
+          Q680,2600 670,2560 Q660,2530 640,2520
+          Q600,2510 560,2510 Q510,2500 490,2460
+          Q470,2420 500,2370 Q550,2290 640,2230
+          Q730,2180 780,2100 Q800,2050 770,2080
+          Q730,2110 690,2120 Q660,2120 680,2100
+          Q700,2070 740,2040 Q810,1990 850,1920
+          Q880,1850 840,1800 Q780,1730 660,1700
+          Q560,1680 440,1690 Q380,1690 370,1660
+          Q360,1620 400,1580 Q480,1540 600,1510
+          Q740,1480 850,1450 Q920,1420 910,1380
+          Q900,1340 850,1370 Q810,1400 770,1410
+          Q750,1420 760,1400 Q780,1370 800,1340
+          Q870,1250 840,1180 Q800,1130 700,1110
+          Q600,1090 480,1100 Q390,1110 340,1130
+          Q280,1150 260,1110 Q240,1060 300,1010
+          Q380,960 520,940 Q700,910 820,850
+          Q890,800 910,750 Q930,700 900,720
+          Q870,750 830,780 Q790,800 770,790
+          Q750,770 760,740 Q770,700 780,660
+          Q810,580 780,530 Q740,490 650,490
+          Q550,500 460,540 Q400,570 360,580
+          Q320,590 310,560 Q300,520 320,460
+          Q350,380 420,310 Q500,220 560,150
+          Q580,100 585,50 Q590,20 595,0
+          Z"
+          fill="var(--color-primary)"
+          opacity="0.55"
         />
-        <!-- Thinner overlay for depth -->
-        <path
-          d="M600,0 C595,190 290,290 355,530
-             S830,490 805,745
-             S215,885 345,1085
-             S885,1190 795,1385
-             S315,1490 405,1685
-             S785,1885 705,2085
-             S415,2290 505,2490
-             C555,2640 605,2790 605,2990"
-          stroke="var(--color-primary)"
-          stroke-width="3"
-          fill="none"
-          stroke-linecap="round"
-          opacity="0.5"
-        />
+        <!-- Ink pooling at pressure points — darker concentrated areas -->
+        <ellipse cx="340" cy="540" rx="35" ry="25" fill="var(--color-primary)" opacity="0.15" transform="rotate(-10, 340, 540)" />
+        <ellipse cx="800" cy="750" rx="30" ry="22" fill="var(--color-primary)" opacity="0.15" transform="rotate(15, 800, 750)" />
+        <ellipse cx="320" cy="1100" rx="38" ry="28" fill="var(--color-primary)" opacity="0.18" transform="rotate(-5, 320, 1100)" />
+        <ellipse cx="800" cy="1400" rx="40" ry="30" fill="var(--color-primary)" opacity="0.2" transform="rotate(8, 800, 1400)" />
+        <ellipse cx="650" cy="2100" rx="50" ry="35" fill="var(--color-primary)" opacity="0.22" transform="rotate(-3, 650, 2100)" />
       </g>
 
-      <!-- ====== BRANCHES — brush strokes that sprout ====== -->
-      <path class="sline sline-branch-a" filter="url(#brush-texture)"
-        d="M800,750 C890,840 940,980 850,1090 S660,1280 700,1480 S560,1680 610,1880 C660,2080 690,2380 660,2680"
-        stroke="var(--color-primary)" stroke-width="5" fill="none" stroke-linecap="round" />
-
-      <path class="sline sline-branch-b" filter="url(#brush-texture)"
-        d="M350,1100 C210,1190 160,1380 260,1530 S460,1680 410,1880 S310,2080 360,2280 C410,2480 510,2680 560,2880"
-        stroke="var(--color-primary)" stroke-width="5" fill="none" stroke-linecap="round" />
-
-      <!-- ====== SPREADING — thinner brush strokes ====== -->
-      <path class="sline sline-spread-1" filter="url(#brush-texture)"
-        d="M700,1500 C790,1590 940,1640 990,1790 S890,1990 940,2190 C960,2390 890,2590 840,2790"
-        stroke="var(--color-primary)" stroke-width="3.5" fill="none" stroke-linecap="round" />
-      <path class="sline sline-spread-2" filter="url(#brush-texture)"
-        d="M400,1700 C310,1790 210,1890 190,2090 S260,2290 210,2490 C190,2640 230,2790 290,2890"
-        stroke="var(--color-primary)" stroke-width="3.5" fill="none" stroke-linecap="round" />
-
-      <!-- ====== BLOOM — many wild brush strokes, explosive ====== -->
-      <path class="sline sline-bloom-1" filter="url(#brush-texture)" d="M600,2100 C510,2190 360,2240 310,2390 S360,2590 330,2790" stroke="var(--color-primary)" stroke-width="2.5" fill="none" stroke-linecap="round" />
-      <path class="sline sline-bloom-2" filter="url(#brush-texture)" d="M700,2100 C790,2190 890,2290 910,2440 S870,2640 890,2840" stroke="var(--color-primary)" stroke-width="2.5" fill="none" stroke-linecap="round" />
-      <path class="sline sline-bloom-3" filter="url(#brush-texture)" d="M500,2500 C410,2540 310,2590 260,2690 S290,2840 260,2990" stroke="var(--color-primary)" stroke-width="2" fill="none" stroke-linecap="round" />
-      <path class="sline sline-bloom-4" filter="url(#brush-texture)" d="M650,2500 C740,2540 840,2570 890,2690 S860,2840 890,2990" stroke="var(--color-primary)" stroke-width="2" fill="none" stroke-linecap="round" />
-      <path class="sline sline-bloom-5" filter="url(#brush-texture)" d="M550,2700 C510,2740 440,2790 410,2890 S440,2970 430,3090" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linecap="round" />
-      <path class="sline sline-bloom-6" filter="url(#brush-texture)" d="M700,2700 C740,2770 790,2840 820,2940 S790,3040 810,3140" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linecap="round" />
-
-      <!-- ====== INK DOTS at steps — splattered, not perfect circles ====== -->
-      <g class="sdot sdot-1" filter="url(#brush-heavy)">
-        <circle cx="350" cy="550" r="14" fill="var(--color-primary)" />
-        <circle cx="365" cy="540" r="5" fill="var(--color-primary)" />
-        <circle cx="338" cy="565" r="4" fill="var(--color-primary)" />
+      <!-- ====== SPLATTER TRAILS — 墨飛沫 at direction changes ====== -->
+      <g class="ink-splatters" filter="url(#ink-splatter)">
+        <!-- Step 1 area — light spray -->
+        <circle cx="310" cy="500" r="8" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="290" cy="520" r="4" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="395" cy="490" r="5" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="280" cy="545" r="3" fill="var(--color-primary)" opacity="0.1" />
+        <!-- Step 2 area — medium spray -->
+        <circle cx="850" cy="700" r="10" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="870" cy="720" r="6" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="830" cy="690" r="4" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="890" cy="740" r="3" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="760" cy="770" r="5" fill="var(--color-primary)" opacity="0.1" />
+        <!-- Step 3 area — heavier spray -->
+        <circle cx="260" cy="1060" r="12" fill="var(--color-primary)" opacity="0.22" />
+        <circle cx="240" cy="1080" r="7" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="380" cy="1070" r="5" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="250" cy="1120" r="6" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="395" cy="1100" r="4" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="230" cy="1050" r="3" fill="var(--color-primary)" opacity="0.08" />
+        <!-- Step 4 area — wild spray -->
+        <circle cx="850" cy="1350" r="14" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="870" cy="1370" r="8" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="750" cy="1420" r="6" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="890" cy="1390" r="5" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="720" cy="1380" r="7" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="910" cy="1360" r="4" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="830" cy="1440" r="5" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="700" cy="1400" r="3" fill="var(--color-primary)" opacity="0.06" />
+        <!-- Step 5 area — EXPLOSIVE spray 大爆発 -->
+        <circle cx="580" cy="2050" r="18" fill="var(--color-primary)" opacity="0.28" />
+        <circle cx="620" cy="2040" r="12" fill="var(--color-primary)" opacity="0.22" />
+        <circle cx="540" cy="2080" r="10" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="700" cy="2060" r="8" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="500" cy="2100" r="7" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="730" cy="2090" r="6" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="480" cy="2050" r="5" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="750" cy="2120" r="5" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="460" cy="2110" r="4" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="770" cy="2070" r="4" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="520" cy="2130" r="3" fill="var(--color-primary)" opacity="0.06" />
+        <circle cx="690" cy="2140" r="3" fill="var(--color-primary)" opacity="0.06" />
       </g>
-      <g class="sdot sdot-2" filter="url(#brush-heavy)">
-        <circle cx="800" cy="750" r="14" fill="var(--color-primary)" />
-        <circle cx="815" cy="738" r="5" fill="var(--color-primary)" />
-        <circle cx="785" cy="762" r="4" fill="var(--color-primary)" />
+
+      <!-- ====== BRANCHES — filled brush shapes (not stroked) ====== -->
+      <!-- Branch A: splits from step 2, thick entry thinning out -->
+      <path class="sline sline-branch-a" filter="url(#ink-rough)"
+        d="M790,740 Q830,750 860,800 Q900,870 880,960 Q860,1050 820,1100
+           Q780,1150 750,1200 Q720,1280 730,1380 Q740,1480 720,1560
+           Q700,1650 680,1740 Q660,1850 660,1950 Q660,2100 660,2300
+           Q660,2500 650,2680
+           L660,2680
+           Q670,2500 670,2300 Q670,2100 670,1950 Q670,1850 690,1740
+           Q710,1650 730,1560 Q750,1480 740,1380 Q730,1280 760,1200
+           Q790,1150 830,1100 Q870,1050 890,960 Q910,870 870,800
+           Q840,750 800,740 Z"
+        fill="var(--color-primary)" opacity="0" />
+
+      <!-- Branch B: splits from step 3 -->
+      <path class="sline sline-branch-b" filter="url(#ink-rough)"
+        d="M340,1100 Q300,1130 260,1200 Q220,1280 230,1380
+           Q240,1500 280,1580 Q320,1660 340,1760 Q360,1880 350,2000
+           Q340,2150 360,2300 Q380,2500 400,2700 Q420,2850 440,2900
+           L450,2900
+           Q430,2850 410,2700 Q390,2500 370,2300 Q350,2150 360,2000
+           Q370,1880 350,1760 Q330,1660 290,1580 Q250,1500 240,1380
+           Q230,1280 270,1200 Q310,1130 350,1100 Z"
+        fill="var(--color-primary)" opacity="0" />
+
+      <!-- ====== SPREADING VEINS — thinner filled shapes ====== -->
+      <path class="sline sline-spread-1" filter="url(#ink-rough)"
+        d="M730,1480 Q800,1530 870,1620 Q940,1720 960,1850 Q970,2000 940,2150
+           Q910,2350 880,2550 Q860,2700 850,2800
+           L856,2800
+           Q866,2700 886,2550 Q916,2350 946,2150 Q976,2000 966,1850
+           Q946,1720 876,1620 Q806,1530 736,1480 Z"
+        fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-spread-2" filter="url(#ink-rough)"
+        d="M300,1580 Q250,1640 210,1750 Q180,1870 190,2020
+           Q200,2200 230,2380 Q260,2560 280,2700 Q290,2850 290,2900
+           L296,2900
+           Q296,2850 286,2700 Q266,2560 236,2380 Q206,2200 196,2020
+           Q186,1870 216,1750 Q256,1640 306,1580 Z"
+        fill="var(--color-primary)" opacity="0" />
+
+      <!-- ====== BLOOM VEINS — many thin wild strokes ====== -->
+      <path class="sline sline-bloom-1" filter="url(#ink-rough)" d="M640,2100 Q580,2150 500,2250 Q430,2360 380,2500 Q350,2620 340,2780 L345,2780 Q355,2620 385,2500 Q435,2360 505,2250 Q585,2150 645,2100 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-2" filter="url(#ink-rough)" d="M680,2100 Q740,2150 820,2250 Q890,2360 920,2500 Q940,2620 950,2800 L955,2800 Q945,2620 925,2500 Q895,2360 825,2250 Q745,2150 685,2100 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-3" filter="url(#ink-rough)" d="M480,2400 Q420,2440 350,2530 Q300,2620 280,2750 Q270,2880 270,2980 L275,2980 Q275,2880 285,2750 Q305,2620 355,2530 Q425,2440 485,2400 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-4" filter="url(#ink-rough)" d="M720,2400 Q780,2440 850,2530 Q900,2620 920,2750 Q930,2880 930,2980 L935,2980 Q935,2880 925,2750 Q905,2620 855,2530 Q785,2440 725,2400 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-5" filter="url(#ink-rough)" d="M530,2600 Q490,2640 440,2720 Q400,2800 390,2900 Q385,2980 390,3050 L395,3050 Q390,2980 395,2900 Q405,2800 445,2720 Q495,2640 535,2600 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-6" filter="url(#ink-rough)" d="M680,2600 Q720,2640 770,2720 Q810,2800 820,2900 Q825,2980 820,3050 L825,3050 Q830,2980 825,2900 Q815,2800 775,2720 Q725,2640 685,2600 Z" fill="var(--color-primary)" opacity="0" />
+
+      <!-- ====== INK POOLS at steps — 墨溜まり ====== -->
+      <g class="sdot sdot-1" filter="url(#ink-splatter)">
+        <ellipse cx="350" cy="545" rx="22" ry="18" fill="var(--color-primary)" transform="rotate(-15, 350, 545)" />
+        <circle cx="325" cy="530" r="5" fill="var(--color-primary)" />
+        <circle cx="375" cy="555" r="4" fill="var(--color-primary)" />
+        <circle cx="340" cy="570" r="3" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-3" filter="url(#brush-heavy)">
-        <circle cx="350" cy="1100" r="16" fill="var(--color-primary)" />
-        <circle cx="370" cy="1088" r="6" fill="var(--color-primary)" />
-        <circle cx="335" cy="1115" r="5" fill="var(--color-primary)" />
-        <circle cx="365" cy="1118" r="3" fill="var(--color-primary)" />
+      <g class="sdot sdot-2" filter="url(#ink-splatter)">
+        <ellipse cx="800" cy="745" rx="25" ry="20" fill="var(--color-primary)" transform="rotate(10, 800, 745)" />
+        <circle cx="830" cy="730" r="6" fill="var(--color-primary)" />
+        <circle cx="775" cy="760" r="5" fill="var(--color-primary)" />
+        <circle cx="820" cy="770" r="3" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-4" filter="url(#brush-heavy)">
-        <circle cx="800" cy="1400" r="18" fill="var(--color-primary)" />
-        <circle cx="822" cy="1388" r="7" fill="var(--color-primary)" />
-        <circle cx="780" cy="1415" r="5" fill="var(--color-primary)" />
-        <circle cx="815" cy="1420" r="4" fill="var(--color-primary)" />
-        <circle cx="770" cy="1395" r="3" fill="var(--color-primary)" />
+      <g class="sdot sdot-3" filter="url(#ink-splatter)">
+        <ellipse cx="340" cy="1095" rx="30" ry="24" fill="var(--color-primary)" transform="rotate(-8, 340, 1095)" />
+        <circle cx="310" cy="1080" r="7" fill="var(--color-primary)" />
+        <circle cx="370" cy="1110" r="6" fill="var(--color-primary)" />
+        <circle cx="325" cy="1120" r="4" fill="var(--color-primary)" />
+        <circle cx="365" cy="1080" r="3" fill="var(--color-primary)" />
       </g>
-      <g class="sdot sdot-5" filter="url(#brush-heavy)">
-        <circle cx="600" cy="2100" r="22" fill="var(--color-primary)" />
-        <circle cx="625" cy="2082" r="8" fill="var(--color-primary)" />
-        <circle cx="575" cy="2118" r="7" fill="var(--color-primary)" />
-        <circle cx="620" cy="2125" r="5" fill="var(--color-primary)" />
-        <circle cx="580" cy="2080" r="4" fill="var(--color-primary)" />
-        <circle cx="640" cy="2108" r="4" fill="var(--color-primary)" />
-        <circle cx="560" cy="2095" r="3" fill="var(--color-primary)" />
+      <g class="sdot sdot-4" filter="url(#ink-splatter)">
+        <ellipse cx="800" cy="1395" rx="35" ry="28" fill="var(--color-primary)" transform="rotate(12, 800, 1395)" />
+        <circle cx="840" cy="1375" r="8" fill="var(--color-primary)" />
+        <circle cx="765" cy="1415" r="7" fill="var(--color-primary)" />
+        <circle cx="820" cy="1425" r="5" fill="var(--color-primary)" />
+        <circle cx="755" cy="1385" r="4" fill="var(--color-primary)" />
+        <circle cx="845" cy="1410" r="3" fill="var(--color-primary)" />
+      </g>
+      <g class="sdot sdot-5" filter="url(#ink-splatter)">
+        <ellipse cx="650" cy="2095" rx="45" ry="35" fill="var(--color-primary)" transform="rotate(-5, 650, 2095)" />
+        <circle cx="600" cy="2070" r="10" fill="var(--color-primary)" />
+        <circle cx="700" cy="2075" r="9" fill="var(--color-primary)" />
+        <circle cx="620" cy="2130" r="8" fill="var(--color-primary)" />
+        <circle cx="680" cy="2120" r="7" fill="var(--color-primary)" />
+        <circle cx="580" cy="2090" r="5" fill="var(--color-primary)" />
+        <circle cx="720" cy="2100" r="5" fill="var(--color-primary)" />
+        <circle cx="560" cy="2110" r="4" fill="var(--color-primary)" />
+        <circle cx="740" cy="2080" r="4" fill="var(--color-primary)" />
       </g>
     </svg>
 
@@ -309,71 +380,69 @@ const steps = [
     pointer-events: none;
   }
 
-  /* ===== INK SPLATTERS ===== */
+  /* ===== INK SPLATTERS — always visible, part of the ink landscape ===== */
   .ink-splatters {
+    opacity: 0;
+    transition: opacity 2s var(--ease-out-expo);
+  }
+
+  .ink-splatters.is-visible { opacity: 1; }
+
+  /* ===== TRUNK — 巨大筆 filled shape, reveals top to bottom ===== */
+  .sline-trunk {
+    clip-path: inset(0 0 100% 0);
+    transition: none; /* clip-path controlled by JS rAF */
+  }
+
+  /* ===== BRANCHES — filled shapes, hidden until sprouting ===== */
+  .sline:not(.sline-trunk) {
     transition: opacity 1.5s var(--ease-out-expo);
   }
 
-  /* ===== TRUNK — brush stroke, draws top to bottom via JS clip-path ===== */
-  .sline-trunk {
-    opacity: 0.55;
-    clip-path: inset(0 0 100% 0);
-    transition: opacity 1s var(--ease-out-expo);
-  }
-
-  .sline-trunk.is-alive { opacity: 0.65; }
-
-  /* ===== BRANCHES — hidden, sprout with brush energy ===== */
-  .sline:not(.sline-trunk) {
-    opacity: 0;
-    stroke-dasharray: 3000;
-    stroke-dashoffset: 3000;
-    transition: opacity 1s var(--ease-out-expo),
-                stroke-dashoffset 3s var(--ease-out-expo);
-  }
-
   .sline-branch-a.is-sprouting,
-  .sline-branch-b.is-sprouting { opacity: 0.3; stroke-dashoffset: 0; }
+  .sline-branch-b.is-sprouting { opacity: 0.35 !important; }
   .sline-spread-1.is-sprouting,
-  .sline-spread-2.is-sprouting { opacity: 0.25; stroke-dashoffset: 0; }
+  .sline-spread-2.is-sprouting { opacity: 0.25 !important; }
   .sline-bloom-1.is-sprouting,
   .sline-bloom-2.is-sprouting,
   .sline-bloom-3.is-sprouting,
   .sline-bloom-4.is-sprouting,
   .sline-bloom-5.is-sprouting,
-  .sline-bloom-6.is-sprouting { opacity: 0.2; stroke-dashoffset: 0; }
+  .sline-bloom-6.is-sprouting { opacity: 0.2 !important; }
 
-  /* Alive = more intense */
+  /* Alive = fully vivid */
   .sline-branch-a.is-alive,
-  .sline-branch-b.is-alive { opacity: 0.4; }
+  .sline-branch-b.is-alive { opacity: 0.45 !important; }
   .sline-spread-1.is-alive,
-  .sline-spread-2.is-alive { opacity: 0.35; }
+  .sline-spread-2.is-alive { opacity: 0.35 !important; }
   .sline-bloom-1.is-alive,
   .sline-bloom-2.is-alive,
   .sline-bloom-3.is-alive,
   .sline-bloom-4.is-alive,
   .sline-bloom-5.is-alive,
-  .sline-bloom-6.is-alive { opacity: 0.3; }
+  .sline-bloom-6.is-alive { opacity: 0.3 !important; }
 
-  /* Ink dots — invisible initially, splatter into existence */
+  /* Ink pools — invisible, then splat into existence */
   .sdot {
     opacity: 0;
-    transition: opacity 0.5s var(--ease-out-expo);
+    transition: opacity 0.4s var(--ease-out-expo);
   }
 
-  .sdot.is-alive { opacity: 0.7; }
+  .sdot.is-alive { opacity: 0.65; }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .sline-trunk { clip-path: none !important; opacity: 0.2 !important; }
-    .sline:not(.sline-trunk) { opacity: 0.15 !important; stroke-dashoffset: 0 !important; }
-    .sdot { opacity: 0.5 !important; }
+    .sline-trunk { clip-path: none !important; }
+    .sline:not(.sline-trunk) { opacity: 0.2 !important; }
+    .sdot { opacity: 0.4 !important; }
+    .ink-splatters { opacity: 1 !important; }
   }
 
   /* No-JS fallback */
-  :global(.no-js) .sline-trunk { clip-path: none; opacity: 0.2; }
-  :global(.no-js) .sline:not(.sline-trunk) { opacity: 0.15; stroke-dashoffset: 0; }
-  :global(.no-js) .sdot { opacity: 0.5; }
+  :global(.no-js) .sline-trunk { clip-path: none; }
+  :global(.no-js) .sline:not(.sline-trunk) { opacity: 0.2; }
+  :global(.no-js) .sdot { opacity: 0.4; }
+  :global(.no-js) .ink-splatters { opacity: 1; }
 
   /* ===== STEPS ===== */
   .storyline-steps {
@@ -539,8 +608,9 @@ const steps = [
 
     if (!isMobile && !prefersReducedMotion) {
       const canvas = document.querySelector('.storyline-canvas') as HTMLElement;
-      const trunk = document.querySelector('.sline-trunk') as SVGPathElement;
+      const trunk = document.querySelector('.sline-trunk') as SVGGElement;
       const dots = document.querySelectorAll('.sdot');
+      const splatters = document.querySelector('.ink-splatters');
 
       if (canvas && trunk) {
         // Which branches sprout at each step (cumulative)
@@ -567,6 +637,11 @@ const steps = [
           // How far we've scrolled into the canvas (0 = top just entered, 1 = bottom leaving)
           const scrolledInto = (viewH - canvasTop) / (canvasHeight + viewH);
           const progress = Math.max(0, Math.min(1, scrolledInto));
+
+          // Show splatters as soon as trunk starts drawing
+          if (progress > 0.05 && splatters) {
+            splatters.classList.add('is-visible');
+          }
 
           // Trunk: reveal from top down using clip-path
           // progress 0 = nothing shown, 1 = fully shown
