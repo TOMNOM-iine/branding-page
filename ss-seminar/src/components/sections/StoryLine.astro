@@ -1,0 +1,740 @@
+---
+/**
+ * StoryLine — 居場所からスモールステップで学びへ
+ *
+ * 線は最初から薄く見えている。スクロールで「生まれる」=太く濃く輝く。
+ * 下に行くほど枝分かれが増え、広がり・つながりを表現。
+ * 1本 → 2本 → 3本 → 多くの線へ。
+ */
+
+const steps = [
+  {
+    id: 'step-arrive',
+    label: 'STEP 1',
+    title: 'ここに来る',
+    text: 'やる気がなくても大丈夫。ドアは開いている。まずは、ここに来るだけでいい。',
+    accent: 'var(--color-you-daidai)',
+    side: 'right',
+    imageAlt: '教室のドアを開ける子ども',
+    imageHint: '教室入口・歓迎の雰囲気',
+  },
+  {
+    id: 'step-belong',
+    label: 'STEP 2',
+    title: '居場所ができる',
+    text: '温かいお茶。「今日どうだった？」。自分のペースでいられる場所。安心が生まれる。',
+    accent: 'var(--color-sora-mizu)',
+    side: 'left',
+    imageAlt: '教室でリラックスする生徒たち',
+    imageHint: '温かい教室の雰囲気・笑顔',
+  },
+  {
+    id: 'step-curiosity',
+    label: 'STEP 3',
+    title: '「なんで？」が芽生える',
+    text: '先生が問いかける。「なんでだと思う？」。答えを教えない。自分で考える楽しさに出会う。',
+    accent: 'var(--color-tatami-kin)',
+    side: 'right',
+    imageAlt: '先生と対話する生徒',
+    imageHint: 'ソクラテス問答法の対話風景',
+  },
+  {
+    id: 'step-challenge',
+    label: 'STEP 4',
+    title: '挑戦してみる',
+    text: '「ちょっとやってみる？」。小さな一歩。間違えても大丈夫。ここでは誰も笑わない。',
+    accent: 'var(--color-you-daidai)',
+    side: 'left',
+    imageAlt: '問題に取り組む生徒',
+    imageHint: '集中して学ぶ姿・ノートに書く',
+  },
+  {
+    id: 'step-grow',
+    label: 'STEP 5',
+    title: '自分の力で学ぶ',
+    text: '「わかった！」の瞬間。自分で考え、自分で見つけた答え。それが一生の力になる。',
+    accent: 'var(--color-sora-mizu)',
+    side: 'right',
+    imageAlt: '達成感を感じる生徒の笑顔',
+    imageHint: '笑顔・達成感・自信',
+  },
+];
+---
+
+<section class="storyline" id="storyline" aria-label="居場所から学びへのストーリー">
+  <div class="storyline-header appear">
+    <p class="storyline-label text-latin">Our Vision</p>
+    <h2 class="storyline-title text-display">居場所から、学びへ。</h2>
+    <p class="storyline-subtitle">一人ひとりのペースで。スモールステップで。</p>
+  </div>
+
+  <div class="storyline-canvas">
+    <!-- Full-width SVG — lines ALWAYS visible (thin/faint), become alive on scroll -->
+    <svg class="storyline-svg" viewBox="0 0 1200 3200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <!-- 暴力的な筆エッジ — 和紙に叩きつけた墨 -->
+        <filter id="ink-brutal" x="-15%" y="-15%" width="130%" height="130%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="6" seed="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <!-- 飛沫用の極端な歪み -->
+        <filter id="ink-explode" x="-30%" y="-30%" width="160%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="5" seed="17" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <!-- かすれ（ドライブラシ）— 毛が見える -->
+        <filter id="ink-kasure" x="-5%" y="-20%" width="110%" height="140%">
+          <feTurbulence type="turbulence" baseFrequency="0.06 0.005" numOctaves="3" seed="7" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+
+      <!-- ============================================================
+           巨大筆書道 — 大字書道スタイル
+           全身で書く一筆書き。墨溜まり、かすれ、飛沫。
+           ============================================================ -->
+
+      <!-- ====== TRUNK: 幹 — filled path for pressure variation ====== -->
+      <!-- The trunk is drawn as a FILLED shape, not a stroked line.
+           This allows thick-thin pressure variation along the curve.
+           Entry: thick (筆を降ろす). Middle: variable. Exit: thin trail. -->
+      <!-- ====== 幹: 巨大筆の一筆書き — 幅80-150px ====== -->
+      <!-- 全身で叩きつけるように書く。入筆で墨が溜まり、走って細くなり、また叩きつける。 -->
+      <g class="sline sline-trunk" filter="url(#ink-brutal)">
+        <!-- メイン筆跡 — 巨大な filled shape -->
+        <path d="
+          M540,0 C520,30 500,80 480,130
+          C430,220 320,280 250,380
+          Q180,470 200,530 Q220,580 300,580
+          Q420,570 550,500 Q700,430 830,470
+          Q940,500 920,600 Q890,720 820,780
+          Q740,840 700,850 Q680,860 720,870
+          Q800,870 880,830 Q960,780 980,820
+          Q1000,880 920,970 Q800,1060 620,1080
+          Q420,1100 280,1120 Q180,1140 200,1200
+          Q220,1260 340,1260 Q500,1250 660,1270
+          Q830,1290 920,1360 Q980,1420 920,1500
+          Q850,1580 750,1610 Q680,1630 690,1650
+          Q720,1660 800,1640 Q900,1600 940,1640
+          Q980,1680 920,1760 Q820,1860 680,1920
+          Q520,1980 380,2050 Q260,2120 280,2200
+          Q300,2280 420,2300 Q560,2310 680,2360
+          Q800,2420 780,2520 Q740,2620 660,2720
+          Q600,2800 580,2900 Q570,2960 580,3050
+          L680,3050
+          Q690,2960 700,2900 Q720,2800 780,2720
+          Q860,2620 880,2520 Q900,2420 780,2360
+          Q660,2310 520,2300 Q380,2280 360,2200
+          Q340,2120 460,2050 Q600,1980 760,1920
+          Q900,1860 1000,1760 Q1060,1680 1020,1640
+          Q980,1600 880,1640 Q800,1660 770,1650
+          Q760,1630 830,1610 Q930,1580 1000,1500
+          Q1060,1420 1000,1360 Q930,1290 760,1270
+          Q600,1250 440,1260 Q300,1260 280,1200
+          Q260,1140 360,1120 Q500,1100 700,1080
+          Q880,1060 1000,970 Q1080,880 1060,820
+          Q1040,780 960,830 Q880,870 800,870
+          Q760,870 780,860 Q800,850 820,840
+          Q900,780 970,720 Q1000,600 980,500
+          Q960,430 830,430 Q700,430 550,500
+          Q420,570 300,580 Q220,580 200,530
+          Q180,470 250,380 Q320,280 430,220
+          Q500,130 520,80 Q540,30 560,0
+          Z"
+          fill="var(--color-primary)"
+          opacity="0.5"
+        />
+
+        <!-- 墨溜まり — 筆を叩きつけた場所に墨が溜まる（巨大） -->
+        <ellipse cx="250" cy="500" rx="80" ry="55" fill="var(--color-primary)" opacity="0.2" transform="rotate(-15, 250, 500)" />
+        <ellipse cx="880" cy="720" rx="70" ry="50" fill="var(--color-primary)" opacity="0.2" transform="rotate(20, 880, 720)" />
+        <ellipse cx="250" cy="1160" rx="90" ry="60" fill="var(--color-primary)" opacity="0.22" transform="rotate(-8, 250, 1160)" />
+        <ellipse cx="920" cy="1450" rx="85" ry="55" fill="var(--color-primary)" opacity="0.25" transform="rotate(12, 920, 1450)" />
+        <ellipse cx="350" cy="2150" rx="100" ry="70" fill="var(--color-primary)" opacity="0.28" transform="rotate(-5, 350, 2150)" />
+
+        <!-- かすれ（ドライブラシ）— 筆が走る中間部分 -->
+        <g filter="url(#ink-kasure)" opacity="0.15">
+          <rect x="400" y="440" width="250" height="8" fill="var(--color-primary)" transform="rotate(-15, 525, 444)" />
+          <rect x="350" y="460" width="280" height="5" fill="var(--color-primary)" transform="rotate(-12, 490, 462)" />
+          <rect x="420" y="480" width="200" height="6" fill="var(--color-primary)" transform="rotate(-18, 520, 483)" />
+          <rect x="700" y="930" width="200" height="7" fill="var(--color-primary)" transform="rotate(10, 800, 933)" />
+          <rect x="680" y="950" width="240" height="5" fill="var(--color-primary)" transform="rotate(8, 800, 952)" />
+          <rect x="400" y="1550" width="250" height="8" fill="var(--color-primary)" transform="rotate(-5, 525, 1554)" />
+          <rect x="420" y="1570" width="220" height="5" fill="var(--color-primary)" transform="rotate(-3, 530, 1572)" />
+          <rect x="500" y="1950" width="200" height="7" fill="var(--color-primary)" transform="rotate(-10, 600, 1953)" />
+          <rect x="480" y="1970" width="240" height="5" fill="var(--color-primary)" transform="rotate(-8, 600, 1972)" />
+          <rect x="520" y="1990" width="180" height="6" fill="var(--color-primary)" transform="rotate(-12, 610, 1993)" />
+        </g>
+      </g>
+
+      <!-- ====== 墨飛沫 — 巨大・爆発的・200%野蛮 ====== -->
+      <g class="ink-splatters" filter="url(#ink-explode)">
+        <!-- Step 1: 入筆の衝撃 — 筆が紙に叩きつけられた瞬間 -->
+        <circle cx="180" cy="450" r="25" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="140" cy="420" r="15" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="220" cy="480" r="12" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="120" cy="500" r="8" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="260" cy="430" r="6" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="100" cy="460" r="5" fill="var(--color-primary)" opacity="0.1" />
+        <!-- 飛沫の軌跡 — 筆が走った方向に飛び散る -->
+        <ellipse cx="300" cy="410" rx="20" ry="4" fill="var(--color-primary)" opacity="0.12" transform="rotate(-30, 300, 410)" />
+        <ellipse cx="150" cy="530" rx="15" ry="3" fill="var(--color-primary)" opacity="0.1" transform="rotate(20, 150, 530)" />
+
+        <!-- Step 2: 方向転換の激しい飛沫 -->
+        <circle cx="980" cy="680" r="30" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="1020" cy="650" r="18" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="950" cy="720" r="14" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="1050" cy="700" r="10" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="920" cy="660" r="8" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="1080" cy="730" r="6" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="900" cy="750" r="5" fill="var(--color-primary)" opacity="0.08" />
+        <ellipse cx="1030" cy="620" rx="25" ry="5" fill="var(--color-primary)" opacity="0.12" transform="rotate(40, 1030, 620)" />
+
+        <!-- Step 3: さらに激しく — 墨が暴れる -->
+        <circle cx="140" cy="1100" r="35" fill="var(--color-primary)" opacity="0.28" />
+        <circle cx="100" cy="1060" r="22" fill="var(--color-primary)" opacity="0.22" />
+        <circle cx="180" cy="1150" r="16" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="80" cy="1130" r="12" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="230" cy="1080" r="10" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="60" cy="1090" r="8" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="200" cy="1180" r="7" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="120" cy="1020" r="5" fill="var(--color-primary)" opacity="0.06" />
+        <ellipse cx="110" cy="1170" rx="30" ry="6" fill="var(--color-primary)" opacity="0.1" transform="rotate(-20, 110, 1170)" />
+        <ellipse cx="250" cy="1050" rx="18" ry="4" fill="var(--color-primary)" opacity="0.08" transform="rotate(15, 250, 1050)" />
+
+        <!-- Step 4: 暴風 — 筆が叫ぶ -->
+        <circle cx="1020" cy="1400" r="40" fill="var(--color-primary)" opacity="0.3" />
+        <circle cx="1060" cy="1360" r="25" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="980" cy="1450" r="20" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="1100" cy="1420" r="15" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="940" cy="1380" r="12" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="1120" cy="1380" r="10" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="900" cy="1430" r="8" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="1140" cy="1450" r="6" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="880" cy="1350" r="5" fill="var(--color-primary)" opacity="0.06" />
+        <ellipse cx="1080" cy="1330" rx="35" ry="7" fill="var(--color-primary)" opacity="0.12" transform="rotate(30, 1080, 1330)" />
+        <ellipse cx="920" cy="1480" rx="28" ry="5" fill="var(--color-primary)" opacity="0.1" transform="rotate(-25, 920, 1480)" />
+
+        <!-- Step 5: 大 爆 発 — 全身の力で叩きつけた最後の一撃 -->
+        <circle cx="400" cy="2100" r="55" fill="var(--color-primary)" opacity="0.32" />
+        <circle cx="340" cy="2050" r="35" fill="var(--color-primary)" opacity="0.28" />
+        <circle cx="480" cy="2150" r="30" fill="var(--color-primary)" opacity="0.25" />
+        <circle cx="300" cy="2170" r="25" fill="var(--color-primary)" opacity="0.22" />
+        <circle cx="550" cy="2080" r="20" fill="var(--color-primary)" opacity="0.2" />
+        <circle cx="250" cy="2100" r="18" fill="var(--color-primary)" opacity="0.18" />
+        <circle cx="600" cy="2180" r="15" fill="var(--color-primary)" opacity="0.15" />
+        <circle cx="200" cy="2050" r="12" fill="var(--color-primary)" opacity="0.12" />
+        <circle cx="650" cy="2120" r="10" fill="var(--color-primary)" opacity="0.1" />
+        <circle cx="180" cy="2180" r="8" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="700" cy="2060" r="8" fill="var(--color-primary)" opacity="0.08" />
+        <circle cx="150" cy="2130" r="6" fill="var(--color-primary)" opacity="0.06" />
+        <circle cx="720" cy="2160" r="5" fill="var(--color-primary)" opacity="0.05" />
+        <!-- 飛沫の弧 — 筆が宙を舞った軌跡 -->
+        <ellipse cx="300" cy="1980" rx="50" ry="8" fill="var(--color-primary)" opacity="0.1" transform="rotate(-35, 300, 1980)" />
+        <ellipse cx="550" cy="2220" rx="40" ry="6" fill="var(--color-primary)" opacity="0.08" transform="rotate(25, 550, 2220)" />
+        <ellipse cx="200" cy="2240" rx="35" ry="5" fill="var(--color-primary)" opacity="0.06" transform="rotate(-15, 200, 2240)" />
+      </g>
+
+      <!-- ====== BRANCHES — 太い筆の枝分かれ ====== -->
+      <path class="sline sline-branch-a" filter="url(#ink-brutal)"
+        d="M820,730 Q880,750 920,830 Q960,920 930,1030 Q900,1120 850,1180
+           Q780,1260 750,1360 Q730,1480 740,1600 Q750,1740 720,1880
+           Q690,2020 670,2200 Q660,2400 650,2680
+           L700,2680
+           Q710,2400 720,2200 Q740,2020 770,1880 Q800,1740 790,1600
+           Q780,1480 800,1360 Q830,1260 900,1180 Q950,1120 980,1030
+           Q1010,920 970,830 Q930,750 870,730 Z"
+        fill="var(--color-primary)" opacity="0" />
+
+      <path class="sline sline-branch-b" filter="url(#ink-brutal)"
+        d="M280,1140 Q220,1180 170,1280 Q130,1400 160,1540
+           Q190,1680 240,1780 Q300,1900 310,2050 Q320,2220 340,2420
+           Q360,2620 380,2800 Q400,2900 410,2950
+           L460,2950
+           Q450,2900 430,2800 Q410,2620 390,2420 Q370,2220 360,2050
+           Q350,1900 290,1780 Q240,1680 210,1540 Q180,1400 220,1280
+           Q270,1180 330,1140 Z"
+        fill="var(--color-primary)" opacity="0" />
+
+      <!-- ====== SPREADING VEINS — thinner filled shapes ====== -->
+      <path class="sline sline-spread-1" filter="url(#ink-brutal)"
+        d="M730,1480 Q800,1530 870,1620 Q940,1720 960,1850 Q970,2000 940,2150
+           Q910,2350 880,2550 Q860,2700 850,2800
+           L856,2800
+           Q866,2700 886,2550 Q916,2350 946,2150 Q976,2000 966,1850
+           Q946,1720 876,1620 Q806,1530 736,1480 Z"
+        fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-spread-2" filter="url(#ink-brutal)"
+        d="M300,1580 Q250,1640 210,1750 Q180,1870 190,2020
+           Q200,2200 230,2380 Q260,2560 280,2700 Q290,2850 290,2900
+           L296,2900
+           Q296,2850 286,2700 Q266,2560 236,2380 Q206,2200 196,2020
+           Q186,1870 216,1750 Q256,1640 306,1580 Z"
+        fill="var(--color-primary)" opacity="0" />
+
+      <!-- ====== BLOOM VEINS — many thin wild strokes ====== -->
+      <path class="sline sline-bloom-1" filter="url(#ink-brutal)" d="M640,2100 Q580,2150 500,2250 Q430,2360 380,2500 Q350,2620 340,2780 L345,2780 Q355,2620 385,2500 Q435,2360 505,2250 Q585,2150 645,2100 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-2" filter="url(#ink-brutal)" d="M680,2100 Q740,2150 820,2250 Q890,2360 920,2500 Q940,2620 950,2800 L955,2800 Q945,2620 925,2500 Q895,2360 825,2250 Q745,2150 685,2100 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-3" filter="url(#ink-brutal)" d="M480,2400 Q420,2440 350,2530 Q300,2620 280,2750 Q270,2880 270,2980 L275,2980 Q275,2880 285,2750 Q305,2620 355,2530 Q425,2440 485,2400 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-4" filter="url(#ink-brutal)" d="M720,2400 Q780,2440 850,2530 Q900,2620 920,2750 Q930,2880 930,2980 L935,2980 Q935,2880 925,2750 Q905,2620 855,2530 Q785,2440 725,2400 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-5" filter="url(#ink-brutal)" d="M530,2600 Q490,2640 440,2720 Q400,2800 390,2900 Q385,2980 390,3050 L395,3050 Q390,2980 395,2900 Q405,2800 445,2720 Q495,2640 535,2600 Z" fill="var(--color-primary)" opacity="0" />
+      <path class="sline sline-bloom-6" filter="url(#ink-brutal)" d="M680,2600 Q720,2640 770,2720 Q810,2800 820,2900 Q825,2980 820,3050 L825,3050 Q830,2980 825,2900 Q815,2800 775,2720 Q725,2640 685,2600 Z" fill="var(--color-primary)" opacity="0" />
+
+      <!-- ====== INK POOLS at steps — 墨溜まり ====== -->
+      <!-- ====== 墨溜まりドット — 筆を叩きつけた衝撃の跡 ====== -->
+      <g class="sdot sdot-1" filter="url(#ink-explode)">
+        <ellipse cx="280" cy="520" rx="60" ry="45" fill="var(--color-primary)" transform="rotate(-18, 280, 520)" />
+        <circle cx="230" cy="490" r="15" fill="var(--color-primary)" />
+        <circle cx="340" cy="540" r="12" fill="var(--color-primary)" />
+        <circle cx="260" cy="570" r="8" fill="var(--color-primary)" />
+      </g>
+      <g class="sdot sdot-2" filter="url(#ink-explode)">
+        <ellipse cx="880" cy="730" rx="65" ry="50" fill="var(--color-primary)" transform="rotate(14, 880, 730)" />
+        <circle cx="940" cy="700" r="18" fill="var(--color-primary)" />
+        <circle cx="830" cy="760" r="14" fill="var(--color-primary)" />
+        <circle cx="910" cy="780" r="10" fill="var(--color-primary)" />
+      </g>
+      <g class="sdot sdot-3" filter="url(#ink-explode)">
+        <ellipse cx="260" cy="1150" rx="75" ry="55" fill="var(--color-primary)" transform="rotate(-10, 260, 1150)" />
+        <circle cx="190" cy="1120" r="20" fill="var(--color-primary)" />
+        <circle cx="340" cy="1170" r="16" fill="var(--color-primary)" />
+        <circle cx="230" cy="1200" r="12" fill="var(--color-primary)" />
+        <circle cx="310" cy="1120" r="8" fill="var(--color-primary)" />
+      </g>
+      <g class="sdot sdot-4" filter="url(#ink-explode)">
+        <ellipse cx="920" cy="1450" rx="80" ry="60" fill="var(--color-primary)" transform="rotate(15, 920, 1450)" />
+        <circle cx="990" cy="1420" r="22" fill="var(--color-primary)" />
+        <circle cx="860" cy="1480" r="18" fill="var(--color-primary)" />
+        <circle cx="950" cy="1510" r="14" fill="var(--color-primary)" />
+        <circle cx="840" cy="1430" r="10" fill="var(--color-primary)" />
+        <circle cx="1000" cy="1480" r="8" fill="var(--color-primary)" />
+      </g>
+      <g class="sdot sdot-5" filter="url(#ink-explode)">
+        <ellipse cx="380" cy="2150" rx="100" ry="75" fill="var(--color-primary)" transform="rotate(-8, 380, 2150)" />
+        <circle cx="280" cy="2100" r="30" fill="var(--color-primary)" />
+        <circle cx="480" cy="2120" r="25" fill="var(--color-primary)" />
+        <circle cx="320" cy="2210" r="20" fill="var(--color-primary)" />
+        <circle cx="450" cy="2200" r="18" fill="var(--color-primary)" />
+        <circle cx="240" cy="2170" r="14" fill="var(--color-primary)" />
+        <circle cx="520" cy="2160" r="12" fill="var(--color-primary)" />
+        <circle cx="200" cy="2130" r="10" fill="var(--color-primary)" />
+        <circle cx="550" cy="2190" r="8" fill="var(--color-primary)" />
+      </g>
+    </svg>
+
+    <!-- Step cards -->
+    <div class="storyline-steps">
+      {steps.map((step, i) => (
+        <div
+          class:list={['storyline-step', `storyline-step--${step.side}`, 'appear']}
+          id={step.id}
+          data-step={i + 1}
+          style={`--step-accent: ${step.accent}`}
+        >
+          <div class="storyline-step-badge" aria-hidden="true">
+            <span class="storyline-step-number">{i + 1}</span>
+          </div>
+          <div class="storyline-step-body">
+            <div class="storyline-step-content">
+              <span class="storyline-step-label text-latin">{step.label}</span>
+              <h3 class="storyline-step-title">{step.title}</h3>
+              <p class="storyline-step-text">{step.text}</p>
+            </div>
+            <div class="storyline-step-image" data-step={i + 1}>
+              <div class="storyline-step-image-placeholder">
+                <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                  <rect x="10" y="18" width="60" height="44" rx="4" stroke="var(--step-accent)" stroke-width="1.5" opacity="0.3" />
+                  <circle cx="30" cy="35" r="6" stroke="var(--step-accent)" stroke-width="1" opacity="0.3" />
+                  <path d="M10,52 L30,38 L45,48 L55,40 L70,52 L70,62 L10,62 Z" fill="var(--step-accent)" opacity="0.08" />
+                </svg>
+                <span class="storyline-step-image-hint">{step.imageHint}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="storyline-ending appear">
+    <p class="storyline-ending-text">
+      この道のりは、一人ひとり違う。<br>
+      でも、始まりはいつも同じ——<br>
+      <strong>「ここに来てくれて、ありがとう。」</strong>
+    </p>
+  </div>
+</section>
+
+<style>
+  .storyline {
+    position: relative;
+    padding: var(--space-2xl) 0 var(--space-section);
+    overflow: hidden;
+  }
+
+  .storyline-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    padding: 0 var(--space-md);
+  }
+
+  .storyline-label {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .storyline-title { font-size: var(--text-3xl); margin-bottom: var(--space-sm); }
+
+  .storyline-subtitle {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    opacity: 0.6;
+  }
+
+  .storyline-canvas {
+    position: relative;
+    min-height: 200vh;
+  }
+
+  .storyline-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== INK SPLATTERS — always visible, part of the ink landscape ===== */
+  .ink-splatters {
+    opacity: 0;
+    transition: opacity 2s var(--ease-out-expo);
+  }
+
+  .ink-splatters.is-visible { opacity: 1; }
+
+  /* ===== TRUNK — 巨大筆 filled shape, reveals top to bottom ===== */
+  .sline-trunk {
+    clip-path: inset(0 0 100% 0);
+    transition: none; /* clip-path controlled by JS rAF */
+  }
+
+  /* ===== BRANCHES — filled shapes, hidden until sprouting ===== */
+  .sline:not(.sline-trunk) {
+    transition: opacity 1.5s var(--ease-out-expo);
+  }
+
+  .sline-branch-a.is-sprouting,
+  .sline-branch-b.is-sprouting { opacity: 0.35 !important; }
+  .sline-spread-1.is-sprouting,
+  .sline-spread-2.is-sprouting { opacity: 0.25 !important; }
+  .sline-bloom-1.is-sprouting,
+  .sline-bloom-2.is-sprouting,
+  .sline-bloom-3.is-sprouting,
+  .sline-bloom-4.is-sprouting,
+  .sline-bloom-5.is-sprouting,
+  .sline-bloom-6.is-sprouting { opacity: 0.2 !important; }
+
+  /* Alive = fully vivid */
+  .sline-branch-a.is-alive,
+  .sline-branch-b.is-alive { opacity: 0.45 !important; }
+  .sline-spread-1.is-alive,
+  .sline-spread-2.is-alive { opacity: 0.35 !important; }
+  .sline-bloom-1.is-alive,
+  .sline-bloom-2.is-alive,
+  .sline-bloom-3.is-alive,
+  .sline-bloom-4.is-alive,
+  .sline-bloom-5.is-alive,
+  .sline-bloom-6.is-alive { opacity: 0.3 !important; }
+
+  /* Ink pools — invisible, then splat into existence */
+  .sdot {
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out-expo);
+  }
+
+  .sdot.is-alive { opacity: 0.65; }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sline-trunk { clip-path: none !important; }
+    .sline:not(.sline-trunk) { opacity: 0.2 !important; }
+    .sdot { opacity: 0.4 !important; }
+    .ink-splatters { opacity: 1 !important; }
+  }
+
+  /* No-JS fallback */
+  :global(.no-js) .sline-trunk { clip-path: none; }
+  :global(.no-js) .sline:not(.sline-trunk) { opacity: 0.2; }
+  :global(.no-js) .sdot { opacity: 0.4; }
+  :global(.no-js) .ink-splatters { opacity: 1; }
+
+  /* ===== STEPS ===== */
+  .storyline-steps {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6rem, 15vw, 14rem);
+    padding: var(--space-2xl) 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .storyline-step {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    max-width: 560px;
+    padding: 0 var(--space-md);
+  }
+
+  .storyline-step--right { margin-left: auto; margin-right: 5%; }
+  .storyline-step--left { margin-left: 5%; margin-right: auto; }
+
+  .storyline-step-badge {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--step-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--step-accent) 40%, transparent);
+    margin-top: var(--space-sm);
+  }
+
+  .storyline-step-number {
+    font-family: var(--font-latin);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: white;
+  }
+
+  .storyline-step-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .storyline-step-content { flex: 1; }
+
+  .storyline-step-label {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--step-accent);
+    margin-bottom: var(--space-xs);
+  }
+
+  .storyline-step-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    margin-bottom: var(--space-sm);
+    color: var(--color-primary);
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+  }
+
+  .storyline-step-text {
+    font-size: var(--text-base);
+    line-height: 2;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  /* Image placeholder */
+  .storyline-step-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-sumi-shiro);
+    border: 1px solid rgba(26, 26, 46, 0.06);
+  }
+
+  .storyline-step-image img { width: 100%; height: 100%; object-fit: cover; }
+
+  .storyline-step-image-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--space-sm);
+    background: linear-gradient(135deg, rgba(26,26,46,0.02), rgba(26,26,46,0.04));
+  }
+
+  .storyline-step-image-placeholder svg { width: 80px; height: 80px; opacity: 0.5; }
+  .storyline-step-image-hint { font-size: var(--text-xs); color: var(--color-text); opacity: 0.3; font-style: italic; }
+
+  /* Ending */
+  .storyline-ending {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-md) 0;
+  }
+
+  .storyline-ending-text {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    line-height: 2.2;
+    color: var(--color-primary);
+  }
+
+  .storyline-ending-text strong {
+    color: var(--color-secondary);
+    font-size: var(--text-2xl);
+    display: block;
+    margin-top: var(--space-md);
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .storyline-canvas { min-height: auto; }
+    .storyline-svg { display: none; }
+
+    .storyline-steps {
+      gap: var(--space-xl);
+      padding: var(--space-lg) 0;
+      border-left: 2px solid rgba(26, 26, 46, 0.1);
+      margin-left: var(--space-lg);
+      padding-left: var(--space-lg);
+    }
+
+    .storyline-step {
+      max-width: 100%;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+
+    .storyline-step-badge {
+      width: 36px; height: 36px;
+      margin-left: calc(-1 * var(--space-lg) - 19px);
+    }
+
+    .storyline-step-number { font-size: var(--text-sm); }
+    .storyline-step-title { font-size: var(--text-xl); }
+    .storyline-step-image { aspect-ratio: 16 / 9; }
+  }
+</style>
+
+<script>
+  /**
+   * The trunk line draws from top to bottom as user scrolls.
+   * When the trunk passes each step's Y position, branches sprout from there.
+   * The trunk uses clip-path (inset bottom %) so already-drawn parts stay visible.
+   * Branches use stroke-dashoffset CSS transition.
+   */
+  if (typeof window !== 'undefined') {
+    const isMobile = window.innerWidth < 768;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!isMobile && !prefersReducedMotion) {
+      const canvas = document.querySelector('.storyline-canvas') as HTMLElement;
+      const trunk = document.querySelector('.sline-trunk') as SVGGElement;
+      const dots = document.querySelectorAll('.sdot');
+      const splatters = document.querySelector('.ink-splatters');
+
+      if (canvas && trunk) {
+        // Which branches sprout at each step (cumulative)
+        const stepBranches: Record<number, string[]> = {
+          1: [],
+          2: ['.sline-branch-a'],
+          3: ['.sline-branch-b'],
+          4: ['.sline-spread-1', '.sline-spread-2'],
+          5: ['.sline-bloom-1', '.sline-bloom-2', '.sline-bloom-3',
+              '.sline-bloom-4', '.sline-bloom-5', '.sline-bloom-6'],
+        };
+
+        // Step thresholds as % of storyline height (approximate Y positions)
+        const stepThresholds = [0.15, 0.30, 0.45, 0.60, 0.78];
+
+        const activatedSteps = new Set<number>();
+
+        function updateTrunk() {
+          const rect = canvas.getBoundingClientRect();
+          const canvasTop = rect.top;
+          const canvasHeight = rect.height;
+          const viewH = window.innerHeight;
+
+          // How far we've scrolled into the canvas (0 = top just entered, 1 = bottom leaving)
+          const scrolledInto = (viewH - canvasTop) / (canvasHeight + viewH);
+          const progress = Math.max(0, Math.min(1, scrolledInto));
+
+          // Show splatters as soon as trunk starts drawing
+          if (progress > 0.05 && splatters) {
+            splatters.classList.add('is-visible');
+          }
+
+          // Trunk: reveal from top down using clip-path
+          // progress 0 = nothing shown, 1 = fully shown
+          // Map progress so trunk starts drawing early and finishes at ~90%
+          const trunkProgress = Math.min(1, progress * 1.3);
+          const clipBottom = 100 - (trunkProgress * 100);
+          trunk.style.clipPath = `inset(0 0 ${clipBottom}% 0)`;
+
+          // Check each step threshold
+          stepThresholds.forEach((threshold, i) => {
+            const stepNum = i + 1;
+            if (progress >= threshold && !activatedSteps.has(stepNum)) {
+              activatedSteps.add(stepNum);
+
+              // Dot blooms
+              dots[i]?.classList.add('is-alive');
+
+              // Previous step's trunk becomes "alive" (thicker)
+              if (stepNum >= 2) {
+                trunk.classList.add('is-alive');
+              }
+
+              // Sprout new branches for this step
+              const newBranches = stepBranches[stepNum] || [];
+              newBranches.forEach((sel, j) => {
+                const branch = document.querySelector(sel);
+                if (branch) {
+                  setTimeout(() => {
+                    branch.classList.add('is-sprouting');
+                    // After sprouting animation, make it "alive" (thicker)
+                    setTimeout(() => branch.classList.add('is-alive'), 1500);
+                  }, j * 300);
+                }
+              });
+
+              // Also activate any previous branches that might have been missed (fast scroll)
+              for (let s = 1; s < stepNum; s++) {
+                (stepBranches[s] || []).forEach(sel => {
+                  const b = document.querySelector(sel);
+                  b?.classList.add('is-sprouting');
+                  b?.classList.add('is-alive');
+                });
+                dots[s - 1]?.classList.add('is-alive');
+              }
+            }
+          });
+        }
+
+        // Run on scroll (throttled via rAF)
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              updateTrunk();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+
+        // Initial check
+        updateTrunk();
+      }
+    }
+  }
+</script>

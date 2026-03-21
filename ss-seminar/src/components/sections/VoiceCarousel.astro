@@ -1,0 +1,188 @@
+---
+/**
+ * Testimonials — Color-blocked quotes with emotional background
+ */
+
+const voices = [
+  {
+    text: '最初は勉強なんて嫌いだった。でも先生が「なんでだと思う？」って聞いてくれて、自分で考えるのが楽しくなった。',
+    author: 'Kさん',
+    role: '中学3年生',
+    color: 'var(--color-sora-mizu)',
+    bgColor: '#E8F8F5',
+  },
+  {
+    text: '学校に行けなかった時期も、S&Sだけは行けた。ここが自分の居場所だった。',
+    author: 'Tさん',
+    role: '高校1年生',
+    color: 'var(--color-you-daidai)',
+    bgColor: '#FFF0E8',
+  },
+  {
+    text: '子どもの変化に驚いています。点数だけでなく、自分から「これ調べたい」と言うようになりました。',
+    author: '保護者 Mさん',
+    role: '小学5年生の母',
+    color: 'var(--color-tatami-kin)',
+    bgColor: '#FDF8E8',
+  },
+  {
+    text: '問答法で鍛えられた思考力は、大学でも社会でも一番の武器になっています。',
+    author: 'Yさん',
+    role: '卒業生・大学生',
+    color: 'var(--color-shu-aka)',
+    bgColor: '#FDF0F0',
+  },
+];
+---
+
+<section class="section voices" id="voices" data-section="voices" data-section-id="voices">
+  <div class="container">
+    <div class="appear">
+      <h2 class="heading-offgrid text-display">みんなの声</h2>
+      <p class="section-subtitle">S&Sセミナーで変わった、子どもたちと保護者の声</p>
+    </div>
+
+    <div class="voices-grid">
+      {voices.map((voice, i) => (
+        <article
+          class:list={['voice-card', 'appear', `appear-delay-${(i % 4) + 1}`]}
+          style={`--voice-color: ${voice.color}; --voice-bg: ${voice.bgColor}`}
+        >
+          <div class="voice-card-bg" aria-hidden="true"></div>
+          {/* Abstract decorative SVG — unique per card */}
+          <svg class="voice-decoration" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+            {i === 0 && (
+              <Fragment>
+                <circle cx="100" cy="20" r="15" stroke="var(--voice-color)" stroke-width="1" opacity="0.2" />
+                <circle cx="105" cy="15" r="8" stroke="var(--voice-color)" stroke-width="1" opacity="0.15" />
+                <path d="M85,35 Q95,20 110,30" stroke="var(--voice-color)" stroke-width="1" opacity="0.15" stroke-linecap="round" />
+              </Fragment>
+            )}
+            {i === 1 && (
+              <Fragment>
+                <rect x="80" y="5" width="20" height="20" rx="3" stroke="var(--voice-color)" stroke-width="1" opacity="0.2" transform="rotate(15, 90, 15)" />
+                <rect x="90" y="15" width="15" height="15" rx="2" stroke="var(--voice-color)" stroke-width="1" opacity="0.15" transform="rotate(-10, 97, 22)" />
+              </Fragment>
+            )}
+            {i === 2 && (
+              <Fragment>
+                <path d="M85,10 L100,5 L105,20 L90,25 Z" stroke="var(--voice-color)" stroke-width="1" opacity="0.2" />
+                <path d="M95,20 L105,30 L110,25" stroke="var(--voice-color)" stroke-width="1" opacity="0.15" stroke-linecap="round" />
+              </Fragment>
+            )}
+            {i === 3 && (
+              <Fragment>
+                <polygon points="95,5 105,25 85,25" stroke="var(--voice-color)" stroke-width="1" opacity="0.2" />
+                <circle cx="95" cy="18" r="5" stroke="var(--voice-color)" stroke-width="1" opacity="0.15" />
+              </Fragment>
+            )}
+          </svg>
+          <div class="voice-card-content">
+            <svg class="voice-quote-mark" viewBox="0 0 32 24" fill="none" aria-hidden="true">
+              <path d="M0,16 Q0,8 8,8 L4,0 Q14,0 14,10 Q14,20 6,24 Z" fill="currentColor" opacity="0.15" />
+              <path d="M18,16 Q18,8 26,8 L22,0 Q32,0 32,10 Q32,20 24,24 Z" fill="currentColor" opacity="0.15" />
+            </svg>
+            <p class="voice-text">{voice.text}</p>
+            <footer class="voice-footer">
+              <span class="voice-dot" aria-hidden="true"></span>
+              <cite class="voice-author">{voice.author}</cite>
+              <span class="voice-role">{voice.role}</span>
+            </footer>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .voices {
+    background: var(--color-sakura-hai);
+  }
+
+  .voices-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-2xl);
+  }
+
+  .voice-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .voice-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .voice-card-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--voice-bg);
+  }
+
+  .voice-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+  }
+
+  .voice-card-content {
+    position: relative;
+    padding: var(--space-xl);
+  }
+
+  .voice-quote-mark {
+    width: 32px;
+    height: 24px;
+    color: var(--voice-color);
+    margin-bottom: var(--space-md);
+  }
+
+  .voice-text {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    line-height: 1.8;
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .voice-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .voice-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--voice-color);
+  }
+
+  .voice-author {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+  }
+
+  .voice-role {
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 768px) {
+    .voices-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

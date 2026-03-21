@@ -1,0 +1,75 @@
+---
+interface Props {
+  color?: string;
+  author?: string;
+  role?: string;
+}
+
+const {
+  color = 'var(--color-accent-warm)',
+  author = '',
+  role = '',
+} = Astro.props;
+---
+
+<blockquote class="color-quote" style={`--quote-color: ${color}`}>
+  <div class="color-quote-bar" aria-hidden="true"></div>
+  <div class="color-quote-content">
+    <p class="color-quote-text"><slot /></p>
+    {(author || role) && (
+      <footer class="color-quote-footer">
+        {author && <cite class="color-quote-author">{author}</cite>}
+        {role && <span class="color-quote-role">{role}</span>}
+      </footer>
+    )}
+  </div>
+</blockquote>
+
+<style>
+  .color-quote {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--color-sumi-shiro);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: none;
+    margin: 0;
+    font-style: normal;
+  }
+
+  .color-quote-bar {
+    flex-shrink: 0;
+    width: 4px;
+    border-radius: 2px;
+    background: var(--quote-color);
+  }
+
+  .color-quote-text {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    line-height: 1.8;
+    color: var(--color-primary);
+  }
+
+  .color-quote-footer {
+    margin-top: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .color-quote-author {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .color-quote-role {
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    opacity: 0.6;
+  }
+</style>

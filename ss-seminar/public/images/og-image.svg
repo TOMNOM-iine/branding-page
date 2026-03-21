@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#FAFAF8"/>
+
+  <!-- Geometric lines -->
+  <path d="M0,200 L500,180 L1200,220" stroke="#FF6B35" stroke-width="2" opacity="0.3"/>
+  <path d="M0,420 L600,440 L1200,400" stroke="#1A1A2E" stroke-width="1.5" opacity="0.2"/>
+  <path d="M400,0 L380,315 L420,630" stroke="#E8D44D" stroke-width="2" opacity="0.2"/>
+  <path d="M800,0 L820,315 L780,630" stroke="#4ECDC4" stroke-width="2" opacity="0.2"/>
+
+  <!-- Central child illustration -->
+  <g transform="translate(550, 120)">
+    <circle cx="50" cy="30" r="25" stroke="#1A1A2E" stroke-width="2.5"/>
+    <path d="M38,25 Q42,20 46,25" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round"/>
+    <path d="M54,25 Q58,20 62,25" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round"/>
+    <path d="M40,38 Q50,48 60,38" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+    <path d="M50,55 L50,110" stroke="#1A1A2E" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M50,75 L25,62" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round"/>
+    <path d="M50,75 L75,62" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round"/>
+    <path d="M50,110 L35,140" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round"/>
+    <path d="M50,110 L65,140" stroke="#1A1A2E" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Main text -->
+  <text x="600" y="350" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="64" fill="#1A1A2E" letter-spacing="0.08em">居場所から始まる学び</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="420" text-anchor="middle" font-family="sans-serif" font-weight="400" font-size="28" fill="#3D3D3D" opacity="0.7">やる気がなくても、大丈夫。まずは、ここに。</text>
+
+  <!-- Logo area -->
+  <text x="600" y="520" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="36" fill="#FF6B35">S&amp;Sセミナー</text>
+  <text x="600" y="560" text-anchor="middle" font-family="sans-serif" font-weight="400" font-size="18" fill="#3D3D3D" opacity="0.5">栃木県日光市 | 40年以上の歴史 | ソクラテス問答法</text>
+
+  <!-- Floating accents -->
+  <circle cx="120" cy="100" r="8" fill="#4ECDC4" opacity="0.3"/>
+  <rect x="1050" y="80" width="14" height="14" fill="#E8D44D" opacity="0.3" transform="rotate(45, 1057, 87)"/>
+  <circle cx="180" cy="520" r="6" fill="#FF6B35" opacity="0.2"/>
+  <polygon points="1080,500 1090,520 1070,520" fill="#C1292E" opacity="0.2"/>
+</svg>

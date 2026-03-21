@@ -1,0 +1,414 @@
+---
+/**
+ * Access & Contact section
+ * Tatami-framed contact form + stylized location info
+ */
+const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID || 'placeholder';
+const formAction = `https://formspree.io/f/${formspreeId}`;
+---
+
+<section class="section access" id="access" data-section="access" data-section-id="access">
+  <div class="container">
+    <div class="appear">
+      <h2 class="heading-offgrid text-display">アクセス・お問い合わせ</h2>
+      <p class="section-subtitle">まずはお気軽にご連絡ください</p>
+    </div>
+
+    <div class="access-grid">
+      <!-- Locations -->
+      <div class="access-locations appear appear-delay-1">
+        <div class="location-card">
+          <div class="location-badge">本校</div>
+          <h3>日光教室</h3>
+          <address>
+            <p>〒321-1261<br>栃木県日光市相生町20-9</p>
+            <p><a href="tel:0288-53-2623">0288-53-2623</a></p>
+          </address>
+          <p class="location-access">JR日光駅より徒歩圏内</p>
+        </div>
+
+        <div class="location-card">
+          <div class="location-badge location-badge--secondary">今市</div>
+          <h3>今市教室</h3>
+          <address>
+            <p>〒321-1261<br>栃木県日光市今市703</p>
+            <p><a href="tel:0288-21-4222">0288-21-4222</a></p>
+          </address>
+          <p class="location-access">今市駅より徒歩圏内</p>
+        </div>
+
+        <div class="location-online">
+          <div class="location-badge location-badge--cool">オンライン</div>
+          <p>遠方の方もオンライン授業で<br>S&Sの指導を受けられます</p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="access-form-wrapper appear appear-delay-2">
+        <div class="tatami-frame" aria-hidden="true"></div>
+        <form
+          class="contact-form"
+          action={formAction}
+          method="POST"
+        >
+          <div class="form-group">
+            <label for="contact-name">お名前 <span class="required">*</span></label>
+            <input type="text" id="contact-name" name="name" required autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="contact-email">メールアドレス <span class="required">*</span></label>
+            <input type="email" id="contact-email" name="email" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="contact-phone">電話番号</label>
+            <input type="tel" id="contact-phone" name="phone" autocomplete="tel" />
+          </div>
+
+          <div class="form-group">
+            <label for="contact-category">お問い合わせ種別</label>
+            <select id="contact-category" name="category">
+              <option value="">選択してください</option>
+              <option value="visit">見学・体験のお申込み</option>
+              <option value="inquiry">入塾についてのご質問</option>
+              <option value="online">オンライン授業について</option>
+              <option value="dayservice">放課後デイサービスについて</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+
+          <div class="form-group form-group--date" id="date-group" style="display: none;">
+            <label for="contact-date">ご希望の日時</label>
+            <input type="date" id="contact-date" name="preferred_date" min={new Date().toISOString().split('T')[0]} />
+            <select id="contact-time" name="preferred_time">
+              <option value="">時間帯を選択</option>
+              <option value="morning">午前（10:00〜12:00）</option>
+              <option value="afternoon">午後（13:00〜17:00）</option>
+              <option value="evening">夕方（17:00〜19:00）</option>
+              <option value="any">いつでも可</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">メッセージ <span class="required">*</span></label>
+            <textarea id="contact-message" name="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="geo-btn geo-btn--primary geo-btn--skew form-submit" id="form-submit-btn">
+            送信する
+          </button>
+
+          <!-- Success message -->
+          <div class="form-success" id="form-success" hidden>
+            <svg viewBox="0 0 48 48" fill="none" width="48" height="48">
+              <circle cx="24" cy="24" r="20" stroke="var(--color-sora-mizu)" stroke-width="2" />
+              <path d="M15,24 L21,30 L33,18" stroke="var(--color-sora-mizu)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <p class="form-success-title">送信しました</p>
+            <p class="form-success-text">お問い合わせありがとうございます。<br>2営業日以内にご連絡いたします。</p>
+          </div>
+
+          <!-- Error message -->
+          <div class="form-error" id="form-error" hidden>
+            <p>送信に失敗しました。お手数ですが、お電話（<a href="tel:0288-53-2623">0288-53-2623</a>）にてお問い合わせください。</p>
+          </div>
+        </form>
+
+        <script>
+          // Show/hide date fields based on category
+          const categorySelect = document.getElementById('contact-category') as HTMLSelectElement;
+          const dateGroup = document.getElementById('date-group');
+          categorySelect?.addEventListener('change', () => {
+            if (dateGroup) {
+              dateGroup.style.display = categorySelect.value === 'visit' ? 'flex' : 'none';
+            }
+          });
+
+          const form = document.querySelector('.contact-form');
+          const submitBtn = document.getElementById('form-submit-btn');
+          const successMsg = document.getElementById('form-success');
+          const errorMsg = document.getElementById('form-error');
+
+          form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!submitBtn || !form) return;
+
+            submitBtn.textContent = '送信中...';
+            submitBtn.setAttribute('disabled', 'true');
+            errorMsg?.setAttribute('hidden', '');
+
+            try {
+              const response = await fetch(form.getAttribute('action') || '', {
+                method: 'POST',
+                body: new FormData(form as HTMLFormElement),
+                headers: { 'Accept': 'application/json' },
+              });
+
+              if (response.ok) {
+                (form as HTMLFormElement).reset();
+                form.querySelectorAll('.form-group').forEach(g => {
+                  (g as HTMLElement).style.display = 'none';
+                });
+                submitBtn.style.display = 'none';
+                successMsg?.removeAttribute('hidden');
+              } else {
+                throw new Error('Submit failed');
+              }
+            } catch {
+              submitBtn.textContent = '送信する';
+              submitBtn.removeAttribute('disabled');
+              errorMsg?.removeAttribute('hidden');
+            }
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .access {
+    background: var(--zone-bg);
+  }
+
+  .access-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl);
+    margin-top: var(--space-2xl);
+    align-items: start;
+  }
+
+  /* Locations */
+  .access-locations {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .location-card {
+    background: var(--color-sumi-shiro);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+  }
+
+  .location-badge {
+    display: inline-block;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    padding: 2px 12px;
+    border-radius: 50px;
+    background: var(--color-secondary);
+    color: var(--color-sumi-shiro);
+    margin-bottom: var(--space-sm);
+    letter-spacing: 0.05em;
+  }
+
+  .location-badge--secondary {
+    background: var(--color-primary);
+  }
+
+  .location-badge--cool {
+    background: var(--color-sora-mizu);
+  }
+
+  .location-card h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .location-card address {
+    font-style: normal;
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    margin-bottom: var(--space-sm);
+  }
+
+  .location-card address a {
+    color: var(--color-secondary);
+    font-weight: 700;
+  }
+
+  .location-access {
+    font-size: var(--text-xs);
+    opacity: 0.6;
+  }
+
+  .location-online {
+    background: var(--color-sumi-shiro);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--color-accent-cool);
+  }
+
+  .location-online p {
+    font-size: var(--text-sm);
+    margin-top: var(--space-sm);
+    opacity: 0.8;
+  }
+
+  /* Contact Form with tatami frame */
+  .access-form-wrapper {
+    position: relative;
+    padding: var(--space-xl);
+    background: var(--color-sumi-shiro);
+    border-radius: var(--radius-lg);
+  }
+
+  .tatami-frame {
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--color-accent-warm);
+    border-radius: var(--radius-lg);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .contact-form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .form-group label {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .required {
+    color: var(--color-shu-aka);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: var(--space-sm);
+    border: none;
+    border-bottom: 2px solid rgba(26, 26, 46, 0.15);
+    background: transparent;
+    color: var(--color-text);
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
+    border-radius: 0;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-bottom-color: var(--color-secondary);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233D3D3D' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 32px;
+  }
+
+  .form-submit {
+    align-self: flex-start;
+    margin-top: var(--space-md);
+  }
+
+  /* Geo button styles (inline for form) */
+  .geo-btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-base);
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .geo-btn--primary {
+    color: var(--color-sumi-shiro);
+    background: var(--color-secondary);
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.25);
+    border: none;
+  }
+
+  .geo-btn--primary:hover {
+    transform: rotate(3deg) scale(1.05);
+    box-shadow: 0 6px 24px rgba(255, 107, 53, 0.35);
+  }
+
+  .geo-btn--skew {
+    transform: rotate(3deg);
+  }
+
+  .form-group--date {
+    flex-direction: row !important;
+    gap: var(--space-sm) !important;
+    flex-wrap: wrap;
+  }
+
+  .form-group--date input,
+  .form-group--date select {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  /* Form success/error */
+  .form-success {
+    text-align: center;
+    padding: var(--space-xl) 0;
+  }
+
+  .form-success-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    color: var(--color-primary);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .form-success-text {
+    font-size: var(--text-sm);
+    opacity: 0.7;
+    line-height: 1.8;
+  }
+
+  .form-error {
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(193, 41, 46, 0.08);
+    border-radius: var(--radius-md);
+    color: var(--color-shu-aka);
+    font-size: var(--text-sm);
+  }
+
+  .form-error a {
+    color: var(--color-shu-aka);
+    font-weight: 700;
+  }
+
+  .geo-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    .access-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

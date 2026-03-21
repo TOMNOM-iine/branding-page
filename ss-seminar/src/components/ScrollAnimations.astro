@@ -1,0 +1,279 @@
+---
+/**
+ * ScrollAnimations — GSAP ScrollTrigger integration
+ *
+ * Room-scroll transitions between sections
+ * Pinned hero with parallax dissolve
+ * Scroll-linked SVG drawing
+ * Section entrance animations
+ *
+ * Respects prefers-reduced-motion
+ * Degrades to CSS-only on mobile < 768px
+ */
+---
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Prevent browser scroll restoration from breaking GSAP
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.innerWidth < 768;
+
+  if (!prefersReducedMotion && !isMobile) {
+    initScrollAnimations();
+  }
+
+  function initScrollAnimations() {
+    // === 1. Hero Parallax & Dissolve ===
+    const hero = document.getElementById('hero');
+    if (hero) {
+      const heroContent = hero.querySelector('.hero-content');
+      const heroCanvas = hero.querySelector('.hero-canvas');
+      const heroBg = hero.querySelector('.hero-bg');
+
+      // Pin the hero and create parallax on scroll — smooth scrub
+      ScrollTrigger.create({
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          if (heroContent) {
+            gsap.set(heroContent, {
+              y: progress * 150,
+              opacity: 1 - progress * 1.5,
+              scale: 1 - progress * 0.1,
+            });
+          }
+          if (heroCanvas) {
+            gsap.set(heroCanvas, {
+              y: progress * 80,
+              opacity: 1 - progress * 1.2,
+            });
+          }
+        },
+      });
+    }
+
+    // === 2. Room-scroll Transition (Hero → Philosophy) ===
+    const roomOverlay = document.getElementById('room-overlay');
+    const philosophySection = document.getElementById('philosophy');
+
+    if (roomOverlay && philosophySection) {
+      const panels = roomOverlay.querySelectorAll('.room-panel');
+
+      // Ensure panels start hidden
+      panels.forEach((panel) => {
+        gsap.set(panel, { scaleY: 0, transformOrigin: 'bottom' });
+      });
+
+      ScrollTrigger.create({
+        trigger: philosophySection,
+        start: 'top 90%',
+        end: 'top 30%',
+        scrub: 1.2,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          panels.forEach((panel, i) => {
+            const stagger = i * 0.05;
+            const panelProgress = Math.max(0, Math.min(1, (progress - stagger) / (1 - stagger * 4)));
+
+            // Panels grow from bottom, then shrink from top
+            if (progress < 0.5) {
+              // Growing phase
+              const growProgress = progress * 2;
+              const staggeredGrow = Math.max(0, Math.min(1, (growProgress - stagger) / (1 - stagger * 4)));
+              gsap.set(panel, {
+                scaleY: staggeredGrow,
+                transformOrigin: 'bottom',
+              });
+            } else {
+              // Shrinking phase
+              const shrinkProgress = (progress - 0.5) * 2;
+              const staggeredShrink = Math.max(0, Math.min(1, (shrinkProgress - stagger) / (1 - stagger * 4)));
+              gsap.set(panel, {
+                scaleY: 1 - staggeredShrink,
+                transformOrigin: 'top',
+              });
+            }
+          });
+        },
+      });
+    }
+
+    // === 3. Section Color Zone Transitions ===
+    const sections = document.querySelectorAll('[data-section]');
+
+    sections.forEach((section) => {
+      const sectionId = section.getAttribute('data-section');
+
+      // Entrance animation for section content
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top 80%',
+        end: 'top 20%',
+        scrub: 1,
+        onUpdate: (self) => {
+          // Subtle background opacity pulse on scroll
+          const progress = self.progress;
+          const intensity = Math.sin(progress * Math.PI);
+          section.style.setProperty('--zone-intensity', String(intensity));
+        },
+      });
+    });
+
+    // === 4. Appear Elements ===
+    // Handled by CSS transitions + IntersectionObserver in BaseLayout
+    // GSAP does NOT touch .appear elements to avoid transition conflicts
+
+    // === 5. Timeline SVG Drawing on Scroll ===
+    const timelineLine = document.querySelector('.timeline-line-path');
+    if (timelineLine) {
+      const lineLength = (timelineLine as SVGGeometryElement).getTotalLength?.() || 1600;
+      gsap.set(timelineLine, {
+        strokeDasharray: lineLength,
+        strokeDashoffset: lineLength,
+      });
+
+      ScrollTrigger.create({
+        trigger: '.timeline-wrapper',
+        start: 'top 70%',
+        end: 'bottom 50%',
+        scrub: 1.2,
+        onUpdate: (self) => {
+          gsap.set(timelineLine, {
+            strokeDashoffset: lineLength * (1 - self.progress),
+          });
+        },
+      });
+
+      // Timeline nodes appear sequentially
+      const timelineNodes = document.querySelectorAll('.timeline-node');
+      timelineNodes.forEach((node, i) => {
+        gsap.set(node, { opacity: 0, y: 20 });
+
+        ScrollTrigger.create({
+          trigger: '.timeline-wrapper',
+          start: `top ${70 - i * 5}%`,
+          once: true,
+          onEnter: () => {
+            gsap.to(node, {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              delay: i * 0.15,
+              ease: 'expo.out',
+            });
+          },
+        });
+      });
+    }
+
+    // === 6. Program Cards — use CSS appear system ===
+    // Cards use .appear class and CSS transitions
+
+    // === 7. Voice Cards — use CSS appear system ===
+    // Voice cards use .appear class and CSS transitions
+
+    // === 8. Stats Counter Animation ===
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach((stat) => {
+      const target = parseInt(stat.getAttribute('data-count') || stat.textContent || '0', 10);
+      const el = stat as HTMLElement;
+
+      ScrollTrigger.create({
+        trigger: stat,
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.fromTo(
+            { val: 0 },
+            { val: target },
+            {
+              duration: 1.5,
+              ease: 'expo.out',
+              onUpdate: function () {
+                el.textContent = String(Math.round(this.targets()[0].val));
+              },
+            }
+          );
+        },
+      });
+    });
+
+    // === 9. Section Divider SVG Draw ===
+    const dividerPaths = document.querySelectorAll('.divider-path');
+    dividerPaths.forEach((path) => {
+      const svgPath = path as SVGGeometryElement;
+      const length = svgPath.getTotalLength?.() || 2000;
+      gsap.set(path, {
+        strokeDasharray: length,
+        strokeDashoffset: length,
+      });
+
+      ScrollTrigger.create({
+        trigger: path.closest('.divider'),
+        start: 'top 80%',
+        end: 'bottom 50%',
+        scrub: 1.2,
+        onUpdate: (self) => {
+          gsap.set(path, {
+            strokeDashoffset: length * (1 - self.progress),
+          });
+        },
+      });
+    });
+
+    // === 10. Contact Form — uses CSS appear system ===
+
+    // === 11. Floating Nav Background Shift ===
+    const nav = document.getElementById('floating-nav');
+    if (nav) {
+      sections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 50%',
+          end: 'bottom 50%',
+          onEnter: () => {
+            const color = getComputedStyle(section).getPropertyValue('--zone-color').trim();
+            if (color) {
+              nav.style.borderColor = color + '30'; // 30 = ~19% opacity hex
+            }
+          },
+          onEnterBack: () => {
+            const color = getComputedStyle(section).getPropertyValue('--zone-color').trim();
+            if (color) {
+              nav.style.borderColor = color + '30';
+            }
+          },
+        });
+      });
+    }
+
+    // === 12. Geometric Accent Parallax in Hero ===
+    const geoAccents = document.querySelectorAll('.geo-accent');
+    geoAccents.forEach((accent, i) => {
+      ScrollTrigger.create({
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5,
+        onUpdate: (self) => {
+          const speed = 0.5 + i * 0.3;
+          gsap.set(accent, {
+            y: self.progress * 100 * speed,
+          });
+        },
+      });
+    });
+  }
+</script>

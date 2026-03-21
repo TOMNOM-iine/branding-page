@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ss-seminar-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "ss-seminar"],
+      "port": 4321,
+      "autoPort": true
+    }
+  ]
+}

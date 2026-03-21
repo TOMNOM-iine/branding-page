@@ -1,0 +1,572 @@
+---
+import ScrollAnimations from '../components/ScrollAnimations.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = 'S&Sセミナー — 居場所から始まる学び',
+  description = '栃木県日光市で40年以上。ソクラテス問答法による個別指導。学習意欲がなくても大丈夫。まずは、ここに。',
+  ogImage = '/images/og-image.jpg',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ss-seminar.net');
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+
+    <!-- OGP -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="S&Sセミナー" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "S&Sセミナー",
+      "alternateName": "S&S Seminar",
+      "description": "栃木県日光市で40年以上の歴史。ソクラテス問答法による個別指導。居場所から始まる学び。",
+      "url": "https://ss-seminar.net",
+      "telephone": "+81-288-53-2623",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "相生町20-9",
+        "addressLocality": "日光市",
+        "addressRegion": "栃木県",
+        "postalCode": "321-1261",
+        "addressCountry": "JP"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.7500,
+        "longitude": 139.6000
+      },
+      "foundingDate": "1980",
+      "areaServed": "日光市",
+      "sameAs": []
+    })} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Google Fonts — non-blocking with media print swap trick -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Reggae+One&family=Shippori+Mincho:wght@800&family=Space+Grotesk:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Reggae+One&family=Shippori+Mincho:wght@800&family=Space+Grotesk:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Reggae+One&family=Shippori+Mincho:wght@800&family=Space+Grotesk:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- Styles -->
+    <title>{title}</title>
+  </head>
+  <body>
+    <!-- Room transition overlay -->
+    <div class="room-overlay" id="room-overlay" aria-hidden="true">
+      <div class="room-panel"></div>
+      <div class="room-panel"></div>
+      <div class="room-panel"></div>
+      <div class="room-panel"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="floating-nav" id="floating-nav" aria-label="メインナビゲーション">
+      <a href="/" class="nav-logo" aria-label="S&Sセミナー ホーム">
+        <span class="nav-logo-text">S&S</span>
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/#philosophy" data-section="philosophy">理念</a></li>
+        <li><a href="/#programs" data-section="programs">プログラム</a></li>
+        <li><a href="/#parents" data-section="parents">保護者の方へ</a></li>
+        <li><a href="/#voices" data-section="voices">声</a></li>
+        <li><a href="/advance" class="nav-advance-link">超特急</a></li>
+        <li><a href="/group">グループ</a></li>
+        <li><a href="/trial" class="nav-cta-link">体験申込</a></li>
+      </ul>
+      <button
+        class="nav-toggle"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-drawer"
+        aria-label="メニューを開く"
+      >
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </nav>
+
+    <!-- Mobile drawer -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+      <div class="mobile-drawer-bg"></div>
+      <div class="mobile-drawer-content">
+        <ul class="mobile-drawer-links">
+          <li><a href="/#philosophy">理念</a></li>
+          <li><a href="/#programs">プログラム</a></li>
+          <li><a href="/#parents">保護者の方へ</a></li>
+          <li><a href="/#voices">声</a></li>
+          <li><a href="/group">グループ事業</a></li>
+          <li><a href="/#access">アクセス</a></li>
+        </ul>
+        <a href="/trial" class="mobile-drawer-cta">無料体験を申し込む</a>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <span class="footer-logo text-display">S&Sセミナー</span>
+            <p class="footer-tagline">居場所から始まる学び</p>
+            <p class="footer-company">S&S合同会社</p>
+          </div>
+          <div class="footer-links">
+            <h4>セミナー</h4>
+            <ul>
+              <li><a href="/#philosophy">理念</a></li>
+              <li><a href="/#programs">プログラム</a></li>
+              <li><a href="/#parents">保護者の方へ</a></li>
+              <li><a href="/trial">体験申込</a></li>
+            </ul>
+          </div>
+          <div class="footer-links">
+            <h4>グループ事業</h4>
+            <ul>
+              <li><a href="/group">トム・ソーヤ</a></li>
+              <li><a href="/group">日光AI食堂</a></li>
+              <li><a href="/group">児童クラブ</a></li>
+              <li><a href="/group">一覧を見る</a></li>
+            </ul>
+          </div>
+          <div class="footer-contact">
+            <h4>お問い合わせ</h4>
+            <p>〒321-1261<br>栃木県日光市相生町20-9</p>
+            <p><a href="tel:0288-53-2623">0288-53-2623</a></p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; {new Date().getFullYear()} S&S合同会社. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- GSAP ScrollTrigger Animations -->
+    <ScrollAnimations />
+
+    <style>
+      /* === Navigation === */
+      .floating-nav {
+        position: fixed;
+        top: var(--space-md);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: var(--space-lg);
+        padding: var(--space-sm) var(--space-lg);
+        background: rgba(250, 250, 248, 0.85);
+        backdrop-filter: blur(12px);
+        border-radius: 50px;
+        border: 1px solid rgba(26, 26, 46, 0.08);
+        box-shadow: var(--shadow-md);
+        transition: all var(--duration-normal) var(--ease-out-expo);
+      }
+
+      .floating-nav.is-scrolled {
+        top: var(--space-sm);
+        padding: var(--space-xs) var(--space-md);
+      }
+
+      .nav-logo-text {
+        font-family: var(--font-latin);
+        font-weight: 700;
+        font-size: var(--text-lg);
+        color: var(--color-primary);
+        letter-spacing: 0.05em;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: var(--space-sm);
+        white-space: nowrap;
+      }
+
+      .nav-links a {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        color: var(--color-text);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: var(--radius-sm);
+        transition: all var(--duration-fast) var(--ease-out-expo);
+      }
+
+      .nav-links a:hover,
+      .nav-links a.is-active {
+        color: var(--color-secondary);
+        background: rgba(255, 107, 53, 0.08);
+      }
+
+      .nav-advance-link {
+        color: var(--color-primary) !important;
+        font-weight: 700 !important;
+        border-bottom: 2px solid var(--color-primary) !important;
+        border-radius: 0 !important;
+        padding-bottom: 2px !important;
+      }
+
+      .nav-advance-link:hover {
+        color: var(--color-secondary) !important;
+        border-bottom-color: var(--color-secondary) !important;
+      }
+
+      .nav-cta-link {
+        background: var(--color-secondary) !important;
+        color: var(--color-sumi-shiro) !important;
+        border-radius: 50px !important;
+        padding: var(--space-xs) var(--space-md) !important;
+        font-weight: 700 !important;
+      }
+
+      .nav-cta-link:hover {
+        background: #e5602e !important;
+        color: var(--color-sumi-shiro) !important;
+      }
+
+      /* Mobile toggle */
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        padding: 8px;
+      }
+
+      .nav-toggle-bar {
+        width: 22px;
+        height: 2px;
+        background: var(--color-primary);
+        transition: all var(--duration-fast) var(--ease-out-expo);
+        transform-origin: center;
+      }
+
+      .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      /* Mobile drawer */
+      .mobile-drawer {
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity var(--duration-normal) var(--ease-out-expo);
+      }
+
+      .mobile-drawer.is-open {
+        pointer-events: all;
+        opacity: 1;
+      }
+
+      .mobile-drawer-bg {
+        position: absolute;
+        inset: 0;
+        background: var(--color-primary);
+        opacity: 0.95;
+      }
+
+      .mobile-drawer-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        gap: var(--space-xl);
+      }
+
+      .mobile-drawer-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-lg);
+      }
+
+      .mobile-drawer-links a {
+        font-family: var(--font-heading);
+        font-size: var(--text-2xl);
+        color: var(--color-sumi-shiro);
+        transition: color var(--duration-fast);
+      }
+
+      .mobile-drawer-links a:hover {
+        color: var(--color-secondary);
+      }
+
+      .mobile-drawer-cta {
+        font-family: var(--font-body);
+        font-weight: 700;
+        font-size: var(--text-base);
+        color: var(--color-primary);
+        background: var(--color-secondary);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 50px;
+        transform: rotate(3deg);
+      }
+
+      /* === Footer === */
+      .site-footer {
+        background: var(--color-primary);
+        color: var(--color-sakura-hai);
+        padding: var(--space-2xl) 0 var(--space-lg);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: var(--space-xl);
+        margin-bottom: var(--space-xl);
+      }
+
+      .footer-company {
+        font-size: var(--text-xs);
+        opacity: 0.4;
+        margin-top: var(--space-sm);
+        letter-spacing: 0.05em;
+      }
+
+      .footer-logo {
+        font-size: var(--text-2xl);
+        color: var(--color-sumi-shiro);
+      }
+
+      .footer-tagline {
+        font-family: var(--font-heading);
+        font-size: var(--text-base);
+        opacity: 0.7;
+        margin-top: var(--space-xs);
+      }
+
+      .footer-links h4,
+      .footer-contact h4 {
+        color: var(--color-sumi-shiro);
+        font-size: var(--text-sm);
+        font-family: var(--font-body);
+        font-weight: 700;
+        margin-bottom: var(--space-md);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .footer-links ul {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+
+      .footer-links a {
+        color: var(--color-sakura-hai);
+        font-size: var(--text-sm);
+        opacity: 0.8;
+      }
+
+      .footer-links a:hover {
+        opacity: 1;
+        color: var(--color-secondary);
+      }
+
+      .footer-contact p {
+        font-size: var(--text-sm);
+        opacity: 0.8;
+        line-height: 1.6;
+        margin-bottom: var(--space-sm);
+      }
+
+      .footer-contact a {
+        color: var(--color-secondary);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(242, 233, 228, 0.15);
+        padding-top: var(--space-md);
+        text-align: center;
+      }
+
+      .footer-bottom p {
+        font-size: var(--text-xs);
+        opacity: 0.5;
+      }
+
+      /* === Responsive === */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .nav-toggle {
+          display: flex;
+        }
+
+        .floating-nav {
+          padding: var(--space-sm) var(--space-md);
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+          gap: var(--space-lg);
+        }
+      }
+    </style>
+
+    <script>
+      // Navigation scroll behavior
+      const nav = document.getElementById('floating-nav');
+      const toggle = document.getElementById('nav-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const drawerLinks = drawer?.querySelectorAll('a');
+
+      // Scroll detection
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+        if (currentScroll > 100) {
+          nav?.classList.add('is-scrolled');
+        } else {
+          nav?.classList.remove('is-scrolled');
+        }
+        lastScroll = currentScroll;
+      }, { passive: true });
+
+      // Mobile drawer toggle
+      toggle?.addEventListener('click', () => {
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+        drawer?.classList.toggle('is-open');
+        drawer?.setAttribute('aria-hidden', String(isOpen));
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+      });
+
+      // Close drawer on link click
+      drawerLinks?.forEach(link => {
+        link.addEventListener('click', () => {
+          toggle?.setAttribute('aria-expanded', 'false');
+          drawer?.classList.remove('is-open');
+          drawer?.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Intersection Observer for scroll-triggered appearances
+      const appearEls = document.querySelectorAll('.appear');
+
+      function checkVisibility(el: Element) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 50 && rect.bottom > -50) {
+          el.classList.add('is-visible');
+          return true;
+        }
+        return false;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        },
+        { threshold: 0, rootMargin: '50px 0px 50px 0px' }
+      );
+
+      // Initial check + observe
+      appearEls.forEach(el => {
+        checkVisibility(el);
+        observer.observe(el);
+      });
+
+      // Fallback: re-check on scroll for any missed elements
+      let scrollCheckTimeout: number;
+      window.addEventListener('scroll', () => {
+        clearTimeout(scrollCheckTimeout);
+        scrollCheckTimeout = window.setTimeout(() => {
+          appearEls.forEach(el => {
+            if (!el.classList.contains('is-visible')) {
+              checkVisibility(el);
+            }
+          });
+        }, 100);
+      }, { passive: true });
+
+      // Active nav section tracking
+      const sections = document.querySelectorAll('[data-section-id]');
+      const navLinks = document.querySelectorAll('.nav-links a[data-section]');
+
+      const sectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.getAttribute('data-section-id');
+              navLinks.forEach(link => {
+                link.classList.toggle('is-active', link.getAttribute('data-section') === id);
+              });
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      sections.forEach(section => sectionObserver.observe(section));
+    </script>
+  </body>
+</html>
